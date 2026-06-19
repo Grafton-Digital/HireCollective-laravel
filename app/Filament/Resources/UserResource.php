@@ -6,6 +6,9 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Models\Boutique;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -25,29 +28,29 @@ class UserResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            Forms\Components\Section::make()->schema([
-                Forms\Components\TextInput::make('name')
+            Section::make()->schema([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                     ->email()
                     ->required()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
-                Forms\Components\TextInput::make('password')
+                TextInput::make('password')
                     ->password()
                     ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
                     ->dehydrated(fn (?string $state): bool => filled($state))
                     ->required(fn (string $operation): bool => $operation === 'create')
                     ->maxLength(255),
-                Forms\Components\Select::make('role')
+                Select::make('role')
                     ->options([
                         'admin' => 'Admin',
                         'boutique_staff' => 'Boutique Staff',
                     ])
                     ->required()
                     ->native(false),
-                Forms\Components\Select::make('boutique_id')
+                Select::make('boutique_id')
                     ->label('Boutique')
                     ->options(Boutique::pluck('name', 'id'))
                     ->searchable()
