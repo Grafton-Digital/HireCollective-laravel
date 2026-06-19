@@ -4,11 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BoutiqueResource\Pages;
 use App\Models\Boutique;
-use Filament\Forms;
-use Filament\Schemas\Schema;
-use Filament\Resources\Resource;
-use Filament\Support\Icons\Heroicon;
 use Filament\Actions;
+use Filament\Forms;
+use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
@@ -17,19 +19,19 @@ class BoutiqueResource extends Resource
 {
     protected static ?string $model = Boutique::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedBuildingStorefront;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingStorefront;
 
     protected static ?int $navigationSort = 1;
 
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            Forms\Components\Section::make('Details')->schema([
+            Section::make('Details')->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255)
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn (\Filament\Schemas\Components\Utilities\Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->maxLength(255)
@@ -40,7 +42,7 @@ class BoutiqueResource extends Resource
                     ->default(true),
             ])->columns(2),
 
-            Forms\Components\Section::make('Images')->schema([
+            Section::make('Images')->schema([
                 Forms\Components\FileUpload::make('logo')
                     ->image()
                     ->directory('boutiques/logos'),
@@ -49,7 +51,7 @@ class BoutiqueResource extends Resource
                     ->directory('boutiques/covers'),
             ])->columns(2),
 
-            Forms\Components\Section::make('Location & Contact')->schema([
+            Section::make('Location & Contact')->schema([
                 Forms\Components\TextInput::make('address')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('city')
@@ -64,7 +66,7 @@ class BoutiqueResource extends Resource
                     ->maxLength(50),
             ])->columns(2),
 
-            Forms\Components\Section::make('Opening Hours & Social')->schema([
+            Section::make('Opening Hours & Social')->schema([
                 Forms\Components\KeyValue::make('opening_hours')
                     ->keyLabel('Day')
                     ->valueLabel('Hours')
@@ -83,7 +85,7 @@ class BoutiqueResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('logo')
                     ->circular()
-                    ->size(40),
+                    ->imageHeight(40),
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable(),

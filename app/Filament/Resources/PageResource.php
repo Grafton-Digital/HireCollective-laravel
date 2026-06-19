@@ -4,11 +4,12 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PageResource\Pages;
 use App\Models\Page;
-use Filament\Forms;
-use Filament\Schemas\Schema;
-use Filament\Resources\Resource;
-use Filament\Support\Icons\Heroicon;
 use Filament\Actions;
+use Filament\Forms;
+use Filament\Resources\Resource;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
@@ -17,19 +18,19 @@ class PageResource extends Resource
 {
     protected static ?string $model = Page::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedDocumentText;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Content';
+    protected static string|\UnitEnum|null $navigationGroup = 'Content';
 
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            Forms\Components\Section::make()->schema([
+            Section::make()->schema([
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255)
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn (\Filament\Schemas\Components\Utilities\Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->maxLength(255)

@@ -4,11 +4,12 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\EnquiryResource\Pages;
 use App\Models\Enquiry;
-use Filament\Forms;
-use Filament\Schemas\Schema;
-use Filament\Resources\Resource;
-use Filament\Support\Icons\Heroicon;
 use Filament\Actions;
+use Filament\Forms;
+use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -16,14 +17,14 @@ class EnquiryResource extends Resource
 {
     protected static ?string $model = Enquiry::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedEnvelope;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
 
     protected static ?int $navigationSort = 4;
 
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            Forms\Components\Section::make('Enquiry Details')->schema([
+            Section::make('Enquiry Details')->schema([
                 Forms\Components\TextInput::make('customer_name')
                     ->disabled(),
                 Forms\Components\TextInput::make('customer_email')
@@ -37,7 +38,7 @@ class EnquiryResource extends Resource
                     ->columnSpanFull(),
             ])->columns(2),
 
-            Forms\Components\Section::make('Product Info')->schema([
+            Section::make('Product Info')->schema([
                 Forms\Components\Placeholder::make('product_name')
                     ->label('Product')
                     ->content(fn (Enquiry $record): string => $record->product?->name ?? '—'),
@@ -49,7 +50,7 @@ class EnquiryResource extends Resource
                     ->content(fn (Enquiry $record): string => $record->variant?->size ?? '—'),
             ])->columns(3),
 
-            Forms\Components\Section::make('Status')->schema([
+            Section::make('Status')->schema([
                 Forms\Components\Select::make('status')
                     ->options([
                         'new' => 'New',
@@ -75,7 +76,8 @@ class EnquiryResource extends Resource
                     ->limit(25),
                 Tables\Columns\TextColumn::make('boutique.name'),
                 Tables\Columns\TextColumn::make('desired_dates'),
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
                     ->colors([
                         'warning' => 'new',
                         'primary' => 'in_progress',

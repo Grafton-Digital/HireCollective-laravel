@@ -5,14 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\Boutique;
 use App\Models\User;
-use Filament\Forms;
+use Filament\Actions;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Filament\Actions;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
@@ -21,7 +21,7 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedUsers;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
     protected static ?int $navigationSort = 2;
 
@@ -54,7 +54,7 @@ class UserResource extends Resource
                     ->label('Boutique')
                     ->options(Boutique::pluck('name', 'id'))
                     ->searchable()
-                    ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get): bool => $get('role') === 'boutique_staff'),
+                    ->visible(fn (Get $get): bool => $get('role') === 'boutique_staff'),
             ])->columns(2),
         ]);
     }
@@ -68,7 +68,8 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\BadgeColumn::make('role')
+                Tables\Columns\TextColumn::make('role')
+                    ->badge()
                     ->colors([
                         'danger' => 'admin',
                         'primary' => 'boutique_staff',

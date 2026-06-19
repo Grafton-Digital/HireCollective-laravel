@@ -5,11 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Boutique;
 use App\Models\Product;
-use Filament\Forms;
-use Filament\Schemas\Schema;
-use Filament\Resources\Resource;
-use Filament\Support\Icons\Heroicon;
 use Filament\Actions;
+use Filament\Forms;
+use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
@@ -18,14 +21,14 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedShoppingBag;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingBag;
 
     protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            Forms\Components\Section::make('Product Details')->schema([
+            Section::make('Product Details')->schema([
                 Forms\Components\Select::make('boutique_id')
                     ->label('Boutique')
                     ->options(Boutique::where('is_active', true)->pluck('name', 'id'))
@@ -36,7 +39,7 @@ class ProductResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn (\Filament\Schemas\Components\Utilities\Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->maxLength(255)
@@ -45,21 +48,21 @@ class ProductResource extends Resource
                     ->columnSpanFull(),
             ])->columns(2),
 
-            Forms\Components\Section::make('Pricing & Type')->schema([
+            Section::make('Pricing & Type')->schema([
                 Forms\Components\Toggle::make('is_variable')
                     ->label('Has size variants')
                     ->live(),
                 Forms\Components\TextInput::make('price')
                     ->numeric()
                     ->prefix('€')
-                    ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get): bool => !$get('is_variable')),
+                    ->visible(fn (Get $get): bool => ! $get('is_variable')),
                 Forms\Components\Toggle::make('is_available')
                     ->default(true),
                 Forms\Components\Toggle::make('is_active')
                     ->default(true),
             ])->columns(2),
 
-            Forms\Components\Section::make('Variants')
+            Section::make('Variants')
                 ->schema([
                     Forms\Components\Repeater::make('variants')
                         ->relationship()
@@ -77,9 +80,9 @@ class ProductResource extends Resource
                         ->columns(3)
                         ->addActionLabel('Add variant'),
                 ])
-                ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get): bool => (bool) $get('is_variable')),
+                ->visible(fn (Get $get): bool => (bool) $get('is_variable')),
 
-            Forms\Components\Section::make('Images')->schema([
+            Section::make('Images')->schema([
                 Forms\Components\FileUpload::make('featured_image')
                     ->image()
                     ->directory('products/featured'),
@@ -101,7 +104,7 @@ class ProductResource extends Resource
                     ->columnSpanFull(),
             ]),
 
-            Forms\Components\Section::make('Categorisation')->schema([
+            Section::make('Categorisation')->schema([
                 Forms\Components\Select::make('categories')
                     ->relationship('categories', 'name')
                     ->multiple()
@@ -123,7 +126,7 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('featured_image')
-                    ->size(50)
+                    ->imageHeight(50)
                     ->square(),
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
