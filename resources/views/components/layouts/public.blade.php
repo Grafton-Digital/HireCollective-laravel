@@ -21,38 +21,117 @@
     </div>
 
     {{-- Header --}}
-    <header class="flex items-center justify-between bg-cream-50 px-[60px] py-4">
-        <a href="{{ route('home') }}" class="font-serif text-2xl tracking-[3px] text-black">
+    <header class="relative flex items-center justify-between bg-cream-50 px-4 py-4 md:px-[60px]" x-data="{ mobileMenuOpen: false, searchOpen: false }">
+        {{-- Left section: Burger menu + links --}}
+        <div class="flex items-center gap-6">
+            {{-- Burger menu button --}}
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="h-6 w-6">
+                <svg x-show="!mobileMenuOpen" class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+                <svg x-show="mobileMenuOpen" class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="display: none;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            {{-- Navigation links --}}
+            <nav class="hidden items-center gap-6 md:flex">
+                <a href="#" class="text-xs text-red-500 font-normal tracking-[1px] hover:underline">NEW</a>
+                <a href="{{ route('products.index') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">PRODUCTS</a>
+                <a href="{{ route('pages.show', 'about') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">HOW IT WORKS</a>
+            </nav>
+        </div>
+
+        {{-- Center: Logo --}}
+        <a href="{{ route('home') }}" class="font-serif text-xl tracking-[3px] text-black md:text-2xl">
             HIRE COLLECTIVE
         </a>
 
-        {{-- Search bar (desktop) --}}
-        <div class="hidden items-center gap-2 border border-[#D0D0D0] px-4 md:flex" style="height:40px; width:360px;">
-            <span class="flex-1 text-[13px] text-[#999]">Search dresses, bags, hats, boutiques...</span>
-            <svg class="h-[18px] w-[18px] text-[#666]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        {{-- Right section: Icons --}}
+        <div class="flex w-full max-w-[305px] items-center justify-end gap-4">
+            <button @click="searchOpen = true" class="h-5 w-5">
+                <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </button>
+            <a href="#" class="h-5 w-5">
+                <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>
+            </a>
+            <a href="#" class="h-5 w-5">
+                <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
+            </a>
         </div>
 
-        {{-- Icons --}}
-        <div class="flex items-center gap-5">
-            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>
-            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
-            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/></svg>
+        {{-- Search overlay --}}
+        <div
+            x-show="searchOpen"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="translate-x-full"
+            x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="translate-x-full"
+            class="absolute inset-0 z-50 flex items-center bg-white px-4 md:px-[60px]"
+            style="display: none;"
+        >
+            <button @click="searchOpen = false" class="mr-4 h-6 w-6 flex-shrink-0">
+                <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <form action="{{ route('products.index') }}" method="GET" class="flex flex-1 items-center">
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search dresses, bags, hats, boutiques..."
+                    class="flex-1 border-b-2 border-black bg-transparent py-2 text-base text-black placeholder-gray-400 focus:outline-none"
+                    x-ref="searchInput"
+                    @keydown.escape="searchOpen = false"
+                >
+                <button type="submit" class="ml-4 h-6 w-6 flex-shrink-0">
+                    <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        {{-- Fullscreen menu --}}
+        <div
+            x-show="mobileMenuOpen"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed inset-0 z-50 bg-cream-50"
+            style="display: none;"
+        >
+            {{-- Close button --}}
+            <div class="absolute left-4 top-4 md:left-[60px]">
+                <button @click="mobileMenuOpen = false" class="h-6 w-6">
+                    <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            {{-- Menu items --}}
+            <nav class="flex h-full flex-col items-center justify-center gap-6">
+                <a href="#" class="text-2xl font-normal tracking-[1px] text-black hover:underline">NEW</a>
+                <a href="{{ route('products.index') }}" class="text-2xl font-normal tracking-[1px] text-black hover:underline">PRODUCTS</a>
+                <a href="{{ route('products.index', ['category' => 'dresses']) }}" class="text-2xl font-normal tracking-[1px] text-black hover:underline">DRESSES</a>
+                <a href="{{ route('products.index', ['category' => 'hats']) }}" class="text-2xl font-normal tracking-[1px] text-black hover:underline">HATS</a>
+                <a href="{{ route('products.index', ['category' => 'bags']) }}" class="text-2xl font-normal tracking-[1px] text-black hover:underline">BAGS</a>
+                <a href="{{ route('boutiques.index') }}" class="text-2xl font-normal tracking-[1px] text-black hover:underline">BOUTIQUES</a>
+                <a href="{{ route('pages.show', 'about') }}" class="text-2xl font-normal tracking-[1px] text-black hover:underline">HOW IT WORKS</a>
+                <a href="{{ route('products.index') }}" class="text-2xl font-normal tracking-[1px] text-black hover:underline">STYLING</a>
+                @auth
+                    <a href="{{ route('dashboard.index') }}" class="text-2xl font-normal tracking-[1px] text-black hover:underline">DASHBOARD</a>
+                @endauth
+            </nav>
         </div>
     </header>
-
-    {{-- Navigation --}}
-    <nav class="flex items-center justify-center gap-10 bg-cream-50 px-[60px] py-3">
-        <a href="{{ route('products.index') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">OUTFITS</a>
-        <a href="{{ route('products.index', ['category' => 'dresses']) }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">DRESSES</a>
-        <a href="{{ route('products.index', ['category' => 'hats']) }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">HATS</a>
-        <a href="{{ route('products.index', ['category' => 'bags']) }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">BAGS</a>
-        <a href="{{ route('boutiques.index') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">BOUTIQUES</a>
-        <a href="{{ route('pages.show', 'about') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">HOW IT WORKS</a>
-        <a href="{{ route('products.index') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">STYLING</a>
-        @auth
-            <a href="{{ route('dashboard.index') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">DASHBOARD</a>
-        @endauth
-    </nav>
 
     <main>
         {{ $slot }}

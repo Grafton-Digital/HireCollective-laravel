@@ -2,23 +2,263 @@
     <x-slot:title>Hire Collective — Luxury Fashion Hire in Ireland</x-slot:title>
 
     {{-- Hero --}}
-    <section class="relative flex bg-cream-200" style="height:520px;">
-        <div class="flex flex-col justify-center gap-4 px-[60px] py-20" style="width:500px;">
-            <h1 class="font-serif text-[44px] italic leading-[1.2] text-black">Find your perfect outfit — all in one place</h1>
-            <div class="h-0.5 w-[35px] bg-gold"></div>
-            <p class="text-sm leading-relaxed text-[#333]">Hundreds of styles brought together from some of Ireland's most trusted hire boutiques.</p>
-            <a href="{{ route('products.index') }}" class="mt-2 inline-flex items-center justify-center self-start bg-black px-6 py-3 text-xs font-medium tracking-[1.5px] text-white hover:bg-gray-800">
-                BROWSE NOW
+    <section class="flex bg-cream-200 h-[600px]">
+        <div class="relative flex flex-col w-[70%] justify-end gap-4 px-[60px] py-20">
+            <img src="{{ asset('images/hero1.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
+            <div class="overflow absolute top-0 left-0 w-full h-full bg-black/20"></div>
+            <div class="relative">
+                <h1 class="max-w-[600px] font-serif text-[60px] italic leading-[1.2] text-white mb-2">Find your perfect outfit — all in one place</h1>
+                <p class="max-w-[400px] text-sm leading-relaxed text-white mb-2">Hundreds of styles brought together from some of Ireland's most trusted hire boutiques.</p>
+                <a href="{{ route('products.index') }}" class="mt-2 inline-flex items-center justify-center self-start bg-black px-6 py-3 text-xs font-medium tracking-[1.5px] text-white hover:bg-gray-800">
+                    BROWSE NOW
+                </a>
+            </div>
+        </div>
+        <div class="relative flex justify-center items-center w-[30%] overflow-hidden">
+            <img src="{{ asset('images/hero2.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="Fashion hero">
+            <div class="overflow absolute top-0 left-0 w-full h-full bg-black/20"></div>
+            <div class="relative">
+                <h3 class="max-w-[200px] text-center text-xl font-normal uppercase text-white">Learn how it works</h3>
+            </div>
+        </div>
+    </section>
+
+    {{-- Interactive text section --}}
+    <section class="relative flex items-center justify-center bg-white px-[60px] py-20" x-data="{ hoveredWord: null }">
+        <p class="max-w-5xl text-center italic text-[38px] leading-[1.3] text-black">
+            We've made Eclipse
+            <span
+                @mouseenter="hoveredWord = 'hundreds'"
+                @mouseleave="hoveredWord = null"
+                class="relative font-bold cursor-pointer not-italic"
+            >
+                hundreds of styles
+            </span>
+            <span class="italic">the starting point for every</span>
+            <span
+                @mouseenter="hoveredWord = 'bold'"
+                @mouseleave="hoveredWord = null"
+                class="relative font-bold cursor-pointer not-italic"
+            >
+                bold look
+            </span>, and can't imagine building style without it/
+        </p>
+
+        {{-- Hover image for "hundreds of styles" --}}
+        <div
+            x-show="hoveredWord === 'hundreds'"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+            class="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2"
+            style="display: none;"
+        >
+            <div class="h-48 w-40 overflow-hidden rounded-lg bg-cream-100 shadow-xl">
+                <img src="{{ asset('images/hero1.webp') }}" class="w-full h-full object-cover -z-1" alt="image">
+            </div>
+        </div>
+
+        {{-- Hover image for "bold look" --}}
+        <div
+            x-show="hoveredWord === 'bold'"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+            class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+            style="display: none;"
+        >
+            <div class="h-48 w-40 overflow-hidden rounded-lg bg-cream-100 shadow-xl">
+                <img src="{{ asset('images/hero1.webp') }}" class="w-full h-full object-cover -z-1" alt="image">
+            </div>
+        </div>
+    </section>
+
+    {{-- Product Categories --}}
+    <section class="pb-16">
+        <div class="px-[60px] pb-12">
+            <h2 class="font-sans text-[40px] font-normal text-black">/PRODUCT CATEGORIES</h2>
+        </div>
+
+        {{-- Grid layout --}}
+        <div class="flex flex-col">
+            {{-- Top row: 2 items --}}
+            <div class="grid grid-cols-2">
+                <a href="{{ route('products.index', ['category' => 'pants']) }}" class="group relative h-[400px] overflow-hidden">
+                    <img src="{{ asset('images/product-cat1.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
+                        <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">PANTS</span>
+                    </div>
+                </a>
+                <a href="{{ route('products.index', ['category' => 'tops']) }}" class="group relative h-[400px] overflow-hidden">
+                    <img src="{{ asset('images/product-cat2.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
+                        <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">TOPS</span>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Bottom row: 3 items --}}
+            <div class="grid grid-cols-3">
+                <a href="{{ route('products.index', ['category' => 'dresses']) }}" class="group relative h-[400px] overflow-hidden">
+                    <img src="{{ asset('images/product-cat3.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
+                        <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">DRESSES</span>
+                    </div>
+                </a>
+                <a href="{{ route('products.index', ['category' => 'sweaters']) }}" class="group relative h-[400px] overflow-hidden">
+                    <img src="{{ asset('images/product-cat4.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
+                        <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">SWEATERS</span>
+                    </div>
+                </a>
+                <a href="{{ route('products.index', ['category' => 'outerwear']) }}" class="group relative h-[400px] overflow-hidden">
+                    <img src="{{ asset('images/product-cat5.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
+                        <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">OUTERWEAR</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    {{-- New Collection --}}
+    <section class="bg-white px-[60px] py-16">
+        <div class="mb-12 flex items-center justify-between">
+            <h2 class="font-sans text-[40px] font-normal text-black">/NEW COLLECTION</h2>
+            <a href="{{ route('products.index') }}" class="flex items-center gap-2 text-base font-normal text-black hover:underline">
+                View all
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+                </svg>
             </a>
         </div>
-        <div class="flex-1 overflow-hidden">
-            {{-- Hero image placeholder — replace with actual image --}}
-            <div class="h-full w-full bg-cream-100"></div>
+
+        <div class="grid grid-cols-3 gap-6">
+            {{-- Product 1 --}}
+            <a href="#" class="group flex flex-col">
+                <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
+                    <img src="{{ asset('images/new-collection1.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="image">
+                    <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
+                        </svg>
+                    </button>
+                </div>
+                <h3 class="text-lg font-normal text-black">Beige Knitted Suit</h3>
+                <p class="mt-1 text-base font-normal text-black">$ 220</p>
+            </a>
+
+            {{-- Product 2 --}}
+            <a href="#" class="group flex flex-col">
+                <div class="relative mb-4 overflow-hidden h-[600px] bg-cream-100">
+                    <img src="{{ asset('images/new-collection2.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="image">
+                    <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
+                        </svg>
+                    </button>
+                </div>
+                <h3 class="text-lg font-normal text-black">Men's Summer T-shirt</h3>
+                <p class="mt-1 text-base font-normal text-black">$ 180</p>
+            </a>
+
+            {{-- Product 3 --}}
+            <a href="#" class="group flex flex-col">
+                <div class="relative mb-4 overflow-hidden h-[700px] bg-cream-100">
+                    <img src="{{ asset('images/new-collection3.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="image">
+                    <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
+                        </svg>
+                    </button>
+                </div>
+                <h3 class="text-lg font-normal text-black">Business Suit Set</h3>
+                <p class="mt-1 text-base font-normal text-black">$ 485</p>
+            </a>
+        </div>
+    </section>
+
+    {{-- Made for the N.Y KNITWEAR --}}
+    <section class="relative h-[600px] overflow-hidden">
+        <img src="{{ asset('images/bg-img.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="N.Y KNITWEAR">
+        <div class="absolute inset-0 bg-black/40"></div>
+
+        <div class="relative flex h-full flex-col items-center justify-center gap-8 px-[60px]">
+            <h2 class="text-center text-white">
+                <span class="block text-[32px] font-light tracking-wide">Made for the</span>
+                <span class="mt-2 block text-[48px] font-bold uppercase tracking-[4px]">N.Y KNITWEAR</span>
+            </h2>
+
+            <div class="flex items-center gap-4">
+                <a href="{{ route('products.index') }}" class="min-w-[160px] inline-flex items-center justify-center border-[1px] border-white bg-white px-6 py-3 text-sm font-medium tracking-[1.5px] text-black transition-colors hover:bg-gray-100">
+                    Shop
+                </a>
+                <a href="{{ route('products.index') }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
+                    Discover collection
+                </a>
+            </div>
+        </div>
+    </section>
+
+    {{-- Brands We Represent --}}
+    <section class="bg-white px-[60px] py-20">
+        <div class="mb-4 text-center">
+            <p class="text-xs tracking-[3px] text-gray-400">OUR PARTNERS</p>
+        </div>
+        <div class="mb-4 text-center">
+            <h2 class="font-serif text-[48px] font-normal italic text-black">Brands We Represent</h2>
+        </div>
+        <div class="mb-16 text-center">
+            <p class="text-base text-gray-600">Exclusive collections from the world's leading designers</p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-8">
+            {{-- Brand 1 --}}
+            <a href="" class="flex flex-col">
+                <div class="relative mb-6 h-[400px] overflow-hidden">
+                    <img src="{{ asset('images/blog1.webp') }}" class="h-full w-full object-cover" alt="Amara Cashmere">
+                </div>
+                <h3 class="mb-3 font-serif text-2xl font-normal text-black">Amara Cashmere</h3>
+                <p class="text-sm leading-relaxed text-gray-600">Italian handcrafted cashmere. Minimalist cuts, soft textures, and a neutral palette for everyday elegance.</p>
+            </a>
+
+            {{-- Brand 2 --}}
+            <a href="" class="flex flex-col">
+                <div class="relative mb-6 h-[400px] overflow-hidden">
+                    <img src="{{ asset('images/blog2.webp') }}" class="h-full w-full object-cover" alt="Maison Laine">
+                </div>
+                <h3 class="mb-3 font-serif text-2xl font-normal text-black">Maison Laine</h3>
+                <p class="text-sm leading-relaxed text-gray-600">Parisian knitwear with an avant-garde approach. Structural silhouettes, organic wool, and impeccable attention to detail.</p>
+            </a>
+
+            {{-- Brand 3 --}}
+            <a href="" class="flex flex-col">
+                <div class="relative mb-6 h-[400px] overflow-hidden">
+                    <img src="{{ asset('images/hero2.webp') }}" class="h-full w-full object-cover" alt="Norde Knit Studio">
+                </div>
+                <h3 class="mb-3 font-serif text-2xl font-normal text-black">Norde Knit Studio</h3>
+                <p class="text-sm leading-relaxed text-gray-600">Scandinavian design with Japanese attention to quality. Oversized forms, natural fibers, and warm simplicity.</p>
+            </a>
+        </div>
+
+        <div class="mt-16 flex justify-center">
+            <a href="{{ route('boutiques.index') }}" class="inline-flex items-center justify-center bg-black px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-gray-800">
+                VIEW ALL BRANDS
+                <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+                </svg>
+            </a>
         </div>
     </section>
 
     {{-- Filter bar --}}
-    <section class="flex items-end gap-4 bg-cream-50 px-[60px] py-6">
+    <!-- <section class="flex items-end gap-4 bg-cream-50 px-[60px] py-6">
         <form method="GET" action="{{ route('products.index') }}" class="flex flex-1 items-end gap-4">
             <div class="flex flex-1 flex-col gap-1.5">
                 <label class="text-2xs font-medium tracking-[1px] text-black">SIZE</label>
@@ -55,10 +295,10 @@
                 SEARCH
             </button>
         </form>
-    </section>
+    </section> -->
 
     {{-- Category cards --}}
-    <section class="flex gap-5 px-[60px] py-8">
+    <!-- <section class="flex gap-5 px-[60px] py-8">
         <a href="{{ route('products.index', ['category' => 'dresses']) }}" class="relative flex-1 overflow-hidden rounded-xl bg-cream-100" style="height:280px;">
             <span class="absolute bottom-6 left-6 text-lg font-bold tracking-[2px] text-white">DRESS HIRE</span>
         </a>
@@ -68,11 +308,11 @@
         <a href="{{ route('products.index', ['category' => 'bags']) }}" class="relative flex-1 overflow-hidden rounded-xl bg-cream-100" style="height:280px;">
             <span class="absolute bottom-6 left-6 text-lg font-bold tracking-[2px] text-white">BAG HIRE</span>
         </a>
-    </section>
+    </section> -->
 
     {{-- Boutiques carousel --}}
     @if ($featuredBoutiques->isNotEmpty())
-        <section class="px-10 py-10">
+        <!-- <section class="px-10 py-10">
             <div class="flex items-center justify-between px-[20px]">
                 <div></div>
                 <h2 class="text-base font-medium tracking-[3px] text-black">BROWSE OUR TRUSTED BOUTIQUES</h2>
@@ -94,11 +334,11 @@
                     <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>
                 </button>
             </div>
-        </section>
+        </section> -->
     @endif
 
     {{-- Trust section --}}
-    <section class="flex items-center justify-between bg-cream-200 px-[60px] py-12">
+    <!-- <section class="flex items-center justify-between bg-cream-200 px-[60px] py-12">
         <div class="flex flex-col items-center gap-3">
             <svg class="h-7 w-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5a1.5 1.5 0 0 0 1.5-1.5V4.5a1.5 1.5 0 0 0-1.5-1.5H3.75a1.5 1.5 0 0 0-1.5 1.5v15a1.5 1.5 0 0 0 1.5 1.5Z"/></svg>
             <span class="text-[13px] text-[#333]">Hundreds of styles</span>
@@ -119,5 +359,6 @@
             <span class="text-[13px] text-[#333]">Exclusive member</span>
             <span class="text-[13px] text-[#666]">benefits</span>
         </div>
-    </section>
+    </section> -->
+
 </x-layouts.public>
