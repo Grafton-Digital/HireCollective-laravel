@@ -7,7 +7,7 @@
             <img src="{{ asset('images/hero1.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
             <div class="overflow absolute top-0 left-0 w-full h-full bg-black/20"></div>
             <div class="relative">
-                <h1 class="max-w-[600px] font-serif text-[60px] italic leading-[1.2] text-white mb-2">Find your perfect outfit — all in one place</h1>
+                <h1 class="max-w-[600px] font-serif font-semibold text-[60px] leading-[1] text-white mb-2">Find your perfect outfit — all in one place</h1>
                 <p class="max-w-[400px] text-sm leading-relaxed text-white mb-2">Hundreds of styles brought together from some of Ireland's most trusted hire boutiques.</p>
                 <a href="{{ route('products.index') }}" class="mt-2 inline-flex items-center justify-center self-start bg-black px-6 py-3 text-xs font-medium tracking-[1.5px] text-white hover:bg-gray-800">
                     BROWSE NOW
@@ -18,19 +18,19 @@
             <img src="{{ asset('images/hero2.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="Fashion hero">
             <div class="overflow absolute top-0 left-0 w-full h-full bg-black/20"></div>
             <div class="relative">
-                <h3 class="max-w-[200px] text-center text-xl font-normal uppercase text-white">Learn how it works</h3>
+                <h3 class="font-serif max-w-[200px] text-center text-xl font-normal uppercase text-white">Learn how it works</h3>
             </div>
         </div>
     </section>
 
     {{-- Interactive text section --}}
     <section class="relative flex items-center justify-center bg-white px-[60px] py-20" x-data="{ hoveredWord: null }">
-        <p class="max-w-5xl text-center text-[38px] leading-[1.3] text-black italic">
+        <p class="max-w-5xl font-serif text-center text-[48px] leading-[1.3] text-black">
             From
             <span
                 @mouseenter="hoveredWord = 'hundreds'"
                 @mouseleave="hoveredWord = null"
-                class="relative font-bold cursor-pointer not-italic"
+                class="relative font-bold cursor-pointer"
             >
                 hundreds of styles
             </span>
@@ -38,14 +38,14 @@
             <span
                 @mouseenter="hoveredWord = 'realtime'"
                 @mouseleave="hoveredWord = null"
-                class="relative font-bold cursor-pointer not-italic"
+                class="relative font-bold cursor-pointer"
             >
                 real-time availability
             </span>, everything is
             <span
                 @mouseenter="hoveredWord = 'styled'"
                 @mouseleave="hoveredWord = null"
-                class="relative font-bold cursor-pointer not-italic"
+                class="relative font-bold cursor-pointer"
             >
                 styled for every occasion
             </span>
@@ -53,10 +53,9 @@
             <span
                 @mouseenter="hoveredWord = 'exclusive'"
                 @mouseleave="hoveredWord = null"
-                class="relative font-bold cursor-pointer not-italic"
+                class="relative font-bold cursor-pointer"
             >
-                exclusive members
-            </span>.
+                exclusive members</span>.
         </p>
 
         {{-- Hover image for "hundreds of styles" --}}
@@ -71,7 +70,7 @@
             class="absolute left-1/4 top-1/3 -translate-x-1/2 -translate-y-1/2"
             style="display: none;"
         >
-            <div class="h-48 w-40 overflow-hidden rounded-lg bg-cream-100 shadow-xl">
+            <div class="h-48 w-40 overflow-hidden bg-cream-100 shadow-xl">
                 <img src="{{ asset('images/hero1.webp') }}" class="w-full h-full object-cover" alt="hundreds of styles">
             </div>
         </div>
@@ -88,7 +87,7 @@
             class="absolute left-1/2 top-1/4 -translate-x-1/2 -translate-y-1/2"
             style="display: none;"
         >
-            <div class="h-48 w-40 overflow-hidden rounded-lg bg-cream-100 shadow-xl">
+            <div class="h-48 w-40 overflow-hidden bg-cream-100 shadow-xl">
                 <img src="{{ asset('images/hero1.webp') }}" class="w-full h-full object-cover" alt="real-time availability">
             </div>
         </div>
@@ -105,7 +104,7 @@
             class="absolute left-3/4 top-1/2 -translate-x-1/2 -translate-y-1/2"
             style="display: none;"
         >
-            <div class="h-48 w-40 overflow-hidden rounded-lg bg-cream-100 shadow-xl">
+            <div class="h-48 w-40 overflow-hidden bg-cream-100 shadow-xl">
                 <img src="{{ asset('images/hero1.webp') }}" class="w-full h-full object-cover" alt="styled for every occasion">
             </div>
         </div>
@@ -122,7 +121,7 @@
             class="absolute right-1/4 top-2/3 -translate-x-1/2 -translate-y-1/2"
             style="display: none;"
         >
-            <div class="h-48 w-40 overflow-hidden rounded-lg bg-cream-100 shadow-xl">
+            <div class="h-48 w-40 overflow-hidden bg-cream-100 shadow-xl">
                 <img src="{{ asset('images/hero1.webp') }}" class="w-full h-full object-cover" alt="exclusive members">
             </div>
         </div>
@@ -131,7 +130,7 @@
     {{-- Product Categories --}}
     <section class="pb-16">
         <div class="px-[60px] pb-12">
-            <h2 class="font-sans text-[40px] font-normal text-black">/PRODUCT CATEGORIES</h2>
+            <h2 class="font-serif text-[40px] font-normal text-black">PRODUCT CATEGORIES</h2>
         </div>
 
         {{-- Grid layout --}}
@@ -179,7 +178,7 @@
     {{-- New Collection --}}
     <section class="bg-white px-[60px] py-16">
         <div class="mb-12 flex items-center justify-between">
-            <h2 class="font-sans text-[40px] font-normal text-black">/NEW COLLECTION</h2>
+            <h2 class="font-serif text-[40px] font-normal text-black">NEW ARRIVALS</h2>
             <a href="{{ route('products.index') }}" class="flex items-center gap-2 text-base font-normal text-black hover:underline">
                 View all
                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -205,7 +204,7 @@
 
             {{-- Product 2 --}}
             <a href="#" class="group flex flex-col">
-                <div class="relative mb-4 overflow-hidden h-[600px] bg-cream-100">
+                <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
                     <img src="{{ asset('images/new-collection2.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="image">
                     <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
                         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -219,7 +218,7 @@
 
             {{-- Product 3 --}}
             <a href="#" class="group flex flex-col">
-                <div class="relative mb-4 overflow-hidden h-[700px] bg-cream-100">
+                <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
                     <img src="{{ asset('images/new-collection3.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="image">
                     <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
                         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -239,17 +238,14 @@
         <div class="absolute inset-0 bg-black/40"></div>
 
         <div class="relative flex h-full flex-col items-center justify-center gap-8 px-[60px]">
-            <h2 class="text-center text-white">
-                <span class="block text-[32px] font-light tracking-wide">Made for the</span>
-                <span class="mt-2 block text-[48px] font-bold uppercase tracking-[4px]">N.Y KNITWEAR</span>
+            <h2 class="font-serif text-center text-white">
+                <!-- <span class="block text-[32px] font-light tracking-wide">Made for the</span> -->
+                <span class="mt-2 block text-[48px] font-bold uppercase tracking-[1px] leading-[1.2]"><span class="font-normal">Register</span> <br>your boutique</span>
             </h2>
 
             <div class="flex items-center gap-4">
-                <a href="{{ route('products.index') }}" class="min-w-[160px] inline-flex items-center justify-center border-[1px] border-white bg-white px-6 py-3 text-sm font-medium tracking-[1.5px] text-black transition-colors hover:bg-gray-100">
-                    Shop
-                </a>
                 <a href="{{ route('products.index') }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
-                    Discover collection
+                   Register Now
                 </a>
             </div>
         </div>
@@ -257,14 +253,8 @@
 
     {{-- Brands We Represent --}}
     <section class="bg-white px-[60px] py-20">
-        <div class="mb-4 text-center">
-            <p class="text-xs tracking-[3px] text-gray-400">OUR PARTNERS</p>
-        </div>
-        <div class="mb-4 text-center">
-            <h2 class="font-serif text-[48px] font-normal italic text-black">Brands We Represent</h2>
-        </div>
-        <div class="mb-16 text-center">
-            <p class="text-base text-gray-600">Exclusive collections from the world's leading designers</p>
+        <div class="mb-12">
+            <h2 class="font-serif text-[48px] uppercase font-normal text-black">Brands We Represent</h2>
         </div>
 
         <div class="grid grid-cols-3 gap-8">
