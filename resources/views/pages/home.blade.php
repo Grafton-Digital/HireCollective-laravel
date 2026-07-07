@@ -25,8 +25,8 @@
 
     {{-- Interactive text section --}}
     <section class="relative flex items-center justify-center bg-white px-[60px] py-20" x-data="{ hoveredWord: null }">
-        <p class="max-w-5xl text-center italic text-[38px] leading-[1.3] text-black">
-            We've made Eclipse
+        <p class="max-w-5xl text-center text-[38px] leading-[1.3] text-black italic">
+            From
             <span
                 @mouseenter="hoveredWord = 'hundreds'"
                 @mouseleave="hoveredWord = null"
@@ -34,14 +34,29 @@
             >
                 hundreds of styles
             </span>
-            <span class="italic">the starting point for every</span>
+            to
             <span
-                @mouseenter="hoveredWord = 'bold'"
+                @mouseenter="hoveredWord = 'realtime'"
                 @mouseleave="hoveredWord = null"
                 class="relative font-bold cursor-pointer not-italic"
             >
-                bold look
-            </span>, and can't imagine building style without it/
+                real-time availability
+            </span>, everything is
+            <span
+                @mouseenter="hoveredWord = 'styled'"
+                @mouseleave="hoveredWord = null"
+                class="relative font-bold cursor-pointer not-italic"
+            >
+                styled for every occasion
+            </span>
+            and designed for
+            <span
+                @mouseenter="hoveredWord = 'exclusive'"
+                @mouseleave="hoveredWord = null"
+                class="relative font-bold cursor-pointer not-italic"
+            >
+                exclusive members
+            </span>.
         </p>
 
         {{-- Hover image for "hundreds of styles" --}}
@@ -53,28 +68,62 @@
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100 scale-100"
             x-transition:leave-end="opacity-0 scale-95"
-            class="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2"
+            class="absolute left-1/4 top-1/3 -translate-x-1/2 -translate-y-1/2"
             style="display: none;"
         >
             <div class="h-48 w-40 overflow-hidden rounded-lg bg-cream-100 shadow-xl">
-                <img src="{{ asset('images/hero1.webp') }}" class="w-full h-full object-cover -z-1" alt="image">
+                <img src="{{ asset('images/hero1.webp') }}" class="w-full h-full object-cover" alt="hundreds of styles">
             </div>
         </div>
 
-        {{-- Hover image for "bold look" --}}
+        {{-- Hover image for "real-time availability" --}}
         <div
-            x-show="hoveredWord === 'bold'"
+            x-show="hoveredWord === 'realtime'"
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0 scale-95"
             x-transition:enter-end="opacity-100 scale-100"
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100 scale-100"
             x-transition:leave-end="opacity-0 scale-95"
-            class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+            class="absolute left-1/2 top-1/4 -translate-x-1/2 -translate-y-1/2"
             style="display: none;"
         >
             <div class="h-48 w-40 overflow-hidden rounded-lg bg-cream-100 shadow-xl">
-                <img src="{{ asset('images/hero1.webp') }}" class="w-full h-full object-cover -z-1" alt="image">
+                <img src="{{ asset('images/hero1.webp') }}" class="w-full h-full object-cover" alt="real-time availability">
+            </div>
+        </div>
+
+        {{-- Hover image for "styled for every occasion" --}}
+        <div
+            x-show="hoveredWord === 'styled'"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+            class="absolute left-3/4 top-1/2 -translate-x-1/2 -translate-y-1/2"
+            style="display: none;"
+        >
+            <div class="h-48 w-40 overflow-hidden rounded-lg bg-cream-100 shadow-xl">
+                <img src="{{ asset('images/hero1.webp') }}" class="w-full h-full object-cover" alt="styled for every occasion">
+            </div>
+        </div>
+
+        {{-- Hover image for "exclusive members" --}}
+        <div
+            x-show="hoveredWord === 'exclusive'"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+            class="absolute right-1/4 top-2/3 -translate-x-1/2 -translate-y-1/2"
+            style="display: none;"
+        >
+            <div class="h-48 w-40 overflow-hidden rounded-lg bg-cream-100 shadow-xl">
+                <img src="{{ asset('images/hero1.webp') }}" class="w-full h-full object-cover" alt="exclusive members">
             </div>
         </div>
     </section>

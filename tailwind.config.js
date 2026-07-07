@@ -12,8 +12,8 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Inter', ...defaultTheme.fontFamily.sans],
-                serif: ['Playfair Display', ...defaultTheme.fontFamily.serif],
+                sans: ['Montserrat', ...defaultTheme.fontFamily.sans],
+                serif: ['Cormorant Garamond', ...defaultTheme.fontFamily.serif],
             },
             colors: {
                 cream: {
