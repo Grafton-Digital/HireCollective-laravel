@@ -43,7 +43,7 @@
         </div>
 
         {{-- Center: Logo --}}
-        <a href="{{ route('home') }}" class="font-serif text-xl tracking-[3px] text-black md:text-2xl">
+        <a href="{{ route('home') }}" class="font-serif text-[26px] tracking-[3px] text-black md:text-2xl">
             HIRE COLLECTIVE
         </a>
 
@@ -82,9 +82,10 @@
                     type="text"
                     name="search"
                     placeholder="Search dresses, bags, hats, boutiques..."
-                    class="flex-1 border-b-2 border-black bg-transparent py-2 text-base text-black placeholder-gray-400 focus:outline-none"
+                    class="flex-1 border-none border-black bg-transparent py-2 text-base text-black placeholder-gray-400 focus:outline-none"
                     x-ref="searchInput"
                     @keydown.escape="searchOpen = false"
+                    style="border-bottom: 1px solid #dadada;"
                 >
                 <button type="submit" class="ml-4 h-6 w-6 flex-shrink-0">
                     <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -142,7 +143,7 @@
         <div class="bg-[#1A1A1A] px-[60px] py-12">
             <div class="flex flex-col gap-10 md:flex-row md:gap-10">
                 <div class="flex-1">
-                    <p class="font-serif text-lg tracking-[2px] text-white">HIRE COLLECTIVE</p>
+                    <p class="font-serif text-[24px] tracking-[2px] text-white">HIRE COLLECTIVE</p>
                     <p class="mt-3 text-[14px] leading-relaxed text-[#AAA]">Ireland's luxury multi-boutique fashion hire marketplace. Discover, hire, and wear designer pieces from trusted Irish boutiques.</p>
                 </div>
                 <div class="flex-1">
