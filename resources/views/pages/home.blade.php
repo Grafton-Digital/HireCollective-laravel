@@ -4,28 +4,28 @@
     {{-- Hero --}}
     <section class="flex bg-cream-200 h-[600px]">
         <div class="relative flex flex-col w-[70%] justify-end gap-4 px-[60px] py-20">
-            <img src="{{ asset('images/hero1.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
+            <img src="{{ asset('storage/images/hero1.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
             <div class="overflow absolute top-0 left-0 w-full h-full bg-black/20"></div>
             <div class="relative">
-                <h1 class="max-w-[600px] font-serif font-semibold text-[60px] leading-[1] text-white mb-2">Find your perfect outfit — all in one place</h1>
-                <p class="max-w-[400px] text-sm leading-relaxed text-white mb-2">Hundreds of styles brought together from some of Ireland's most trusted hire boutiques.</p>
-                <a href="{{ route('products.index') }}" class="mt-2 inline-flex items-center justify-center self-start bg-black px-6 py-3 text-xs font-medium tracking-[1.5px] text-white hover:bg-gray-800">
+                <h1 class="animate max-w-[600px] font-serif font-semibold text-[60px] leading-[1] text-white mb-2">Find your perfect outfit — all in one place</h1>
+                <p class="animate animate-delay-100 max-w-[400px] text-sm leading-relaxed text-white mb-2">Hundreds of styles brought together from some of Ireland's most trusted hire boutiques.</p>
+                <a href="{{ route('products.index') }}" class="animate animate-delay-200 mt-2 inline-flex items-center justify-center self-start bg-black px-6 py-3 text-xs font-medium tracking-[1.5px] text-white hover:bg-gray-800">
                     BROWSE NOW
                 </a>
             </div>
         </div>
         <div class="relative flex justify-center items-center w-[30%] overflow-hidden">
-            <img src="{{ asset('images/hero2.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="Fashion hero">
+            <img src="{{ asset('storage/images/hero2.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="Fashion hero">
             <div class="overflow absolute top-0 left-0 w-full h-full bg-black/20"></div>
             <div class="relative">
-                <h3 class="font-serif max-w-[200px] text-center text-xl font-normal uppercase text-white">Learn how it works</h3>
+                <h3 class="animate animate-delay-300 font-serif max-w-[200px] text-center text-xl font-normal uppercase text-white">Learn how it works</h3>
             </div>
         </div>
     </section>
 
     {{-- Interactive text section --}}
     <section class="relative flex items-center justify-center bg-white px-[60px] py-20" x-data="{ hoveredWord: null }">
-        <p class="max-w-5xl font-serif text-center text-[48px] leading-[1.3] text-black">
+        <p class="animate max-w-5xl font-serif text-center text-[48px] leading-[1.3] text-black">
             From
             <span
                 @mouseenter="hoveredWord = 'hundreds'"
@@ -71,7 +71,7 @@
             style="display: none;"
         >
             <div class="h-48 w-40 overflow-hidden bg-cream-100 shadow-xl">
-                <img src="{{ asset('images/cat-dresses.jpg') }}" class="w-full h-full object-cover" alt="hundreds of styles">
+                <img src="{{ asset('storage/images/cat-dresses.jpg') }}" class="w-full h-full object-cover" alt="hundreds of styles">
             </div>
         </div>
 
@@ -88,7 +88,7 @@
             style="display: none;"
         >
             <div class="h-48 w-40 overflow-hidden bg-cream-100 shadow-xl">
-                <img src="{{ asset('images/cat-suits.jpg') }}" class="w-full h-full object-cover" alt="real-time availability">
+                <img src="{{ asset('storage/images/cat-suits.jpg') }}" class="w-full h-full object-cover" alt="real-time availability">
             </div>
         </div>
 
@@ -105,7 +105,7 @@
             style="display: none;"
         >
             <div class="h-48 w-40 overflow-hidden bg-cream-100 shadow-xl">
-                <img src="{{ asset('images/image1.jpg') }}" class="w-full h-full object-cover" alt="styled for every occasion">
+                <img src="{{ asset('storage/images/image1.jpg') }}" class="w-full h-full object-cover" alt="styled for every occasion">
             </div>
         </div>
 
@@ -122,7 +122,7 @@
             style="display: none;"
         >
             <div class="h-48 w-40 overflow-hidden bg-cream-100 shadow-xl">
-                <img src="{{ asset('images/image1.webp') }}" class="w-full h-full object-cover" alt="exclusive members">
+                <img src="{{ asset('storage/images/image1.webp') }}" class="w-full h-full object-cover" alt="exclusive members">
             </div>
         </div>
     </section>
@@ -130,7 +130,7 @@
     {{-- Product Categories --}}
     <section class="pb-16">
         <div class="px-[60px] pb-12">
-            <h2 class="font-serif text-[40px] font-normal text-black">PRODUCT CATEGORIES</h2>
+            <h2 class="animate font-serif text-[40px] font-normal text-black">PRODUCT CATEGORIES</h2>
         </div>
 
         {{-- Grid layout --}}
@@ -138,13 +138,13 @@
             {{-- Top row: 2 items --}}
             <div class="grid grid-cols-2">
                 <a href="{{ route('products.index', ['category' => 'pants']) }}" class="group relative h-[400px] overflow-hidden">
-                    <img src="{{ asset('images/cat-all.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
+                    <img src="{{ asset('storage/images/cat-all.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
                     <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
                         <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">All products</span>
                     </div>
                 </a>
                 <a href="{{ route('products.index', ['category' => 'tops']) }}" class="group relative h-[400px] overflow-hidden">
-                    <img src="{{ asset('images/cat-suits.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
+                    <img src="{{ asset('storage/images/cat-suits.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
                     <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
                         <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">Suits</span>
                     </div>
@@ -154,19 +154,19 @@
             {{-- Bottom row: 3 items --}}
             <div class="grid grid-cols-3">
                 <a href="{{ route('products.index', ['category' => 'dresses']) }}" class="group relative h-[400px] overflow-hidden">
-                    <img src="{{ asset('images/cat-dresses.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
+                    <img src="{{ asset('storage/images/cat-dresses.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
                     <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
                         <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">Dresses</span>
                     </div>
                 </a>
                 <a href="{{ route('products.index', ['category' => 'sweaters']) }}" class="group relative h-[400px] overflow-hidden">
-                    <img src="{{ asset('images/cat-hats.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
+                    <img src="{{ asset('storage/images/cat-hats.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
                     <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
                         <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">Hats</span>
                     </div>
                 </a>
                 <a href="{{ route('products.index', ['category' => 'outerwear']) }}" class="group relative h-[400px] overflow-hidden">
-                    <img src="{{ asset('images/cat-bags.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
+                    <img src="{{ asset('storage/images/cat-bags.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
                     <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
                         <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">Bags</span>
                     </div>
@@ -189,9 +189,9 @@
 
         <div class="grid grid-cols-3 gap-6">
             {{-- Product 1 --}}
-            <a href="#" class="group flex flex-col">
+            <a href="#" class="group flex flex-col animate [&:hover_img]:scale-105">
                 <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
-                    <img src="{{ asset('images/new-collection1.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="image">
+                    <img src="{{ asset('storage/images/new-collection1.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500" alt="image">
                     <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
                         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                             <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
@@ -203,9 +203,9 @@
             </a>
 
             {{-- Product 2 --}}
-            <a href="#" class="group flex flex-col">
+            <a href="#" class="group flex flex-col animate animate-delay-100 [&:hover_img]:scale-105">
                 <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
-                    <img src="{{ asset('images/new-collection2.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="image">
+                    <img src="{{ asset('storage/images/new-collection2.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500" alt="image">
                     <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
                         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                             <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
@@ -217,9 +217,9 @@
             </a>
 
             {{-- Product 3 --}}
-            <a href="#" class="group flex flex-col">
+            <a href="#" class="group flex flex-col animate animate-delay-200 [&:hover_img]:scale-105">
                 <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
-                    <img src="{{ asset('images/new-collection3.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="image">
+                    <img src="{{ asset('storage/images/new-collection3.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500" alt="image">
                     <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
                         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                             <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
@@ -234,16 +234,15 @@
 
     {{-- Made for the N.Y KNITWEAR --}}
     <section class="relative h-[600px] overflow-hidden">
-        <img src="{{ asset('images/bg-img.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="N.Y KNITWEAR">
+        <img src="{{ asset('storage/images/bg-img.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="N.Y KNITWEAR">
         <div class="absolute inset-0 bg-black/40"></div>
 
         <div class="relative flex h-full flex-col items-center justify-center gap-8 px-[60px]">
-            <h2 class="font-serif text-center text-white">
-                <!-- <span class="block text-[32px] font-light tracking-wide">Made for the</span> -->
+            <h2 class="animate font-serif text-center text-white">
                 <span class="mt-2 block text-[48px] font-bold uppercase tracking-[1px] leading-[1.2]"><span class="font-normal">Register</span> <br>your boutique</span>
             </h2>
 
-            <div class="flex items-center gap-4">
+            <div class="animate animate-delay-100 flex items-center gap-4">
                 <a href="{{ route('products.index') }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
                    Register Now
                 </a>
@@ -254,39 +253,39 @@
     {{-- Brands We Represent --}}
     <section class="bg-white px-[60px] py-20">
         <div class="mb-12">
-            <h2 class="font-serif text-[48px] uppercase font-normal text-black">Brands We Represent</h2>
+            <h2 class="animate font-serif text-[48px] uppercase font-normal text-black">Brands We Represent</h2>
         </div>
 
         <div class="grid grid-cols-3 gap-8">
             {{-- Brand 1 --}}
-            <a href="" class="flex flex-col">
+            <a href="" class="animate flex flex-col [&:hover_img]:scale-105">
                 <div class="relative mb-6 h-[400px] overflow-hidden">
-                    <img src="{{ asset('images/blog1.webp') }}" class="h-full w-full object-cover" alt="Amara Cashmere">
+                    <img src="{{ asset('storage/images/blog1.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Amara Cashmere">
                 </div>
                 <h3 class="mb-3 font-serif text-2xl font-normal text-black">Amara Cashmere</h3>
                 <p class="text-sm leading-relaxed text-gray-600">Italian handcrafted cashmere. Minimalist cuts, soft textures, and a neutral palette for everyday elegance.</p>
             </a>
 
             {{-- Brand 2 --}}
-            <a href="" class="flex flex-col">
+            <a href="" class="animate animate-delay-100 flex flex-col [&:hover_img]:scale-105">
                 <div class="relative mb-6 h-[400px] overflow-hidden">
-                    <img src="{{ asset('images/blog2.webp') }}" class="h-full w-full object-cover" alt="Maison Laine">
+                    <img src="{{ asset('storage/images/blog2.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Maison Laine">
                 </div>
                 <h3 class="mb-3 font-serif text-2xl font-normal text-black">Maison Laine</h3>
                 <p class="text-sm leading-relaxed text-gray-600">Parisian knitwear with an avant-garde approach. Structural silhouettes, organic wool, and impeccable attention to detail.</p>
             </a>
 
             {{-- Brand 3 --}}
-            <a href="" class="flex flex-col">
+            <a href="" class="animate animate-delay-200 flex flex-col [&:hover_img]:scale-105">
                 <div class="relative mb-6 h-[400px] overflow-hidden">
-                    <img src="{{ asset('images/hero2.webp') }}" class="h-full w-full object-cover" alt="Norde Knit Studio">
+                    <img src="{{ asset('storage/images/hero2.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Norde Knit Studio">
                 </div>
                 <h3 class="mb-3 font-serif text-2xl font-normal text-black">Norde Knit Studio</h3>
                 <p class="text-sm leading-relaxed text-gray-600">Scandinavian design with Japanese attention to quality. Oversized forms, natural fibers, and warm simplicity.</p>
             </a>
         </div>
 
-        <div class="mt-16 flex justify-center">
+        <div class="animate mt-16 flex justify-center">
             <a href="{{ route('boutiques.index') }}" class="inline-flex items-center justify-center bg-black px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-gray-800">
                 VIEW ALL BRANDS
                 <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

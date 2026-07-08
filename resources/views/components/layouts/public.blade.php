@@ -37,7 +37,7 @@
             {{-- Navigation links --}}
             <nav class="hidden items-center gap-6 md:flex">
                 <a href="#" class="text-xs text-red-500 font-normal tracking-[1px] hover:underline">NEW</a>
-                <a href="{{ route('products.index') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">PRODUCTS</a>
+                <a href="{{ route('products.index') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">All PRODUCTS</a>
                 <a href="{{ route('pages.show', 'about') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">HOW IT WORKS</a>
             </nav>
         </div>
@@ -100,16 +100,16 @@
         <div
             x-show="mobileMenuOpen"
             x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
+            x-transition:enter-start="-translate-x-full"
+            x-transition:enter-end="translate-x-0"
             x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
-            class="fixed inset-0 z-50 bg-cream-50"
+            x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="-translate-x-full"
+            class="fixed w-[300px] inset-0 z-50 bg-cream-50"
             style="display: none;"
         >
             {{-- Close button --}}
-            <div class="absolute left-4 top-4 md:left-[60px]">
+            <div class="absolute left-[24px] top-[54px]">
                 <button @click="mobileMenuOpen = false" class="h-6 w-6">
                     <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -118,9 +118,9 @@
             </div>
 
             {{-- Menu items --}}
-            <nav class="flex h-full flex-col items-center justify-center gap-6">
+            <nav class="flex h-full flex-col justify-center gap-6 p-6">
                 <a href="#" class="text-2xl font-normal tracking-[1px] text-black hover:underline">NEW</a>
-                <a href="{{ route('products.index') }}" class="text-2xl font-normal tracking-[1px] text-black hover:underline">PRODUCTS</a>
+                <a href="{{ route('products.index') }}" class="text-2xl font-normal tracking-[1px] text-black hover:underline">All PRODUCTS</a>
                 <a href="{{ route('products.index', ['category' => 'dresses']) }}" class="text-2xl font-normal tracking-[1px] text-black hover:underline">DRESSES</a>
                 <a href="{{ route('products.index', ['category' => 'hats']) }}" class="text-2xl font-normal tracking-[1px] text-black hover:underline">HATS</a>
                 <a href="{{ route('products.index', ['category' => 'bags']) }}" class="text-2xl font-normal tracking-[1px] text-black hover:underline">BAGS</a>
