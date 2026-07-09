@@ -19,9 +19,7 @@
 /public/build
 /public/fonts-manifest.dev.json
 /public/hot
-/public/storage/*
-!/public/storage/images
-!/public/storage/.gitignore
+/public/storage
 
 /storage/*.key
 /storage/pail
