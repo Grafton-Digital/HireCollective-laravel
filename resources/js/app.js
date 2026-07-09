@@ -1,4 +1,8 @@
 import Alpine from 'alpinejs';
+import Swiper from 'swiper';
+import { Navigation, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 window.Alpine = Alpine;
 
@@ -29,5 +33,32 @@ document.addEventListener('DOMContentLoaded', () => {
     animateElements.forEach(element => {
         observer.observe(element);
     });
+
+    // Initialize Swiper Carousel
+    const brandsSwiper = document.querySelector('.brands-swiper');
+    if (brandsSwiper) {
+        new Swiper('.brands-swiper', {
+            modules: [Navigation, Autoplay],
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next-brands',
+                prevEl: '.swiper-button-prev-brands',
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 2,
+                },
+                1024: {
+                    slidesPerView: 3,
+                },
+            },
+        });
+    }
 
 });

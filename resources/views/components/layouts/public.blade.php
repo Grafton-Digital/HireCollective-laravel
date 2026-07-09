@@ -48,7 +48,7 @@
         </a>
 
         {{-- Right section: Icons --}}
-        <div class="flex w-full max-w-[305px] items-center justify-end gap-4">
+        <div class="flex w-full max-w-[338px] items-center justify-end gap-4">
             <button @click="searchOpen = true" class="h-5 w-5">
                 <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             </button>
