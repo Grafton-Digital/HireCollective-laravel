@@ -17,6 +17,16 @@
     <section class="flex items-end gap-4 bg-cream-50 px-[60px] py-6">
         <form method="GET" action="{{ route('products.index') }}" class="flex flex-1 items-end gap-4">
             <div class="flex flex-1 flex-col gap-1.5">
+                <label class="text-2xs font-medium tracking-[1px] text-black">CATEGORY</label>
+                <select name="category" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                    <option value="all">All Categories</option>
+                    <option value="suits">Suits</option>
+                    <option value="dresses">Dresses</option>
+                    <option value="hats">Hats</option>
+                    <option value="bags">Bags</option>
+                </select>
+            </div>
+            <div class="flex flex-1 flex-col gap-1.5">
                 <label class="text-2xs font-medium tracking-[1px] text-black">SIZE</label>
                 <select name="size" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
                     <option value="">All Sizes</option>
@@ -32,20 +42,28 @@
                 </select>
             </div>
             <div class="flex flex-1 flex-col gap-1.5">
-                <label class="text-2xs font-medium tracking-[1px] text-black">CATEGORY</label>
-                <select name="category" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
-                    <option value="">All Categories</option>
-                </select>
-            </div>
-            <div class="flex flex-1 flex-col gap-1.5">
-                <label class="text-2xs font-medium tracking-[1px] text-black">OCCASION</label>
+                <label class="text-2xs font-medium tracking-[1px] uppercase text-black">Designer</label>
                 <select name="occasion" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
-                    <option value="">All Occasions</option>
+                    <option value="">All Designers</option>
                 </select>
             </div>
             <div class="flex flex-1 flex-col gap-1.5">
-                <label class="text-2xs font-medium tracking-[1px] text-black">DATE</label>
-                <input type="text" name="date" placeholder="Select date" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                <label class="text-2xs font-medium tracking-[1px] uppercase text-black">Region/Location</label>
+                <select name="location" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                    <option value="">All Locations</option>
+                </select>
+            </div>
+            <div class="flex flex-1 flex-col gap-1.5">
+                <label class="text-2xs font-medium tracking-[1px] uppercase text-black">Price</label>
+                <select name="price" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                    <option value="">All Prices</option>
+                </select>
+            </div>
+            <div class="flex flex-1 flex-col gap-1.5">
+                <label class="text-2xs font-medium tracking-[1px] uppercase text-black">Event tags</label>
+                <select name="price" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                    <option value="">All Tags</option>
+                </select>
             </div>
             <button type="submit" class="flex h-10 w-[120px] items-center justify-center bg-black text-xs font-medium tracking-[1.5px] text-white hover:bg-gray-800">
                 SEARCH
@@ -75,7 +93,7 @@
             x-transition:leave="transition ease-in duration-300"
             x-transition:leave-start="translate-x-0"
             x-transition:leave-end="translate-x-full"
-            class="relative w-full inset-0 z-50 flex items-center bg-white px-4 md:px-[60px]"
+            class="relative w-full inset-0 z-0 flex items-center bg-white px-4 md:px-[60px]"
             style="display: none;"
         >
 
