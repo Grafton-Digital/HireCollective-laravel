@@ -129,7 +129,7 @@
 
 
     {{-- Featured Edit of the Week --}}
-    <section class="bg-[#b69d851a] px-[60px] py-16">
+    <section class="bg-cream-50 px-[60px] py-16">
         <div class="mb-12 flex items-center justify-between">
             <h2 class="animate font-serif text-[48px] uppercase font-normal text-black">Featured Edit of the Week</h2>
             <div class="flex items-center gap-4">
