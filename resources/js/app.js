@@ -34,7 +34,34 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(element);
     });
 
-    // Initialize Swiper Carousel
+    // Initialize Featured Edit Swiper
+    const featuredSwiper = document.querySelector('.featured-swiper');
+    if (featuredSwiper) {
+        new Swiper('.featured-swiper', {
+            modules: [Navigation, Autoplay],
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next-featured',
+                prevEl: '.swiper-button-prev-featured',
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 2,
+                },
+                1024: {
+                    slidesPerView: 3,
+                },
+            },
+        });
+    }
+
+    // Initialize Brands Swiper
     const brandsSwiper = document.querySelector('.brands-swiper');
     if (brandsSwiper) {
         new Swiper('.brands-swiper', {

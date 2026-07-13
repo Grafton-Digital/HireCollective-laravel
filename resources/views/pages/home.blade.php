@@ -127,6 +127,96 @@
         </div>
     </section>
 
+
+    {{-- Featured Edit of the Week --}}
+    <section class="bg-white px-[60px] pb-20">
+        <div class="mb-12 flex items-center justify-between">
+            <h2 class="animate font-serif text-[48px] uppercase font-normal text-black">Featured Edit of the Week</h2>
+            <div class="flex items-center gap-4">
+                <button class="swiper-button-prev-featured flex h-12 w-12 items-center justify-center border border-black bg-transparent text-black transition-colors hover:bg-black hover:text-white">
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/>
+                    </svg>
+                </button>
+                <button class="swiper-button-next-featured flex h-12 w-12 items-center justify-center border border-black bg-transparent text-black transition-colors hover:bg-black hover:text-white">
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="featured-swiper swiper relative">
+            <div class="swiper-wrapper">
+                {{-- Brand 1 --}}
+                <div class="swiper-slide">
+                    <a href="" class="flex flex-col [&:hover_img]:scale-105">
+                        <div class="relative mb-6 h-[400px] overflow-hidden">
+                            <img src="{{ asset('images/blog1.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Amara Cashmere">
+                        </div>
+                        <h3 class="mb-3 font-serif text-2xl font-normal text-black">Amara Cashmere</h3>
+                        <p class="text-sm leading-relaxed text-gray-600">Italian handcrafted cashmere. Minimalist cuts, soft textures, and a neutral palette for everyday elegance.</p>
+                    </a>
+                </div>
+
+                {{-- Brand 2 --}}
+                <div class="swiper-slide">
+                    <a href="" class="flex flex-col [&:hover_img]:scale-105">
+                        <div class="relative mb-6 h-[400px] overflow-hidden">
+                            <img src="{{ asset('images/blog2.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Maison Laine">
+                        </div>
+                        <h3 class="mb-3 font-serif text-2xl font-normal text-black">Maison Laine</h3>
+                        <p class="text-sm leading-relaxed text-gray-600">Parisian knitwear with an avant-garde approach. Structural silhouettes, organic wool, and impeccable attention to detail.</p>
+                    </a>
+                </div>
+
+                {{-- Brand 3 --}}
+                <div class="swiper-slide">
+                    <a href="" class="flex flex-col [&:hover_img]:scale-105">
+                        <div class="relative mb-6 h-[400px] overflow-hidden">
+                            <img src="{{ asset('images/hero2.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Norde Knit Studio">
+                        </div>
+                        <h3 class="mb-3 font-serif text-2xl font-normal text-black">Norde Knit Studio</h3>
+                        <p class="text-sm leading-relaxed text-gray-600">Scandinavian design with Japanese attention to quality. Oversized forms, natural fibers, and warm simplicity.</p>
+                    </a>
+                </div>
+
+                <div class="swiper-slide">
+                    <a href="" class="flex flex-col [&:hover_img]:scale-105">
+                        <div class="relative mb-6 h-[400px] overflow-hidden">
+                            <img src="{{ asset('images/product-cat1.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Amara Cashmere">
+                        </div>
+                        <h3 class="mb-3 font-serif text-2xl font-normal text-black">Amara Cashmere</h3>
+                        <p class="text-sm leading-relaxed text-gray-600">Italian handcrafted cashmere. Minimalist cuts, soft textures, and a neutral palette for everyday elegance.</p>
+                    </a>
+                </div>
+
+                {{-- Brand 2 --}}
+                <div class="swiper-slide">
+                    <a href="" class="flex flex-col [&:hover_img]:scale-105">
+                        <div class="relative mb-6 h-[400px] overflow-hidden">
+                            <img src="{{ asset('images/product-cat2.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Maison Laine">
+                        </div>
+                        <h3 class="mb-3 font-serif text-2xl font-normal text-black">Maison Laine</h3>
+                        <p class="text-sm leading-relaxed text-gray-600">Parisian knitwear with an avant-garde approach. Structural silhouettes, organic wool, and impeccable attention to detail.</p>
+                    </a>
+                </div>
+
+                {{-- Brand 3 --}}
+                <div class="swiper-slide">
+                    <a href="" class="flex flex-col [&:hover_img]:scale-105">
+                        <div class="relative mb-6 h-[400px] overflow-hidden">
+                            <img src="{{ asset('images/product-cat3.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Norde Knit Studio">
+                        </div>
+                        <h3 class="mb-3 font-serif text-2xl font-normal text-black">Norde Knit Studio</h3>
+                        <p class="text-sm leading-relaxed text-gray-600">Scandinavian design with Japanese attention to quality. Oversized forms, natural fibers, and warm simplicity.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
     {{-- Product Categories --}}
     <section class="pb-16">
         <div class="px-[60px] pb-12">
