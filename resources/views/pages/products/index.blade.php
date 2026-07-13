@@ -74,7 +74,7 @@
     {{-- Filter bar --}}
     <section class="flex items-center justify-end bg-white px-[60px] py-4" x-data="{ filterOpen: false }">
 
-        <div class="flex flex-row mr-2">
+        <!-- <div class="flex flex-row mr-2">
             <button type="button" class="filter-btn flex items-center" @click="filterOpen = true" x-show="!filterOpen">
                 <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"/></svg>
                 <span class="text-[11px] font-semibold tracking-[1px] ml-1">FILTERS</span>
@@ -138,7 +138,7 @@
                 </select>
             </form>
         
-        </div>
+        </div> -->
 
         <div class="flex items-center gap-2">
             <span class="w-[80px] px-2 text-xs text-[#666]">{{ $products->total() }} {{ Str::plural(request('category', 'item'), $products->total()) }}</span>
