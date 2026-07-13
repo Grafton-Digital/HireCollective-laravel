@@ -129,7 +129,7 @@
 
 
     {{-- Featured Edit of the Week --}}
-    <section class="bg-white px-[60px] pb-20">
+    <section class="bg-white px-[60px] py-16">
         <div class="mb-12 flex items-center justify-between">
             <h2 class="animate font-serif text-[48px] uppercase font-normal text-black">Featured Edit of the Week</h2>
             <div class="flex items-center gap-4">
@@ -249,7 +249,7 @@
 
 
     {{-- Product Categories --}}
-    <section class="pb-16">
+    <section class="py-16">
         <div class="px-[60px] pb-12">
             <h2 class="animate font-serif text-[40px] font-normal text-black">PRODUCT CATEGORIES</h2>
         </div>
