@@ -26,6 +26,21 @@ class RegistrationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertRedirect('/admin');
+    }
+
+    public function test_new_users_are_registered_as_boutique_owner(): void
+    {
+        $this->post('/register', [
+            'name' => 'Test Owner',
+            'email' => 'owner@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'owner@example.com',
+            'role' => 'boutique_owner',
+        ]);
     }
 }

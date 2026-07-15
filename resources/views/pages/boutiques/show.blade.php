@@ -3,7 +3,7 @@
     <x-slot:metaDescription>{{ Str::limit(strip_tags($boutique->description), 160) }}</x-slot:metaDescription>
 
     {{-- Breadcrumb --}}
-    <div class="flex items-center gap-2 bg-cream-50 px-[60px] py-3">
+    <div class="flex items-center gap-2 px-[60px] py-3">
         <a href="{{ route('home') }}" class="text-xs text-[#666] hover:underline">Home</a>
         <span class="text-xs text-[#666]">&gt;</span>
         <a href="{{ route('boutiques.index') }}" class="text-xs text-[#666] hover:underline">Boutiques</a>
@@ -12,8 +12,34 @@
     </div>
 
     {{-- Hero section --}}
-    <section class="flex bg-cream-200 px-[60px]" style="height:380px;">
-        <div class="flex flex-col justify-center gap-4 py-10" style="width:50%;">
+    <section class="flex px-[60px] border border-b-[#e5e7eb]" style="height:380px;">
+
+        <div class="flex py-16 gap-x-12">
+
+            <div class="flex w-[200px] h-[200px] rounded-[50%] bg-gray-300 overflow-hidden">
+                @if ($boutique->logo)
+                    <img src="{{ Storage::url($boutique->logo) }}" alt="{{ $boutique->name }}" class="h-full w-full object-contain">
+                @else
+                    <div class="h-full w-full flex items-center justify-center bg-cream-100">
+                        <span class="font-serif text-6xl font-bold text-black">{{ substr($boutique->name, 0, 1) }}</span>
+                    </div>
+                @endif
+            </div>
+
+            <div class="flex flex-col" style="width: calc(100% - 248px)">
+                <h1 class="font-serif text-[56px] italic text-black">{{ $boutique->name }}</h1>
+                <div class="flex items-center gap-1.5 mb-3">
+                    <svg class="h-3.5 w-3.5 text-[#666]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/></svg>
+                    <span class="text-[11px] text-[#666]">{{ $boutique->city }}, {{ $boutique->county }}</span>
+                </div>
+                <div class="text-sm leading-relaxed text-gray-600">
+                    {{ $boutique->description }}
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- <div class="flex flex-col justify-center gap-4 py-10" style="width:50%;">
             <h1 class="font-serif text-[42px] italic text-black">{{ $boutique->name }}</h1>
             <div class="flex items-center gap-1.5">
                 <svg class="h-3.5 w-3.5 text-[#666]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/></svg>
@@ -52,18 +78,121 @@
                     </a>
                 @endif
             </div>
-        </div>
-        <div class="flex-1 overflow-hidden">
+        </div> -->
+        <!-- <div class="flex-1 overflow-hidden">
             @if ($boutique->cover_image)
                 <img src="{{ Storage::url($boutique->cover_image) }}" alt="{{ $boutique->name }}" class="h-full w-full object-cover">
             @else
                 <div class="h-full w-full bg-cream-100"></div>
             @endif
+        </div> -->
+    </section>
+
+    <section class="flex items-end gap-4 px-[60px] py-6">
+        <form method="GET" action="{{ route('boutiques.show', $boutique) }}" class="flex flex-1 items-end gap-4">
+
+            <div class="flex flex-1 flex-col gap-1.5">
+                <label class="text-2xs font-medium tracking-[1px] text-black">CATEGORY</label>
+                <select name="category" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                    <option value="">All Categories</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->slug }}" {{ request('category') == $category->slug ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="flex flex-1 flex-col gap-1.5">
+                <label class="text-2xs font-medium tracking-[1px] text-black">SIZE</label>
+                <select name="size" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                    <option value="">All Sizes</option>
+                    @for ($i = 6; $i <= 18; $i += 2)
+                        <option value="{{ $i }}" {{ request('size') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                    @endfor
+                </select>
+            </div>
+            <div class="flex flex-1 flex-col gap-1.5">
+                <label class="text-2xs font-medium tracking-[1px] text-black">COLOUR</label>
+                <select name="colour" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                    <option value="">All Colours</option>
+                    @foreach($colours as $colour)
+                        <option value="{{ $colour->slug }}" {{ request('colour') == $colour->slug ? 'selected' : '' }}>
+                            {{ $colour->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="flex flex-1 flex-col gap-1.5">
+                <label class="text-2xs font-medium tracking-[1px] uppercase text-black">Designer</label>
+                <select name="designer" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                    <option value="">All Designers</option>
+                    @foreach($designers as $designer)
+                        <option value="{{ $designer }}" {{ request('designer') == $designer ? 'selected' : '' }}>
+                            {{ $designer }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="flex flex-1 flex-col gap-1.5">
+                <label class="text-2xs font-medium tracking-[1px] uppercase text-black">County</label>
+                <select name="county" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                    <option value="">All Counties</option>
+                    @foreach($counties as $county)
+                        <option value="{{ $county }}" {{ request('county') == $county ? 'selected' : '' }}>
+                            {{ $county }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="flex flex-1 flex-col gap-1.5">
+                <label class="text-2xs font-medium tracking-[1px] uppercase text-black">Price Range</label>
+                <select name="price_range" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                    <option value="">All Prices</option>
+                    <option value="0-50" {{ request('price_range') == '0-50' ? 'selected' : '' }}>€0 - €50</option>
+                    <option value="50-100" {{ request('price_range') == '50-100' ? 'selected' : '' }}>€50 - €100</option>
+                    <option value="100-150" {{ request('price_range') == '100-150' ? 'selected' : '' }}>€100 - €150</option>
+                    <option value="150-200" {{ request('price_range') == '150-200' ? 'selected' : '' }}>€150 - €200</option>
+                    <option value="200+" {{ request('price_range') == '200+' ? 'selected' : '' }}>€200+</option>
+                </select>
+            </div>
+            <div class="flex flex-1 flex-col gap-1.5">
+                <label class="text-2xs font-medium tracking-[1px] uppercase text-black">Occasion</label>
+                <select name="occasion" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                    <option value="">All Occasions</option>
+                    @foreach($occasions as $occasion)
+                        <option value="{{ $occasion->slug }}" {{ request('occasion') == $occasion->slug ? 'selected' : '' }}>
+                            {{ $occasion->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <button type="submit" class="flex h-10 w-[120px] items-center justify-center bg-black text-xs font-medium tracking-[1.5px] text-white hover:bg-gray-800">
+                SEARCH
+            </button>
+        </form>
+    </section>
+
+    <section class="flex items-end gap-4 px-[60px] py-6">
+        <div class="flex w-full items-center justify-between">
+            <div class="text-sm text-gray-600">
+                Showing {{ $products->count() }} product{{ $products->count() !== 1 ? 's' : '' }}
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-sm text-gray-600">Sort by:</span>
+                <select name="sort" onchange="window.location.href=this.value" class="border border-gray-300 bg-white px-3 py-2 pr-[35px] text-sm text-black focus:border-black focus:outline-none focus:ring-1 focus:ring-black">
+                    <option value="{{ route('boutiques.show', array_merge(['boutique' => $boutique], request()->except('sort'))) }}" {{ !request('sort') ? 'selected' : '' }}>Latest</option>
+                    <option value="{{ route('boutiques.show', array_merge(['boutique' => $boutique], request()->except('sort'), ['sort' => 'name'])) }}" {{ request('sort') === 'name' ? 'selected' : '' }}>Name (A-Z)</option>
+                    <option value="{{ route('boutiques.show', array_merge(['boutique' => $boutique], request()->except('sort'), ['sort' => 'price_asc'])) }}" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>Price (Low to High)</option>
+                    <option value="{{ route('boutiques.show', array_merge(['boutique' => $boutique], request()->except('sort'), ['sort' => 'price_desc'])) }}" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>Price (High to Low)</option>
+                </select>
+            </div>
         </div>
     </section>
 
+    
+
     {{-- Trust bar --}}
-    <section class="flex items-center justify-between border border-[#F0F0F0] bg-cream-50 px-[60px] py-4">
+    <!-- <section class="flex items-center justify-between border border-[#F0F0F0] bg-cream-50 px-[60px] py-4">
         <div class="flex items-center gap-2">
             <svg class="h-[18px] w-[18px]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5a1.5 1.5 0 0 0 1.5-1.5V4.5a1.5 1.5 0 0 0-1.5-1.5H3.75a1.5 1.5 0 0 0-1.5 1.5v15a1.5 1.5 0 0 0 1.5 1.5Z"/></svg>
             <span class="text-xs text-[#333]">Designer &amp; Premium Brands</span>
@@ -80,37 +209,40 @@
             <svg class="h-[18px] w-[18px]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"/></svg>
             <span class="text-xs text-[#333]">5 Star Customer Experience</span>
         </div>
-    </section>
+    </section> -->
 
     {{-- Dresses section --}}
     <section id="products" class="px-[60px] py-8">
-        <div class="flex items-center justify-between">
+        <!-- <div class="flex items-center justify-between">
             <h2 class="text-sm font-semibold tracking-[1.5px] text-black">DRESSES FROM {{ strtoupper($boutique->name) }}</h2>
             <a href="{{ route('products.index', ['boutique' => $boutique->slug]) }}" class="flex items-center gap-1 text-[11px] tracking-[0.5px] text-black hover:underline">
                 VIEW ALL DRESSES
                 <svg class="h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
-        </div>
-        <div class="mt-5 grid grid-cols-6 gap-4">
+        </div> -->
+        <div class="grid grid-cols-3 gap-4">
             @forelse ($products->take(6) as $product)
-                <a href="{{ route('products.show', [$boutique, $product]) }}" class="group block">
-                    @if ($product->featured_image)
-                        <div class="overflow-hidden rounded bg-cream-100" style="height:220px;">
-                            <img src="{{ Storage::url($product->featured_image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover transition group-hover:scale-105">
-                        </div>
-                    @else
-                        <div class="flex items-center justify-center rounded bg-cream-100" style="height:220px;">
-                            <span class="text-xs text-[#999]">No image</span>
-                        </div>
-                    @endif
-                    <div class="mt-2 flex flex-col gap-1">
-                        <p class="text-xs font-medium text-black">{{ $product->name }}</p>
-                        <p class="text-[11px] text-[#666]">
-                            @if ($product->is_variable && $product->variants->count())
-                                Size {{ $product->variants->min('size') }} - {{ $product->variants->max('size') }}
-                            @endif
-                        </p>
-                        <p class="text-[13px] font-semibold text-black">
+                <a href="{{ route('products.show', [$boutique, $product]) }}" class="group flex flex-col [&:hover_img]:scale-105">
+                    <div class="relative mb-4 overflow-hidden h-[600px] bg-cream-100">
+                        @if ($product->featured_image)
+                            <div class="overflow-hidden rounded bg-cream-100">
+                                <img src="{{ Storage::url($product->featured_image) }}" alt="{{ $product->name }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500">
+                            </div>
+                        @else
+                            <div class="flex items-center justify-center rounded bg-cream-100" style="height:220px;">
+                                <span class="text-xs text-[#999]">No image</span>
+                            </div>
+                        @endif
+                        <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="flex flex-row justify-between">
+                        <h3 class="text-lg font-normal text-black">{{ $product->name }}</h3>
+                        <p class="mt-1 text-base font-normal text-black">
+                            form 
                             @if ($product->is_variable && $product->variants->count())
                                 €{{ number_format($product->variants->min('price'), 0) }}
                             @elseif ($product->price)

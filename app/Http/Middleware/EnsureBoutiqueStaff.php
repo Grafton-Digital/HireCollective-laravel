@@ -12,7 +12,7 @@ class EnsureBoutiqueStaff
     {
         $user = $request->user();
 
-        if (!$user || !$user->isBoutiqueStaff() || $user->boutique_id === null) {
+        if (! $user || ! $user->isBoutiqueOwner() || $user->boutique_id === null) {
             abort(403, 'You do not have access to the boutique dashboard.');
         }
 

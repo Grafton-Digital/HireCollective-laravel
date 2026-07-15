@@ -22,6 +22,11 @@ class HomepageSectionResource extends Resource
 
     protected static ?string $navigationLabel = 'Homepage Sections';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([

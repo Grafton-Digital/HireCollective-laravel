@@ -22,6 +22,11 @@ class PageResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Content';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([

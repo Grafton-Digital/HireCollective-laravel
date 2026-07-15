@@ -21,6 +21,7 @@ class ProductController extends Controller
             ->when($request->query('colour'), fn ($q, $slug) => $q->whereHas('colours', fn ($cq) => $cq->where('slug', $slug)))
             ->when($request->query('occasion'), fn ($q, $slug) => $q->whereHas('occasions', fn ($cq) => $cq->where('slug', $slug)))
             ->when($request->query('boutique'), fn ($q, $slug) => $q->whereHas('boutique', fn ($bq) => $bq->where('slug', $slug)))
+            ->when($request->query('designer'), fn ($q, $designer) => $q->where('designer', $designer))
             ->when($request->query('size'), fn ($q, $size) => $q->whereHas('variants', fn ($vq) => $vq->where('size', $size)))
             ->when($request->query('search'), fn ($q, $search) => $q->where('name', 'like', "%{$search}%"))
             ->when($request->query('price'), function ($q, $price) {
@@ -50,7 +51,7 @@ class ProductController extends Controller
 
     public function show(Boutique $boutique, Product $product): View
     {
-        if (!$boutique->is_active || !$product->is_active || $product->boutique_id !== $boutique->id) {
+        if (! $boutique->is_active || ! $product->is_active || $product->boutique_id !== $boutique->id) {
             abort(404);
         }
 

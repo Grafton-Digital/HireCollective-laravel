@@ -31,15 +31,22 @@ class ProductResource extends Resource
             Section::make('Product Details')->schema([
                 Forms\Components\Select::make('boutique_id')
                     ->label('Boutique')
-                    ->options(Boutique::where('is_active', true)->pluck('name', 'id'))
+                    ->options(fn () => static::getBoutiqueOptions())
+                    ->default(fn () => static::getDefaultBoutiqueId())
                     ->required()
                     ->searchable()
-                    ->native(false),
+                    ->native(false)
+                    ->disabled(fn () => auth()->user()?->isBoutiqueOwner() && auth()->user()?->boutique_id)
+                    ->dehydrated(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255)
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                Forms\Components\TextInput::make('designer')
+                    ->label('Designer/Brand')
+                    ->maxLength(255)
+                    ->placeholder('e.g. Gucci, Prada, Chanel'),
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->maxLength(255)
@@ -85,14 +92,18 @@ class ProductResource extends Resource
             Section::make('Images')->schema([
                 Forms\Components\FileUpload::make('featured_image')
                     ->image()
-                    ->directory('products/featured'),
+                    ->disk('public')
+                    ->directory('products/featured')
+                    ->visibility('public'),
                 Forms\Components\Repeater::make('images')
                     ->relationship()
                     ->schema([
                         Forms\Components\FileUpload::make('path')
                             ->image()
                             ->required()
-                            ->directory('products/gallery'),
+                            ->disk('public')
+                            ->directory('products/gallery')
+                            ->visibility('public'),
                         Forms\Components\TextInput::make('sort_order')
                             ->numeric()
                             ->default(0),
@@ -124,14 +135,20 @@ class ProductResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => static::scopeToUserProducts($query))
             ->columns([
                 Tables\Columns\ImageColumn::make('featured_image')
+                    ->disk('public')
                     ->imageHeight(50)
                     ->square(),
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable()
                     ->limit(30),
+                Tables\Columns\TextColumn::make('designer')
+                    ->sortable()
+                    ->searchable()
+                    ->placeholder('—'),
                 Tables\Columns\TextColumn::make('boutique.name')
                     ->sortable()
                     ->searchable(),
@@ -178,5 +195,38 @@ class ProductResource extends Resource
             'create' => Pages\CreateProduct::route('/create'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
+    }
+
+    protected static function scopeToUserProducts($query)
+    {
+        $user = auth()->user();
+
+        if ($user && $user->isBoutiqueOwner()) {
+            if ($user->boutique_id) {
+                return $query->where('boutique_id', $user->boutique_id);
+            }
+
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query;
+    }
+
+    protected static function getBoutiqueOptions(): array
+    {
+        $user = auth()->user();
+
+        if ($user && $user->isBoutiqueOwner() && $user->boutique_id) {
+            return Boutique::where('id', $user->boutique_id)->pluck('name', 'id')->toArray();
+        }
+
+        return Boutique::where('is_active', true)->pluck('name', 'id')->toArray();
+    }
+
+    protected static function getDefaultBoutiqueId(): ?int
+    {
+        $user = auth()->user();
+
+        return $user?->boutique_id;
     }
 }

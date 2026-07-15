@@ -23,7 +23,7 @@ class ProductVariantPolicy
 
     public function create(User $user): bool
     {
-        return $user->isAdmin() || $user->isBoutiqueStaff();
+        return $user->isAdmin() || $user->isBoutiqueOwner();
     }
 
     public function update(User $user, ProductVariant $variant): bool

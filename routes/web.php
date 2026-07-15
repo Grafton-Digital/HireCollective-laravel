@@ -27,7 +27,7 @@ Route::post('/enquiry', [EnquiryController::class, 'store'])->middleware('thrott
 Route::get('/page/{page:slug}', [PageController::class, 'show'])->name('pages.show');
 
 // Boutique dashboard
-Route::middleware(['auth', 'boutique_staff'])->prefix('dashboard')->name('dashboard.')->group(function () {
+Route::middleware(['auth', 'boutique_owner'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     Route::get('/products', [DashboardProductController::class, 'index'])->name('products.index');

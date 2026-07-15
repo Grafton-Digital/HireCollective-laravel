@@ -9,7 +9,7 @@ class BoutiquePolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->isAdmin();
+        return true;
     }
 
     public function view(User $user, Boutique $boutique): bool
@@ -18,17 +18,25 @@ class BoutiquePolicy
             return true;
         }
 
-        return $user->boutique_id === $boutique->id;
+        return $user->isBoutiqueOwner() && $user->boutique_id === $boutique->id;
     }
 
     public function create(User $user): bool
     {
-        return $user->isAdmin();
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return $user->isBoutiqueOwner() && $user->boutique_id === null;
     }
 
     public function update(User $user, Boutique $boutique): bool
     {
-        return $user->isAdmin();
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return $user->isBoutiqueOwner() && $user->boutique_id === $boutique->id;
     }
 
     public function delete(User $user, Boutique $boutique): bool

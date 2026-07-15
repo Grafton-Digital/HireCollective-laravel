@@ -96,13 +96,13 @@ class DatabaseSeeder extends Seeder
             ],
         ])->map(fn ($b) => Boutique::create($b));
 
-        // Staff users for each boutique
+        // Owner users for each boutique
         foreach ($boutiques as $i => $boutique) {
             User::create([
-                'name' => $boutique->name . ' Staff',
-                'email' => 'staff' . ($i + 1) . '@hirecollective.ie',
+                'name' => $boutique->name.' Owner',
+                'email' => 'owner'.($i + 1).'@hirecollective.ie',
                 'password' => Hash::make('password'),
-                'role' => 'boutique_staff',
+                'role' => 'boutique_owner',
                 'boutique_id' => $boutique->id,
             ]);
         }

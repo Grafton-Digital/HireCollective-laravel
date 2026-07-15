@@ -67,6 +67,7 @@ class EnquiryResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => static::scopeToUserEnquiries($query))
             ->columns([
                 Tables\Columns\TextColumn::make('customer_name')
                     ->searchable(),
@@ -112,5 +113,20 @@ class EnquiryResource extends Resource
             'index' => Pages\ListEnquiries::route('/'),
             'edit' => Pages\EditEnquiry::route('/{record}/edit'),
         ];
+    }
+
+    protected static function scopeToUserEnquiries($query)
+    {
+        $user = auth()->user();
+
+        if ($user && $user->isBoutiqueOwner()) {
+            if ($user->boutique_id) {
+                return $query->where('boutique_id', $user->boutique_id);
+            }
+
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query;
     }
 }

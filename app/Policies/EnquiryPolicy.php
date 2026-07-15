@@ -9,7 +9,7 @@ class EnquiryPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->isAdmin() || $user->isBoutiqueStaff();
+        return $user->isAdmin() || $user->isBoutiqueOwner();
     }
 
     public function view(User $user, Enquiry $enquiry): bool

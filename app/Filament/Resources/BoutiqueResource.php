@@ -45,10 +45,14 @@ class BoutiqueResource extends Resource
             Section::make('Images')->schema([
                 Forms\Components\FileUpload::make('logo')
                     ->image()
-                    ->directory('boutiques/logos'),
+                    ->disk('public')
+                    ->directory('boutiques/logos')
+                    ->visibility('public'),
                 Forms\Components\FileUpload::make('cover_image')
                     ->image()
-                    ->directory('boutiques/covers'),
+                    ->disk('public')
+                    ->directory('boutiques/covers')
+                    ->visibility('public'),
             ])->columns(2),
 
             Section::make('Location & Contact')->schema([
@@ -82,8 +86,10 @@ class BoutiqueResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => static::scopeToUserBoutiques($query))
             ->columns([
                 Tables\Columns\ImageColumn::make('logo')
+                    ->disk('public')
                     ->circular()
                     ->imageHeight(40),
                 Tables\Columns\TextColumn::make('name')
@@ -129,5 +135,20 @@ class BoutiqueResource extends Resource
             'create' => Pages\CreateBoutique::route('/create'),
             'edit' => Pages\EditBoutique::route('/{record}/edit'),
         ];
+    }
+
+    protected static function scopeToUserBoutiques($query)
+    {
+        $user = auth()->user();
+
+        if ($user && $user->isBoutiqueOwner()) {
+            if ($user->boutique_id) {
+                return $query->where('id', $user->boutique_id);
+            }
+
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query;
     }
 }

@@ -25,6 +25,11 @@ class UserResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
@@ -46,7 +51,7 @@ class UserResource extends Resource
                 Select::make('role')
                     ->options([
                         'admin' => 'Admin',
-                        'boutique_staff' => 'Boutique Staff',
+                        'boutique_owner' => 'Boutique Owner',
                     ])
                     ->required()
                     ->native(false),
@@ -54,7 +59,7 @@ class UserResource extends Resource
                     ->label('Boutique')
                     ->options(Boutique::pluck('name', 'id'))
                     ->searchable()
-                    ->visible(fn (Get $get): bool => $get('role') === 'boutique_staff'),
+                    ->visible(fn (Get $get): bool => $get('role') === 'boutique_owner'),
             ])->columns(2),
         ]);
     }
@@ -72,7 +77,7 @@ class UserResource extends Resource
                     ->badge()
                     ->colors([
                         'danger' => 'admin',
-                        'primary' => 'boutique_staff',
+                        'primary' => 'boutique_owner',
                     ]),
                 Tables\Columns\TextColumn::make('boutique.name')
                     ->label('Boutique')
@@ -86,7 +91,7 @@ class UserResource extends Resource
                 Tables\Filters\SelectFilter::make('role')
                     ->options([
                         'admin' => 'Admin',
-                        'boutique_staff' => 'Boutique Staff',
+                        'boutique_owner' => 'Boutique Owner',
                     ]),
                 Tables\Filters\SelectFilter::make('boutique')
                     ->relationship('boutique', 'name'),
