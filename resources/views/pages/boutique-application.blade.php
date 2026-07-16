@@ -1,12 +1,16 @@
 <x-layouts.public>
     <div class="mx-auto max-w-2xl px-4 py-12 md:py-20">
-        <div class="rounded-lg bg-white p-8 shadow-lg md:p-12">
+        <div class="bg-white p-8 shadow-lg md:p-12">
             <div class="mb-8 text-center">
                 <h1 class="font-serif text-3xl tracking-wide text-black md:text-4xl">Create Your Boutique</h1>
                 <p class="mt-3 text-sm text-gray-600">Submit your boutique application. We review each request within 48 hours.</p>
             </div>
 
-            <form method="POST" action="{{ route('boutique.application.store') }}" enctype="multipart/form-data" class="space-y-6">
+            <form method="POST" action="{{ route('boutique.application.store') }}" enctype="multipart/form-data" class="space-y-6"
+                x-data="applicationForm()"
+                @submit.prevent="submitForm"
+                @file-selected-logo.window="logoFile = $event.detail"
+                @file-selected-cover.window="coverFile = $event.detail">
                 @csrf
 
                 <div>
@@ -18,28 +22,106 @@
                         value="{{ old('name') }}"
                         required
                         placeholder="Enter your boutique name"
-                        class="mt-2 block w-full rounded-md border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                        class="mt-2 block w-full border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                     >
                     @error('name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                 </div>
 
+                {{-- Logo and Cover Image --}}
                 <div>
-                    <label for="banner_image" class="block text-xs font-semibold uppercase tracking-wider text-gray-700">Banner Image</label>
-                    <div class="mt-2 flex items-center justify-center rounded-md border-2 border-dashed border-gray-300 px-6 py-12 text-center">
-                        <div>
-                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            <div class="mt-4 flex text-sm text-gray-600">
-                                <label for="banner_image" class="relative cursor-pointer rounded-md font-medium text-black hover:underline">
-                                    <span>Click to upload or drag and drop</span>
-                                    <input id="banner_image" name="banner_image" type="file" accept="image/*" required class="sr-only">
-                                </label>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-2">Images</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        {{-- Logo --}}
+                        <div x-data="fileUpload('logo')" x-ref="logoUpload">
+                            <label class="mb-2 block text-xs font-medium text-gray-700">Logo</label>
+                            <div
+                                @dragover.prevent="isDragging = true"
+                                @dragleave.prevent="isDragging = false"
+                                @drop.prevent="handleDrop($event)"
+                                @click="$refs.fileInput.click()"
+                                :class="isDragging ? 'border-gray-900 bg-gray-50' : 'border-gray-300'"
+                                class="relative flex h-32 cursor-pointer flex-col items-center justify-center border-2 border-dashed bg-white transition-colors hover:border-gray-400"
+                            >
+                                <template x-if="!preview">
+                                    <div class="text-center">
+                                        <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                        </svg>
+                                        <p class="mt-2 text-xs text-gray-500">Drag & drop or click</p>
+                                    </div>
+                                </template>
+                                <template x-if="preview">
+                                    <div class="relative h-full w-full">
+                                        <img :src="preview" class="h-full w-full object-cover">
+                                        <button
+                                            type="button"
+                                            @click.stop="clearFile()"
+                                            class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center bg-black bg-opacity-50 text-white hover:bg-opacity-70"
+                                        >
+                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </template>
                             </div>
-                            <p class="text-xs text-gray-500">PNG, JPG up to 5MB (1200×400 recommended)</p>
+                            <input
+                                type="file"
+                                name="logo"
+                                x-ref="fileInput"
+                                @change="handleFileSelect($event)"
+                                accept="image/*"
+                                class="hidden"
+                            >
+                            @error('logo') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                        </div>
+
+                        {{-- Cover Image --}}
+                        <div x-data="fileUpload('cover_image')" x-ref="coverUpload">
+                            <label class="mb-2 block text-xs font-medium text-gray-700">Cover Photo</label>
+                            <div
+                                @dragover.prevent="isDragging = true"
+                                @dragleave.prevent="isDragging = false"
+                                @drop.prevent="handleDrop($event)"
+                                @click="$refs.fileInput.click()"
+                                :class="isDragging ? 'border-gray-900 bg-gray-50' : 'border-gray-300'"
+                                class="relative flex h-32 cursor-pointer flex-col items-center justify-center border-2 border-dashed bg-white transition-colors hover:border-gray-400"
+                            >
+                                <template x-if="!preview">
+                                    <div class="text-center">
+                                        <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                        </svg>
+                                        <p class="mt-2 text-xs text-gray-500">Drag & drop or click</p>
+                                    </div>
+                                </template>
+                                <template x-if="preview">
+                                    <div class="relative h-full w-full">
+                                        <img :src="preview" class="h-full w-full object-cover">
+                                        <button
+                                            type="button"
+                                            @click.stop="clearFile()"
+                                            class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center bg-black bg-opacity-50 text-white hover:bg-opacity-70"
+                                        >
+                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+                            <input
+                                type="file"
+                                name="cover_image"
+                                x-ref="fileInput"
+                                @change="handleFileSelect($event)"
+                                accept="image/*"
+                                class="hidden"
+                            >
+                            @error('cover_image') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
-                    @error('banner_image') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                    <p class="mt-2 text-xs text-gray-500">PNG, JPG up to 5MB. Logo: square, Cover: 1200×400 recommended</p>
                 </div>
 
                 <div>
@@ -50,7 +132,7 @@
                         rows="4"
                         required
                         placeholder="Tell us about your boutique, your style, and what makes you unique..."
-                        class="mt-2 block w-full rounded-md border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                        class="mt-2 block w-full border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                     >{{ old('bio') }}</textarea>
                     @error('bio') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                 </div>
@@ -61,7 +143,7 @@
                         name="region"
                         id="region"
                         required
-                        class="mt-2 block w-full rounded-md border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                        class="mt-2 block w-full border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                     >
                         <option value="">Select your region</option>
                         <option value="Dublin" {{ old('region') == 'Dublin' ? 'selected' : '' }}>Dublin</option>
@@ -92,7 +174,7 @@
                                     value="{{ old('contact_email') }}"
                                     required
                                     placeholder="your@email.com"
-                                    class="block w-full rounded-md border-gray-300 py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                    class="block w-full border-gray-300 py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                                 >
                             </div>
                             @error('contact_email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
@@ -112,7 +194,7 @@
                                     id="phone"
                                     value="{{ old('phone') }}"
                                     placeholder="+44 000 000 000"
-                                    class="block w-full rounded-md border-gray-300 py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                    class="block w-full border-gray-300 py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                                 >
                             </div>
                             @error('phone') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
@@ -132,7 +214,7 @@
                                     id="instagram"
                                     value="{{ old('instagram') }}"
                                     placeholder="@handle"
-                                    class="block w-full rounded-md border-gray-300 py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                    class="block w-full border-gray-300 py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                                 >
                             </div>
                             @error('instagram') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
@@ -153,7 +235,7 @@
                                 value="{{ old('email') }}"
                                 required
                                 placeholder="your@email.com"
-                                class="mt-1 block w-full rounded-md border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                class="mt-1 block w-full border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                             >
                             @error('email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
@@ -166,7 +248,7 @@
                                 id="password"
                                 required
                                 placeholder="Create a password"
-                                class="mt-1 block w-full rounded-md border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                class="mt-1 block w-full border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                             >
                             @error('password') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
@@ -179,7 +261,7 @@
                                 id="password_confirmation"
                                 required
                                 placeholder="Repeat your password"
-                                class="mt-1 block w-full rounded-md border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                class="mt-1 block w-full border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                             >
                         </div>
                     </div>
@@ -188,7 +270,7 @@
                 <div class="pt-4">
                     <button
                         type="submit"
-                        class="w-full rounded-md bg-black px-6 py-4 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-gray-800"
+                        class="w-full bg-black px-6 py-4 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-gray-800"
                     >
                         Submit Application
                     </button>
@@ -196,4 +278,95 @@
             </form>
         </div>
     </div>
+
+    <script>
+        function applicationForm() {
+            return {
+                logoFile: null,
+                coverFile: null,
+                submitForm(e) {
+                    const form = e.target;
+                    const formData = new FormData(form);
+
+                    if (this.logoFile) {
+                        formData.set('logo', this.logoFile);
+                    }
+
+                    if (this.coverFile) {
+                        formData.set('cover_image', this.coverFile);
+                    }
+
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok || response.redirected) {
+                            window.location.href = '{{ route("boutique.application.confirmation") }}';
+                        } else {
+                            return response.json().then(data => {
+                                if (data.errors) {
+                                    let errorMsg = 'Please fix the following errors:\n';
+                                    Object.values(data.errors).forEach(errors => {
+                                        errors.forEach(error => errorMsg += '- ' + error + '\n');
+                                    });
+                                    alert(errorMsg);
+                                } else {
+                                    alert('Error: ' + (data.message || 'Failed to submit application'));
+                                }
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        alert('Failed to submit application. Please try again.');
+                    });
+                }
+            }
+        }
+
+        function fileUpload(fieldName) {
+            return {
+                preview: null,
+                file: null,
+                isDragging: false,
+                fieldName: fieldName,
+                handleFileSelect(e) {
+                    const file = e.target.files[0];
+                    this.processFile(file);
+                },
+                handleDrop(e) {
+                    this.isDragging = false;
+                    const file = e.dataTransfer.files[0];
+                    this.processFile(file);
+                },
+                processFile(file) {
+                    if (file && file.type.startsWith('image/')) {
+                        this.file = file;
+
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.preview = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+
+                        // Dispatch event based on field name
+                        const eventName = this.fieldName === 'logo' ? 'file-selected-logo' : 'file-selected-cover';
+                        window.dispatchEvent(new CustomEvent(eventName, { detail: file }));
+                    }
+                },
+                clearFile() {
+                    this.preview = null;
+                    this.file = null;
+                    this.$refs.fileInput.value = '';
+
+                    const eventName = this.fieldName === 'logo' ? 'file-selected-logo' : 'file-selected-cover';
+                    window.dispatchEvent(new CustomEvent(eventName, { detail: null }));
+                }
+            }
+        }
+    </script>
 </x-layouts.public>

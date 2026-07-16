@@ -3,7 +3,7 @@
         <div class="mb-8 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <h1 class="font-serif text-[24px] tracking-wide text-gray-900">Products</h1>
-                <span class="text-sm text-gray-500">{{ $products->total() }} items</span>
+                <span class="text-sm text-gray-500 mt-1">{{ $products->total() }} items</span>
             </div>
 
             <div class="flex items-center gap-4">

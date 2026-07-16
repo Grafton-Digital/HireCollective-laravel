@@ -31,8 +31,12 @@ class BoutiqueApplicationController extends Controller
         $boutique->status = Boutique::STATUS_PENDING;
         $boutique->is_active = false;
 
-        if ($request->hasFile('banner_image')) {
-            $boutique->cover_image = $request->file('banner_image')->store('boutiques/covers', 'public');
+        if ($request->hasFile('logo')) {
+            $boutique->logo = $request->file('logo')->store('boutiques/logos', 'public');
+        }
+
+        if ($request->hasFile('cover_image')) {
+            $boutique->cover_image = $request->file('cover_image')->store('boutiques/covers', 'public');
         }
 
         if (! empty($validated['instagram'])) {

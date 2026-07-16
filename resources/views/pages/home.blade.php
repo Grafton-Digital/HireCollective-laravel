@@ -479,9 +479,15 @@
             </h2>
 
             <div class="animate animate-delay-100 flex items-center gap-4">
-                <a href="{{ route('products.index') }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
-                   Register Now
-                </a>
+                @auth
+                    <a href="{{ route('account.overview') }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
+                       Go to Account
+                    </a>
+                @else
+                    <a href="{{ route('boutique.application.create') }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
+                       Register Now
+                    </a>
+                @endauth
             </div>
         </div>
     </section>
