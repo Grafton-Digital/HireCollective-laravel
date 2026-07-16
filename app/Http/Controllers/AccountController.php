@@ -45,14 +45,39 @@ class AccountController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email,'.$request->user()->id],
+            'boutique_name' => ['required', 'string', 'max:255'],
+            'contact_email' => ['required', 'email', 'max:255'],
+            'category' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'location' => ['nullable', 'string', 'max:255'],
+            'instagram' => ['nullable', 'string', 'max:255'],
+            'founded' => ['nullable', 'string', 'max:4'],
+            'description' => ['nullable', 'string'],
         ]);
 
-        $request->user()->update($validated);
+        $boutique = $request->user()->boutique;
+
+        if ($boutique) {
+            $location = explode(',', $validated['location'] ?? '');
+            $socialLinks = $boutique->social_links ?? [];
+
+            if (isset($validated['instagram'])) {
+                $socialLinks['instagram'] = $validated['instagram'];
+            }
+
+            $boutique->update([
+                'name' => $validated['boutique_name'],
+                'contact_email' => $validated['contact_email'],
+                'phone' => $validated['phone'] ?? null,
+                'city' => trim($location[0] ?? ''),
+                'county' => trim($location[1] ?? ''),
+                'description' => $validated['description'] ?? null,
+                'social_links' => $socialLinks,
+            ]);
+        }
 
         return redirect()->route('account.settings')
-            ->with('success', 'Profile updated successfully.');
+            ->with('success', 'Boutique information updated successfully.');
     }
 
     public function updatePassword(Request $request): RedirectResponse

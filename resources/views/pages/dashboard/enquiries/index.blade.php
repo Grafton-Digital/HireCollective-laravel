@@ -1,4 +1,4 @@
-<x-layouts.dashboard>
+<x-layouts.account>
     <x-slot:header>Enquiries</x-slot:header>
 
     <div class="flex items-center gap-4">
@@ -53,4 +53,4 @@
     <div class="mt-6">
         {{ $enquiries->links() }}
     </div>
-</x-layouts.dashboard>
+</x-layouts.account>

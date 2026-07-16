@@ -25,40 +25,137 @@
         </div>
 
         <div class="mt-8">
-            <div x-show="tab === 'account'" class="max-w-2xl">
+            <div x-show="tab === 'account'" class="max-w-4xl">
                 <div class="rounded-lg bg-white p-6 shadow">
-                    <h3 class="text-lg font-semibold text-gray-900">Profile Information</h3>
-                    <p class="mt-1 text-sm text-gray-600">Update your account details.</p>
+                    <h3 class="text-lg font-semibold text-gray-900">Boutique Information</h3>
+                    <p class="mt-1 text-sm text-gray-600">Update your boutique profile and contact details.</p>
 
                     <form method="POST" action="{{ route('account.update') }}" class="mt-6">
                         @csrf
                         @method('PATCH')
 
-                        <div class="space-y-4">
-                            <div>
-                                <label for="name" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Name</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    id="name"
-                                    value="{{ old('name', $user->name) }}"
-                                    required
-                                    class="block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
-                                >
-                                @error('name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                        @php
+                            $boutique = $user->boutique;
+                        @endphp
+
+                        <div class="space-y-5">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="boutique_name" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Boutique Name</label>
+                                    <input
+                                        type="text"
+                                        name="boutique_name"
+                                        id="boutique_name"
+                                        value="{{ old('boutique_name', $boutique?->name) }}"
+                                        required
+                                        class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                    >
+                                    @error('boutique_name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+
+                                <div>
+                                    <label for="contact_email" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Email</label>
+                                    <input
+                                        type="email"
+                                        name="contact_email"
+                                        id="contact_email"
+                                        value="{{ old('contact_email', $boutique?->contact_email) }}"
+                                        required
+                                        class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                    >
+                                    @error('contact_email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="category" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Category</label>
+                                    <input
+                                        type="text"
+                                        name="category"
+                                        id="category"
+                                        value="{{ old('category', 'Occasion Wear, Knitwear') }}"
+                                        class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                    >
+                                    @error('category') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+
+                                <div>
+                                    <label for="phone" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">WhatsApp</label>
+                                    <input
+                                        type="text"
+                                        name="phone"
+                                        id="phone"
+                                        value="{{ old('phone', $boutique?->phone) }}"
+                                        placeholder="+44 7700 900000"
+                                        class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                    >
+                                    @error('phone') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="location" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Location</label>
+                                    <input
+                                        type="text"
+                                        name="location"
+                                        id="location"
+                                        value="{{ old('location', $boutique ? $boutique->city.', '.$boutique->county : '') }}"
+                                        placeholder="London, UK"
+                                        class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                    >
+                                    @error('location') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+
+                                <div>
+                                    <label for="instagram" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Instagram</label>
+                                    <input
+                                        type="text"
+                                        name="instagram"
+                                        id="instagram"
+                                        value="{{ old('instagram', $boutique?->social_links['instagram'] ?? '') }}"
+                                        placeholder="@thecompletelook"
+                                        class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                    >
+                                    @error('instagram') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="founded" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Founded</label>
+                                    <input
+                                        type="text"
+                                        name="founded"
+                                        id="founded"
+                                        value="{{ old('founded', $boutique?->created_at?->format('Y')) }}"
+                                        placeholder="2019"
+                                        class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                    >
+                                    @error('founded') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+
+                                <div>
+                                    <label for="status" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Status</label>
+                                    <input
+                                        type="text"
+                                        value="Active"
+                                        disabled
+                                        class="block w-full border-gray-300 bg-gray-50 text-sm text-gray-500 shadow-sm"
+                                    >
+                                </div>
                             </div>
 
                             <div>
-                                <label for="email" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Email</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    id="email"
-                                    value="{{ old('email', $user->email) }}"
-                                    required
-                                    class="block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
-                                >
-                                @error('email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                <label for="description" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Short Bio</label>
+                                <textarea
+                                    name="description"
+                                    id="description"
+                                    rows="4"
+                                    class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                >{{ old('description', $boutique?->description) }}</textarea>
+                                @error('description') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
 

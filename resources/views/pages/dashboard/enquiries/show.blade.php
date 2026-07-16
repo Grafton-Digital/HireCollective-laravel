@@ -1,4 +1,4 @@
-<x-layouts.dashboard>
+<x-layouts.account>
     <x-slot:header>Enquiry from {{ $enquiry->customer_name }}</x-slot:header>
 
     <div class="max-w-2xl space-y-6">
@@ -71,4 +71,4 @@
 
         <a href="{{ route('dashboard.enquiries.index') }}" class="inline-block text-sm text-gray-500 hover:text-gray-700">&larr; Back to enquiries</a>
     </div>
-</x-layouts.dashboard>
+</x-layouts.account>
