@@ -1,7 +1,10 @@
-<x-layouts.dashboard>
-    <x-slot:header>Edit: {{ $product->name }}</x-slot:header>
+<x-layouts.public>
+    <div class="mx-auto max-w-4xl px-4 py-12 md:py-16">
+        <div class="mb-8">
+            <h1 class="text-3xl font-semibold text-gray-900">Edit: {{ $product->name }}</h1>
+        </div>
 
-    <form method="POST" action="{{ route('dashboard.products.update', $product) }}" enctype="multipart/form-data" class="max-w-2xl space-y-6">
+        <form method="POST" action="{{ route('dashboard.products.update', $product) }}" enctype="multipart/form-data" class="space-y-6 rounded-lg bg-white p-8 shadow">
         @csrf
         @method('PUT')
 
@@ -163,4 +166,5 @@
             }
         }
     </script>
-</x-layouts.dashboard>
+    </div>
+</x-layouts.public>

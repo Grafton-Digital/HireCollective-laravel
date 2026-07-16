@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\BoutiqueApplicationController;
 use App\Http\Controllers\BoutiqueController;
-use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\EnquiryController as DashboardEnquiryController;
 use App\Http\Controllers\Dashboard\ProductController as DashboardProductController;
 use App\Http\Controllers\EnquiryController;
@@ -26,10 +27,13 @@ Route::post('/enquiry', [EnquiryController::class, 'store'])->middleware('thrott
 // Static pages
 Route::get('/page/{page:slug}', [PageController::class, 'show'])->name('pages.show');
 
-// Boutique dashboard
-Route::middleware(['auth', 'boutique_owner'])->prefix('dashboard')->name('dashboard.')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('index');
+// Boutique application (public, rate-limited)
+Route::get('/boutique/apply', [BoutiqueApplicationController::class, 'create'])->name('boutique.application.create');
+Route::post('/boutique/apply', [BoutiqueApplicationController::class, 'store'])->middleware('throttle:3,60')->name('boutique.application.store');
+Route::get('/boutique/application/confirmation', [BoutiqueApplicationController::class, 'confirmation'])->name('boutique.application.confirmation');
 
+// Boutique owner products
+Route::middleware(['auth', 'boutique_owner'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/products', [DashboardProductController::class, 'index'])->name('products.index');
     Route::get('/products/create', [DashboardProductController::class, 'create'])->name('products.create');
     Route::post('/products', [DashboardProductController::class, 'store'])->name('products.store');
@@ -40,6 +44,18 @@ Route::middleware(['auth', 'boutique_owner'])->prefix('dashboard')->name('dashbo
     Route::get('/enquiries', [DashboardEnquiryController::class, 'index'])->name('enquiries.index');
     Route::get('/enquiries/{enquiry}', [DashboardEnquiryController::class, 'show'])->name('enquiries.show');
     Route::patch('/enquiries/{enquiry}', [DashboardEnquiryController::class, 'update'])->name('enquiries.update');
+});
+
+// Boutique owner account
+Route::middleware(['auth', 'boutique_owner'])->prefix('account')->name('account.')->group(function () {
+    Route::get('/', fn () => redirect()->route('account.overview'));
+    Route::get('/overview', [AccountController::class, 'overview'])->name('overview');
+    Route::get('/boutique-info', [AccountController::class, 'boutiqueInfo'])->name('boutique-info');
+    Route::get('/products', [AccountController::class, 'products'])->name('products');
+    Route::get('/settings', [AccountController::class, 'settings'])->name('settings');
+    Route::get('/help-support', [AccountController::class, 'helpSupport'])->name('help-support');
+    Route::patch('/profile', [AccountController::class, 'update'])->name('update');
+    Route::patch('/password', [AccountController::class, 'updatePassword'])->name('password.update');
 });
 
 // Auth profile (Breeze)

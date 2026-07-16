@@ -9,7 +9,6 @@ use App\Models\Category;
 use App\Models\Colour;
 use App\Models\Occasion;
 use App\Models\Product;
-use App\Models\ProductVariant;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -54,17 +53,17 @@ class ProductController extends Controller
 
         $product->save();
 
-        if (!empty($validated['categories'])) {
+        if (! empty($validated['categories'])) {
             $product->categories()->sync($validated['categories']);
         }
-        if (!empty($validated['colours'])) {
+        if (! empty($validated['colours'])) {
             $product->colours()->sync($validated['colours']);
         }
-        if (!empty($validated['occasions'])) {
+        if (! empty($validated['occasions'])) {
             $product->occasions()->sync($validated['occasions']);
         }
 
-        if ($product->is_variable && !empty($validated['variants'])) {
+        if ($product->is_variable && ! empty($validated['variants'])) {
             foreach ($validated['variants'] as $variantData) {
                 $product->variants()->create($variantData);
             }
@@ -107,12 +106,12 @@ class ProductController extends Controller
         $product->colours()->sync($validated['colours'] ?? []);
         $product->occasions()->sync($validated['occasions'] ?? []);
 
-        if ($product->is_variable && !empty($validated['variants'])) {
+        if ($product->is_variable && ! empty($validated['variants'])) {
             $product->variants()->delete();
             foreach ($validated['variants'] as $variantData) {
                 $product->variants()->create($variantData);
             }
-        } elseif (!$product->is_variable) {
+        } elseif (! $product->is_variable) {
             $product->variants()->delete();
         }
 

@@ -115,6 +115,11 @@ class EnquiryResource extends Resource
         ];
     }
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return ! (auth()->user()?->isBoutiqueOwner() ?? false);
+    }
+
     protected static function scopeToUserEnquiries($query)
     {
         $user = auth()->user();

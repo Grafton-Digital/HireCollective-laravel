@@ -223,7 +223,7 @@
         <div class="grid grid-cols-3 gap-4">
             @forelse ($products->take(6) as $product)
                 <a href="{{ route('products.show', [$boutique, $product]) }}" class="group flex flex-col [&:hover_img]:scale-105">
-                    <div class="relative mb-4 overflow-hidden h-[600px] bg-cream-100">
+                    <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
                         @if ($product->featured_image)
                             <div class="overflow-hidden rounded bg-cream-100">
                                 <img src="{{ Storage::url($product->featured_image) }}" alt="{{ $product->name }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500">

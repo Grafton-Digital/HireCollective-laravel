@@ -1,12 +1,14 @@
-<x-layouts.dashboard>
-    <x-slot:header>Products</x-slot:header>
-
-    <div class="flex items-center justify-between">
-        <p class="text-sm text-gray-500">{{ $products->total() }} products</p>
-        <a href="{{ route('dashboard.products.create') }}" class="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800">
-            Add Product
-        </a>
-    </div>
+<x-layouts.public>
+    <div class="mx-auto max-w-6xl px-4 py-12 md:py-16">
+        <div class="mb-8 flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-semibold text-gray-900">Products</h1>
+                <p class="mt-2 text-sm text-gray-500">{{ $products->total() }} products</p>
+            </div>
+            <a href="{{ route('dashboard.products.create') }}" class="rounded-md bg-gray-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-gray-800">
+                Add Product
+            </a>
+        </div>
 
     <div class="mt-6 overflow-hidden rounded-lg border border-gray-200">
         <table class="min-w-full divide-y divide-gray-200">
@@ -49,7 +51,8 @@
         </table>
     </div>
 
-    <div class="mt-6">
-        {{ $products->links() }}
+        <div class="mt-6">
+            {{ $products->links() }}
+        </div>
     </div>
-</x-layouts.dashboard>
+</x-layouts.public>

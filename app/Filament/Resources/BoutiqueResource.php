@@ -39,7 +39,8 @@ class BoutiqueResource extends Resource
                 Forms\Components\MarkdownEditor::make('description')
                     ->columnSpanFull(),
                 Forms\Components\Toggle::make('is_active')
-                    ->default(true),
+                    ->default(true)
+                    ->visible(fn () => auth()->user()?->isAdmin() ?? false),
             ])->columns(2),
 
             Section::make('Images')->schema([
@@ -64,6 +65,7 @@ class BoutiqueResource extends Resource
                     ->maxLength(100),
                 Forms\Components\TextInput::make('contact_email')
                     ->email()
+                    ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('phone')
                     ->tel()
@@ -143,10 +145,15 @@ class BoutiqueResource extends Resource
 
         if ($user && $user->isBoutiqueOwner()) {
             if ($user->boutique_id) {
-                return $query->where('id', $user->boutique_id);
+                return $query->where('id', $user->boutique_id)
+                    ->where('status', Boutique::STATUS_APPROVED);
             }
 
             return $query->whereRaw('1 = 0');
+        }
+
+        if ($user && $user->isAdmin()) {
+            return $query->where('status', Boutique::STATUS_APPROVED);
         }
 
         return $query;

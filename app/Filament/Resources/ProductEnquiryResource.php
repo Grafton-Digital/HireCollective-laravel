@@ -2,28 +2,36 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ProductResource\Pages;
-use App\Models\Boutique;
+use App\Filament\Resources\ProductEnquiryResource\Pages;
 use App\Models\Product;
 use Filament\Actions;
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Support\Str;
 
-class ProductResource extends Resource
+class ProductEnquiryResource extends Resource
 {
     protected static ?string $model = Product::class;
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingBag;
 
+    protected static ?string $navigationLabel = 'Product Enquiries';
+
+    protected static ?string $modelLabel = 'Product Enquiry';
+
+    protected static ?string $pluralModelLabel = 'Product Enquiries';
+
     protected static ?int $navigationSort = 3;
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -31,22 +39,16 @@ class ProductResource extends Resource
             Section::make('Product Details')->schema([
                 Forms\Components\Select::make('boutique_id')
                     ->label('Boutique')
-                    ->options(fn () => static::getBoutiqueOptions())
-                    ->default(fn () => static::getDefaultBoutiqueId())
+                    ->relationship('boutique', 'name')
                     ->required()
                     ->searchable()
-                    ->native(false)
-                    ->disabled(fn () => auth()->user()?->isBoutiqueOwner() && auth()->user()?->boutique_id)
-                    ->dehydrated(),
+                    ->native(false),
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255)
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('designer')
                     ->label('Designer/Brand')
-                    ->maxLength(255)
-                    ->placeholder('e.g. Gucci, Prada, Chanel'),
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->maxLength(255)
@@ -62,7 +64,7 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('price')
                     ->numeric()
                     ->prefix('€')
-                    ->visible(fn (Get $get): bool => ! $get('is_variable')),
+                    ->visible(fn ($get): bool => ! $get('is_variable')),
                 Forms\Components\Toggle::make('is_available')
                     ->default(true),
                 Forms\Components\Toggle::make('is_active')
@@ -85,9 +87,10 @@ class ProductResource extends Resource
                                 ->default(true),
                         ])
                         ->columns(3)
+                        ->defaultItems(0)
                         ->addActionLabel('Add variant'),
                 ])
-                ->visible(fn (Get $get): bool => (bool) $get('is_variable')),
+                ->visible(fn ($get): bool => (bool) $get('is_variable')),
 
             Section::make('Images')->schema([
                 Forms\Components\FileUpload::make('featured_image')
@@ -130,67 +133,88 @@ class ProductResource extends Resource
                     ->multiple()
                     ->preload(),
             ])->columns(3),
+
+            Section::make('Approval')->schema([
+                Forms\Components\Select::make('status')
+                    ->options([
+                        Product::STATUS_PENDING => 'Pending',
+                        Product::STATUS_APPROVED => 'Approved',
+                        Product::STATUS_REJECTED => 'Rejected',
+                    ])
+                    ->required(),
+            ]),
+
+            Section::make('Submission Info')->schema([
+                Forms\Components\TextInput::make('submittedBy.name')
+                    ->label('Submitted By')
+                    ->disabled(),
+                Forms\Components\TextInput::make('submittedBy.email')
+                    ->label('Submitter Email')
+                    ->disabled(),
+                Forms\Components\TextInput::make('created_at')
+                    ->label('Submitted At')
+                    ->disabled(),
+            ])->columns(3),
         ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($query) => static::scopeToUserProducts($query))
+            ->modifyQueryUsing(fn ($query) => $query->where('status', Product::STATUS_PENDING)->with(['submittedBy', 'boutique']))
             ->columns([
-                Tables\Columns\ImageColumn::make('featured_image')
-                    ->disk('public')
-                    ->imageHeight(50)
-                    ->square(),
                 Tables\Columns\TextColumn::make('name')
-                    ->sortable()
-                    ->searchable()
-                    ->limit(30),
-                Tables\Columns\TextColumn::make('designer')
-                    ->sortable()
-                    ->searchable()
-                    ->placeholder('—'),
-                Tables\Columns\TextColumn::make('boutique.name')
+                    ->label('Product name')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('price')
-                    ->money('EUR')
+                Tables\Columns\TextColumn::make('designer')
+                    ->label('Designer/Brand')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('boutique.name')
+                    ->label('Boutique')
                     ->sortable(),
-                Tables\Columns\IconColumn::make('is_variable')
-                    ->boolean()
-                    ->label('Variants'),
-                Tables\Columns\IconColumn::make('is_available')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('status')
-                    ->badge()
-                    ->colors([
-                        'warning' => Product::STATUS_PENDING,
-                        'success' => Product::STATUS_APPROVED,
-                        'danger' => Product::STATUS_REJECTED,
-                    ])
-                    ->visible(fn () => auth()->user()?->isBoutiqueOwner() ?? false),
+                Tables\Columns\TextColumn::make('price')
+                    ->money('GBP')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('submittedBy.name')
+                    ->label('Submitted By')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Submitted At')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('boutique')
-                    ->relationship('boutique', 'name'),
-                Tables\Filters\SelectFilter::make('status')
-                    ->options([
-                        Product::STATUS_PENDING => 'Pending',
-                        Product::STATUS_APPROVED => 'Approved',
-                        Product::STATUS_REJECTED => 'Rejected',
-                    ])
-                    ->visible(fn () => auth()->user()?->isAdmin() ?? false),
-                Tables\Filters\TernaryFilter::make('is_active'),
-                Tables\Filters\TernaryFilter::make('is_available'),
+                //
             ])
             ->actions([
                 Actions\EditAction::make(),
+                Actions\Action::make('approve')
+                    ->icon(Heroicon::OutlinedCheckCircle)
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->action(function (Product $record) {
+                        $record->approve();
+
+                        Notification::make()
+                            ->success()
+                            ->title('Product Approved')
+                            ->body("The product '{$record->name}' has been approved.")
+                            ->send();
+                    }),
+                Actions\Action::make('reject')
+                    ->icon(Heroicon::OutlinedXCircle)
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->action(function (Product $record) {
+                        $record->reject();
+
+                        Notification::make()
+                            ->warning()
+                            ->title('Product Rejected')
+                            ->body("The product '{$record->name}' has been rejected.")
+                            ->send();
+                    }),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
@@ -207,63 +231,24 @@ class ProductResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProducts::route('/'),
-            'create' => Pages\CreateProduct::route('/create'),
-            'edit' => Pages\EditProduct::route('/{record}/edit'),
+            'index' => Pages\ListProductEnquiries::route('/'),
+            'edit' => Pages\EditProductEnquiry::route('/{record}/edit'),
         ];
     }
 
     public static function shouldRegisterNavigation(): bool
     {
-        $user = auth()->user();
-
-        if ($user && $user->isBoutiqueOwner()) {
-            if ($user->boutique_id) {
-                $boutique = Boutique::find($user->boutique_id);
-
-                return $boutique && $boutique->isApproved();
-            }
-
-            return false;
-        }
-
-        return true;
+        return auth()->user()?->isAdmin() ?? false;
     }
 
-    protected static function scopeToUserProducts($query)
+    public static function getNavigationBadge(): ?string
     {
-        $user = auth()->user();
-
-        if ($user && $user->isBoutiqueOwner()) {
-            if ($user->boutique_id) {
-                return $query->where('boutique_id', $user->boutique_id);
-            }
-
-            return $query->whereRaw('1 = 0');
+        if (! auth()->user()?->isAdmin()) {
+            return null;
         }
 
-        if ($user && $user->isAdmin()) {
-            return $query->where('status', Product::STATUS_APPROVED);
-        }
+        $count = Product::where('status', Product::STATUS_PENDING)->count();
 
-        return $query;
-    }
-
-    protected static function getBoutiqueOptions(): array
-    {
-        $user = auth()->user();
-
-        if ($user && $user->isBoutiqueOwner() && $user->boutique_id) {
-            return Boutique::where('id', $user->boutique_id)->pluck('name', 'id')->toArray();
-        }
-
-        return Boutique::where('is_active', true)->pluck('name', 'id')->toArray();
-    }
-
-    protected static function getDefaultBoutiqueId(): ?int
-    {
-        $user = auth()->user();
-
-        return $user?->boutique_id;
+        return $count > 0 ? (string) $count : null;
     }
 }

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Boutique;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -30,6 +31,32 @@ class ProductFactory extends Factory
             'price' => fake()->randomFloat(2, 50, 200),
             'is_available' => true,
             'is_active' => true,
+            'status' => Product::STATUS_APPROVED,
+            'submitted_by' => User::factory(),
         ];
+    }
+
+    public function pending(): self
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => Product::STATUS_PENDING,
+            'is_active' => false,
+        ]);
+    }
+
+    public function approved(): self
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => Product::STATUS_APPROVED,
+            'is_active' => true,
+        ]);
+    }
+
+    public function rejected(): self
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => Product::STATUS_REJECTED,
+            'is_active' => false,
+        ]);
     }
 }

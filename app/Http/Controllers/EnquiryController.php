@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreEnquiryRequest;
 use App\Models\Enquiry;
 use App\Models\Product;
-use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class EnquiryController extends Controller
 {
     public function create(Product $product): View
     {
-        if (!$product->is_active || !$product->boutique->is_active) {
+        if (! $product->is_active || ! $product->boutique->is_active) {
             abort(404);
         }
 

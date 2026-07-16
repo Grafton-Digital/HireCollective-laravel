@@ -30,7 +30,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->isAdmin() || $this->isBoutiqueOwner();
+        return $this->isAdmin();
     }
 
     public function boutique(): BelongsTo

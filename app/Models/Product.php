@@ -20,10 +20,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'is_available',
     'featured_image',
     'is_active',
+    'status',
+    'submitted_by',
 ])]
 class Product extends Model
 {
     use HasFactory;
+
+    public const STATUS_PENDING = 'pending';
+
+    public const STATUS_APPROVED = 'approved';
+
+    public const STATUS_REJECTED = 'rejected';
 
     protected function casts(): array
     {
@@ -68,5 +76,41 @@ class Product extends Model
     public function enquiries(): HasMany
     {
         return $this->hasMany(Enquiry::class);
+    }
+
+    public function submittedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'submitted_by');
+    }
+
+    public function isPending(): bool
+    {
+        return $this->status === self::STATUS_PENDING;
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->status === self::STATUS_APPROVED;
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->status === self::STATUS_REJECTED;
+    }
+
+    public function approve(): void
+    {
+        $this->update([
+            'status' => self::STATUS_APPROVED,
+            'is_active' => true,
+        ]);
+    }
+
+    public function reject(): void
+    {
+        $this->update([
+            'status' => self::STATUS_REJECTED,
+            'is_active' => false,
+        ]);
     }
 }

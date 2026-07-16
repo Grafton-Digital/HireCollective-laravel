@@ -27,7 +27,13 @@ class BoutiquePolicy
             return true;
         }
 
-        return $user->isBoutiqueOwner() && $user->boutique_id === null;
+        if ($user->isBoutiqueOwner() && $user->boutique_id === null) {
+            return ! Boutique::where('submitted_by', $user->id)
+                ->whereIn('status', [Boutique::STATUS_PENDING, Boutique::STATUS_APPROVED])
+                ->exists();
+        }
+
+        return false;
     }
 
     public function update(User $user, Boutique $boutique): bool

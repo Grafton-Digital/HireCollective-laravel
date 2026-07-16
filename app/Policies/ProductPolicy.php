@@ -32,7 +32,11 @@ class ProductPolicy
             return true;
         }
 
-        return $user->boutique_id === $product->boutique_id;
+        if ($user->isBoutiqueOwner() && $user->boutique_id === $product->boutique_id) {
+            return ! $product->isPending();
+        }
+
+        return false;
     }
 
     public function delete(User $user, Product $product): bool
@@ -41,6 +45,10 @@ class ProductPolicy
             return true;
         }
 
-        return $user->boutique_id === $product->boutique_id;
+        if ($user->isBoutiqueOwner() && $user->boutique_id === $product->boutique_id) {
+            return ! $product->isPending();
+        }
+
+        return false;
     }
 }

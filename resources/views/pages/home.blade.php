@@ -267,7 +267,7 @@
                 <a href="{{ route('products.index', ['category' => 'tops']) }}" class="group relative h-[400px] overflow-hidden">
                     <img src="{{ asset('images/cat-suits.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
                     <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
-                        <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">Suits</span>
+                        <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">Suits/Jumpsuits</span>
                     </div>
                 </a>
             </div>
@@ -355,17 +355,17 @@
 
     {{-- Made for the N.Y KNITWEAR --}}
     <section class="relative h-[600px] overflow-hidden">
-        <img src="{{ asset('images/bg-img.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="N.Y KNITWEAR">
+        <img src="{{ asset('images/cat-all.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="N.Y KNITWEAR">
         <div class="absolute inset-0 bg-black/40"></div>
 
         <div class="relative flex h-full flex-col items-center justify-center gap-8 px-[60px]">
             <h2 class="animate font-serif text-center text-white">
-                <span class="mt-2 block text-[48px] font-bold uppercase tracking-[1px] leading-[1.2]"><span class="font-normal">Register</span> <br>your boutique</span>
+                <span class="mt-2 block text-[48px] font-bold uppercase tracking-[1px] leading-[1.2]"><span class="font-normal">For</span><br> Colaboration</span>
             </h2>
-
+            <p class="text-white max-w-[500px] text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem ducimus sunt deleniti, tempora, porro animi, minus labore excepturi deserunt reiciendis distinctio maiores laboriosam facilis. Modi tempora maiores quae temporibus excepturi.</p>
             <div class="animate animate-delay-100 flex items-center gap-4">
                 <a href="{{ route('products.index') }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
-                   Register Now
+                   Contact Us
                 </a>
             </div>
         </div>
@@ -465,6 +465,24 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
                 </svg>
             </a>
+        </div>
+    </section>
+
+    {{-- Made for the N.Y KNITWEAR --}}
+    <section class="relative h-[600px] overflow-hidden">
+        <img src="{{ asset('images/bg-img.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="N.Y KNITWEAR">
+        <div class="absolute inset-0 bg-black/40"></div>
+
+        <div class="relative flex h-full flex-col items-center justify-center gap-8 px-[60px]">
+            <h2 class="animate font-serif text-center text-white">
+                <span class="mt-2 block text-[48px] font-bold uppercase tracking-[1px] leading-[1.2]"><span class="font-normal">Register</span> <br>your boutique</span>
+            </h2>
+
+            <div class="animate animate-delay-100 flex items-center gap-4">
+                <a href="{{ route('products.index') }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
+                   Register Now
+                </a>
+            </div>
         </div>
     </section>
 
