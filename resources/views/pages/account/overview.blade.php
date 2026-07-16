@@ -42,8 +42,8 @@
                 </div>
 
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Category</p>
-                    <p class="mt-1 text-sm text-gray-900">{{ $boutique->description ? 'Occasion Wear, Knitwear' : 'Not specified' }}</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Designer</p>
+                    <p class="mt-1 text-sm text-gray-900">{{ auth()->user()->name ?? 'Not specified' }}</p>
                 </div>
 
                 <div>

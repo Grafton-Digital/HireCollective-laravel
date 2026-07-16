@@ -16,9 +16,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'slug',
     'description',
     'price',
+    'price_per_day',
+    'size',
+    'color',
+    'category_id',
     'is_variable',
     'is_available',
     'featured_image',
+    'images',
+    'availability',
     'is_active',
     'status',
     'submitted_by',
@@ -37,6 +43,9 @@ class Product extends Model
     {
         return [
             'price' => 'decimal:2',
+            'price_per_day' => 'decimal:2',
+            'images' => 'array',
+            'availability' => 'array',
             'is_variable' => 'boolean',
             'is_available' => 'boolean',
             'is_active' => 'boolean',
@@ -56,6 +65,11 @@ class Product extends Model
     public function images(): HasMany
     {
         return $this->hasMany(ProductImage::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function categories(): BelongsToMany

@@ -12,7 +12,7 @@
            class="text-sm {{ request('status') === 'archived' ? 'font-medium text-gray-900' : 'text-gray-500 hover:text-gray-700' }}">Archived</a>
     </div>
 
-    <div class="mt-6 overflow-hidden rounded-lg border border-gray-200">
+    <div class="mt-6 overflow-hidden  border border-gray-200">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
@@ -33,7 +33,7 @@
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-600">{{ $enquiry->product?->name ?? '—' }}</td>
                         <td class="px-4 py-3 text-sm">
-                            <span class="rounded-full px-2 py-0.5 text-xs font-medium
+                            <span class=" px-2 py-0.5 text-xs font-medium
                                 {{ $enquiry->status === 'new' ? 'bg-blue-100 text-blue-700' : '' }}
                                 {{ $enquiry->status === 'read' ? 'bg-gray-100 text-gray-700' : '' }}
                                 {{ $enquiry->status === 'archived' ? 'bg-gray-50 text-gray-400' : '' }}

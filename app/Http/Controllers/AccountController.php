@@ -9,7 +9,7 @@ use Illuminate\View\View;
 
 class AccountController extends Controller
 {
-    public function overview(Request $request): View
+    public function overview(): View
     {
         return view('pages.account.overview');
     }
@@ -23,9 +23,13 @@ class AccountController extends Controller
 
     public function products(Request $request): View
     {
-        $products = $request->user()->boutique->products()
-            ->latest()
-            ->paginate(15);
+        $query = $request->user()->boutique->products()->with('category')->latest();
+
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        $products = $query->paginate(15)->withQueryString();
 
         return view('pages.account.products', compact('products'));
     }
@@ -37,7 +41,7 @@ class AccountController extends Controller
         ]);
     }
 
-    public function helpSupport(Request $request): View
+    public function helpSupport(): View
     {
         return view('pages.account.help-support');
     }
@@ -45,9 +49,13 @@ class AccountController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $validated = $request->validate([
+            'logo' => ['nullable', 'image', 'max:2048'],
+            'cover_image' => ['nullable', 'image', 'max:2048'],
+            'remove_logo' => ['nullable', 'in:0,1'],
+            'remove_cover_image' => ['nullable', 'in:0,1'],
             'boutique_name' => ['required', 'string', 'max:255'],
             'contact_email' => ['required', 'email', 'max:255'],
-            'category' => ['nullable', 'string', 'max:255'],
+            'designer' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
             'location' => ['nullable', 'string', 'max:255'],
             'instagram' => ['nullable', 'string', 'max:255'],
@@ -56,6 +64,7 @@ class AccountController extends Controller
         ]);
 
         $boutique = $request->user()->boutique;
+        $user = $request->user();
 
         if ($boutique) {
             $location = explode(',', $validated['location'] ?? '');
@@ -65,7 +74,12 @@ class AccountController extends Controller
                 $socialLinks['instagram'] = $validated['instagram'];
             }
 
-            $boutique->update([
+            // Update user name (designer)
+            $user->update([
+                'name' => $validated['designer'],
+            ]);
+
+            $updateData = [
                 'name' => $validated['boutique_name'],
                 'contact_email' => $validated['contact_email'],
                 'phone' => $validated['phone'] ?? null,
@@ -73,7 +87,21 @@ class AccountController extends Controller
                 'county' => trim($location[1] ?? ''),
                 'description' => $validated['description'] ?? null,
                 'social_links' => $socialLinks,
-            ]);
+            ];
+
+            if ($request->input('remove_logo') === '1') {
+                $updateData['logo'] = null;
+            } elseif ($request->hasFile('logo')) {
+                $updateData['logo'] = $request->file('logo')->store('boutiques/logos', 'public');
+            }
+
+            if ($request->input('remove_cover_image') === '1') {
+                $updateData['cover_image'] = null;
+            } elseif ($request->hasFile('cover_image')) {
+                $updateData['cover_image'] = $request->file('cover_image')->store('boutiques/covers', 'public');
+            }
+
+            $boutique->update($updateData);
         }
 
         return redirect()->route('account.settings')

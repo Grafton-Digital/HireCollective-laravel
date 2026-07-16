@@ -2,7 +2,7 @@
     <x-slot:header>Enquiry from {{ $enquiry->customer_name }}</x-slot:header>
 
     <div class="max-w-2xl space-y-6">
-        <div class="rounded-lg border border-gray-200 p-6">
+        <div class=" border border-gray-200 p-6">
             <dl class="grid gap-4 sm:grid-cols-2">
                 <div>
                     <dt class="text-xs font-medium uppercase text-gray-500">Customer</dt>
@@ -57,12 +57,12 @@
                         @csrf
                         @method('PATCH')
                         <input type="hidden" name="status" value="{{ $status }}">
-                        <button type="submit" class="rounded-md border border-gray-300 px-3 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50">
+                        <button type="submit" class=" border border-gray-300 px-3 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50">
                             Mark as {{ ucfirst($status) }}
                         </button>
                     </form>
                 @else
-                    <span class="rounded-md bg-gray-100 px-3 py-1 text-xs font-medium text-gray-900">
+                    <span class=" bg-gray-100 px-3 py-1 text-xs font-medium text-gray-900">
                         {{ ucfirst($status) }}
                     </span>
                 @endif

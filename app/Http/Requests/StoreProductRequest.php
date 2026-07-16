@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreProductRequest extends FormRequest
 {
@@ -14,27 +13,19 @@ class StoreProductRequest extends FormRequest
 
     public function rules(): array
     {
-        $boutiqueId = $this->user()->boutique_id;
-
         return [
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', Rule::unique('products')->where('boutique_id', $boutiqueId)],
+            'slug' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'price' => ['nullable', 'required_if:is_variable,false', 'numeric', 'min:0'],
-            'is_variable' => ['required', 'boolean'],
-            'is_available' => ['required', 'boolean'],
-            'is_active' => ['required', 'boolean'],
-            'featured_image' => ['nullable', 'image', 'max:2048'],
-            'categories' => ['nullable', 'array'],
-            'categories.*' => ['exists:categories,id'],
-            'colours' => ['nullable', 'array'],
-            'colours.*' => ['exists:colours,id'],
-            'occasions' => ['nullable', 'array'],
-            'occasions.*' => ['exists:occasions,id'],
-            'variants' => ['nullable', 'required_if:is_variable,true', 'array'],
-            'variants.*.size' => ['required_with:variants', 'string', 'max:50'],
-            'variants.*.price' => ['required_with:variants', 'numeric', 'min:0'],
-            'variants.*.is_available' => ['required_with:variants', 'boolean'],
+            'price_per_day' => ['required', 'numeric', 'min:0'],
+            'size' => ['nullable', 'string', 'max:255'],
+            'color' => ['required', 'string', 'max:255'],
+            'category' => ['nullable', 'exists:categories,id'],
+            'designer' => ['nullable', 'string', 'max:255'],
+            'featured_image' => ['required', 'image', 'max:10240'],
+            'gallery' => ['nullable', 'array', 'max:10'],
+            'gallery.*' => ['image', 'max:10240'],
+            'availability' => ['nullable', 'json'],
         ];
     }
 }

@@ -9,18 +9,23 @@ use App\Models\Category;
 use App\Models\Colour;
 use App\Models\Occasion;
 use App\Models\Product;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ProductController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(Request $request): View
     {
         $this->authorize('viewAny', Product::class);
 
         $products = $request->user()->boutique->products()
+            ->with('category')
             ->latest()
             ->paginate(15);
 
@@ -44,6 +49,24 @@ class ProductController extends Controller
 
         $validated = $request->validated();
 
+        // Generate unique slug
+        $slug = $validated['slug'] ?? Str::slug($validated['name']);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while (Product::where('slug', $slug)->exists()) {
+            $slug = $originalSlug.'-'.$counter;
+            $counter++;
+        }
+
+        $validated['slug'] = $slug;
+
+        // Map 'category' to 'category_id'
+        if (isset($validated['category'])) {
+            $validated['category_id'] = $validated['category'];
+            unset($validated['category']);
+        }
+
         $product = new Product($validated);
         $product->boutique_id = $request->user()->boutique_id;
 
@@ -51,25 +74,18 @@ class ProductController extends Controller
             $product->featured_image = $request->file('featured_image')->store('products', 'public');
         }
 
+        // Handle gallery images
+        if ($request->hasFile('gallery')) {
+            $galleryPaths = [];
+            foreach ($request->file('gallery') as $image) {
+                $galleryPaths[] = $image->store('products/gallery', 'public');
+            }
+            $product->images = $galleryPaths;
+        }
+
         $product->save();
 
-        if (! empty($validated['categories'])) {
-            $product->categories()->sync($validated['categories']);
-        }
-        if (! empty($validated['colours'])) {
-            $product->colours()->sync($validated['colours']);
-        }
-        if (! empty($validated['occasions'])) {
-            $product->occasions()->sync($validated['occasions']);
-        }
-
-        if ($product->is_variable && ! empty($validated['variants'])) {
-            foreach ($validated['variants'] as $variantData) {
-                $product->variants()->create($variantData);
-            }
-        }
-
-        return redirect()->route('dashboard.products.index')
+        return redirect()->route('account.products')
             ->with('success', 'Product created successfully.');
     }
 
@@ -91,6 +107,12 @@ class ProductController extends Controller
 
         $validated = $request->validated();
 
+        // Map 'category' to 'category_id'
+        if (isset($validated['category'])) {
+            $validated['category_id'] = $validated['category'];
+            unset($validated['category']);
+        }
+
         $product->fill($validated);
 
         if ($request->hasFile('featured_image')) {
@@ -100,22 +122,22 @@ class ProductController extends Controller
             $product->featured_image = $request->file('featured_image')->store('products', 'public');
         }
 
-        $product->save();
+        // Handle gallery images
+        $keptImages = $request->input('keep_images') ? json_decode($request->input('keep_images'), true) : [];
+        $newGalleryPaths = [];
 
-        $product->categories()->sync($validated['categories'] ?? []);
-        $product->colours()->sync($validated['colours'] ?? []);
-        $product->occasions()->sync($validated['occasions'] ?? []);
-
-        if ($product->is_variable && ! empty($validated['variants'])) {
-            $product->variants()->delete();
-            foreach ($validated['variants'] as $variantData) {
-                $product->variants()->create($variantData);
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $image) {
+                $newGalleryPaths[] = $image->store('products/gallery', 'public');
             }
-        } elseif (! $product->is_variable) {
-            $product->variants()->delete();
         }
 
-        return redirect()->route('dashboard.products.index')
+        // Combine kept existing images with new ones
+        $product->images = array_merge($keptImages, $newGalleryPaths);
+
+        $product->save();
+
+        return redirect()->route('account.products')
             ->with('success', 'Product updated successfully.');
     }
 
@@ -129,7 +151,7 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('dashboard.products.index')
+        return redirect()->route('account.products')
             ->with('success', 'Product deleted successfully.');
     }
 }
