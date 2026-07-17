@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\ProductController as DashboardProductControll
 use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\HomepageController;
+use App\Http\Controllers\HowItWorksController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -27,6 +28,7 @@ Route::get('/enquiry/{product}', [EnquiryController::class, 'create'])->name('en
 Route::post('/enquiry', [EnquiryController::class, 'store'])->middleware('throttle:5,1')->name('enquiry.store');
 
 // Static pages
+Route::get('/how-it-works', [HowItWorksController::class, 'index'])->name('how-it-works');
 Route::get('/page/{page:slug}', [PageController::class, 'show'])->name('pages.show');
 
 // Boutique application (public, rate-limited)
