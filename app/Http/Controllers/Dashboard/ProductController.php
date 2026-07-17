@@ -25,7 +25,7 @@ class ProductController extends Controller
         $this->authorize('viewAny', Product::class);
 
         $products = $request->user()->boutique->products()
-            ->with('category')
+            ->with(['boutique', 'category', 'variants'])
             ->latest()
             ->paginate(15);
 
@@ -93,7 +93,7 @@ class ProductController extends Controller
     {
         $this->authorize('update', $product);
 
-        $product->load(['variants', 'categories', 'colours', 'occasions']);
+        $product->load(['boutique', 'variants', 'images', 'categories', 'colours', 'occasions']);
         $categories = Category::orderBy('name')->get();
         $colours = Colour::orderBy('name')->get();
         $occasions = Occasion::orderBy('name')->get();
@@ -125,6 +125,16 @@ class ProductController extends Controller
         // Handle gallery images
         $keptImages = $request->input('keep_images') ? json_decode($request->input('keep_images'), true) : [];
         $newGalleryPaths = [];
+
+        // Delete removed images from storage
+        $oldImages = $product->images ?? [];
+        if (is_array($oldImages)) {
+            foreach ($oldImages as $oldImage) {
+                if (! in_array($oldImage, $keptImages)) {
+                    Storage::disk('public')->delete($oldImage);
+                }
+            }
+        }
 
         if ($request->hasFile('gallery')) {
             foreach ($request->file('gallery') as $image) {

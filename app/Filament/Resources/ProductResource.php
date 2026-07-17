@@ -55,14 +55,26 @@ class ProductResource extends Resource
                     ->columnSpanFull(),
             ])->columns(2),
 
-            Section::make('Pricing & Type')->schema([
+            Section::make('Pricing & Details')->schema([
                 Forms\Components\Toggle::make('is_variable')
                     ->label('Has size variants')
                     ->live(),
-                Forms\Components\TextInput::make('price')
+                Forms\Components\TextInput::make('price_per_day')
+                    ->label('Price per day')
                     ->numeric()
                     ->prefix('€')
+                    ->required()
                     ->visible(fn (Get $get): bool => ! $get('is_variable')),
+                Forms\Components\TextInput::make('size')
+                    ->label('Size')
+                    ->maxLength(50)
+                    ->placeholder('e.g. 8, 10, 12, 14')
+                    ->visible(fn (Get $get): bool => ! $get('is_variable')),
+                Forms\Components\TextInput::make('color')
+                    ->label('Colour')
+                    ->maxLength(255)
+                    ->placeholder('e.g. Cream, Black')
+                    ->required(),
                 Forms\Components\Toggle::make('is_available')
                     ->default(true),
                 Forms\Components\Toggle::make('is_active')
@@ -77,7 +89,8 @@ class ProductResource extends Resource
                             Forms\Components\TextInput::make('size')
                                 ->required()
                                 ->maxLength(10),
-                            Forms\Components\TextInput::make('price')
+                            Forms\Components\TextInput::make('price_per_day')
+                                ->label('Price per day')
                                 ->numeric()
                                 ->required()
                                 ->prefix('€'),
@@ -91,29 +104,27 @@ class ProductResource extends Resource
 
             Section::make('Images')->schema([
                 Forms\Components\FileUpload::make('featured_image')
+                    ->label('Featured Image')
                     ->image()
                     ->disk('public')
                     ->directory('products/featured')
-                    ->visibility('public'),
-                Forms\Components\Repeater::make('images')
-                    ->relationship()
-                    ->schema([
-                        Forms\Components\FileUpload::make('path')
-                            ->image()
-                            ->required()
-                            ->disk('public')
-                            ->directory('products/gallery')
-                            ->visibility('public'),
-                        Forms\Components\TextInput::make('sort_order')
-                            ->numeric()
-                            ->default(0),
-                        Forms\Components\Toggle::make('is_featured')
-                            ->default(false),
-                    ])
-                    ->columns(3)
-                    ->defaultItems(0)
-                    ->addActionLabel('Add image')
+                    ->visibility('public')
                     ->columnSpanFull(),
+                Forms\Components\ViewField::make('existing_images')
+                    ->label('Existing Gallery Images')
+                    ->view('filament.forms.components.product-gallery')
+                    ->visible(fn ($record) => $record && is_array($record->images) && ! empty($record->images))
+                    ->columnSpanFull(),
+                Forms\Components\FileUpload::make('new_gallery_images')
+                    ->label('Add New Gallery Images')
+                    ->image()
+                    ->multiple()
+                    ->maxFiles(10)
+                    ->disk('public')
+                    ->directory('products/gallery')
+                    ->visibility('public')
+                    ->columnSpanFull()
+                    ->helperText('Upload new images to add to the gallery'),
             ]),
 
             Section::make('Categorisation')->schema([
