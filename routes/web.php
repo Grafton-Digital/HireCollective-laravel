@@ -6,6 +6,7 @@ use App\Http\Controllers\BoutiqueController;
 use App\Http\Controllers\Dashboard\EnquiryController as DashboardEnquiryController;
 use App\Http\Controllers\Dashboard\ProductController as DashboardProductController;
 use App\Http\Controllers\EnquiryController;
+use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
@@ -18,6 +19,7 @@ Route::get('/boutiques', [BoutiqueController::class, 'index'])->name('boutiques.
 Route::get('/boutiques/{boutique:slug}', [BoutiqueController::class, 'show'])->name('boutiques.show');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/boutiques/{boutique:slug}/{product:slug}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/favorites', [FavoritesController::class, 'index'])->name('favorites.index');
 
 // Enquiry (public, rate-limited)
 Route::get('/enquiry/confirmation', [EnquiryController::class, 'confirmation'])->name('enquiry.confirmation');

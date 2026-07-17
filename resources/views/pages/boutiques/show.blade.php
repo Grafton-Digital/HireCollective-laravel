@@ -221,38 +221,10 @@
             </a>
         </div> -->
         <div class="grid grid-cols-3 gap-4">
-            @forelse ($products->take(6) as $product)
-                <a href="{{ route('products.show', [$boutique, $product]) }}" class="group flex flex-col [&:hover_img]:scale-105">
-                    <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
-                        @if ($product->featured_image)
-                            <div class="overflow-hidden rounded bg-cream-100">
-                                <img src="{{ Storage::url($product->featured_image) }}" alt="{{ $product->name }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500">
-                            </div>
-                        @else
-                            <div class="flex items-center justify-center rounded bg-cream-100" style="height:220px;">
-                                <span class="text-xs text-[#999]">No image</span>
-                            </div>
-                        @endif
-                        <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
-                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="flex flex-row justify-between">
-                        <h3 class="text-lg font-normal text-black">{{ $product->name }}</h3>
-                        <p class="mt-1 text-base font-normal text-black">
-                            form 
-                            @if ($product->is_variable && $product->variants->count())
-                                €{{ number_format($product->variants->min('price'), 0) }}
-                            @elseif ($product->price)
-                                €{{ number_format($product->price, 0) }}
-                            @endif
-                        </p>
-                    </div>
-                </a>
+            @forelse ($products as $product)
+                <x-product-card :product="$product" />
             @empty
-                <p class="col-span-6 text-center text-[#666]">No items available at the moment.</p>
+                <p class="col-span-3 text-center text-[#666]">No items available at the moment.</p>
             @endforelse
         </div>
     </section>

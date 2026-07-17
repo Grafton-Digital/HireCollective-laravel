@@ -148,101 +148,15 @@
 
         <div class="featured-swiper swiper relative">
             <div class="swiper-wrapper">
-                {{-- Product 1 --}}
-                <div class="swiper-slide">
-                    <a href="#" class="group flex flex-col [&:hover_img]:scale-105">
-                        <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
-                            <img src="{{ asset('images/new-collection1.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500" alt="Beige Knitted Suit">
-                            <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
-                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <h3 class="text-lg font-normal text-black">Beige Knitted Suit</h3>
-                        <p class="mt-1 text-base font-normal text-black">$ 220</p>
-                    </a>
-                </div>
-
-                {{-- Product 2 --}}
-                <div class="swiper-slide">
-                    <a href="#" class="group flex flex-col [&:hover_img]:scale-105">
-                        <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
-                            <img src="{{ asset('images/new-collection2.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500" alt="Men's Summer T-shirt">
-                            <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
-                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <h3 class="text-lg font-normal text-black">Men's Summer T-shirt</h3>
-                        <p class="mt-1 text-base font-normal text-black">$ 180</p>
-                    </a>
-                </div>
-
-                {{-- Product 3 --}}
-                <div class="swiper-slide">
-                    <a href="#" class="group flex flex-col [&:hover_img]:scale-105">
-                        <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
-                            <img src="{{ asset('images/new-collection3.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500" alt="Business Suit Set">
-                            <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
-                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <h3 class="text-lg font-normal text-black">Business Suit Set</h3>
-                        <p class="mt-1 text-base font-normal text-black">$ 485</p>
-                    </a>
-                </div>
-
-                {{-- Product 4 --}}
-                <div class="swiper-slide">
-                    <a href="#" class="group flex flex-col [&:hover_img]:scale-105">
-                        <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
-                            <img src="{{ asset('images/blog1.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500" alt="Elegant Evening Dress">
-                            <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
-                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <h3 class="text-lg font-normal text-black">Elegant Evening Dress</h3>
-                        <p class="mt-1 text-base font-normal text-black">$ 350</p>
-                    </a>
-                </div>
-
-                {{-- Product 5 --}}
-                <div class="swiper-slide">
-                    <a href="#" class="group flex flex-col [&:hover_img]:scale-105">
-                        <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
-                            <img src="{{ asset('images/blog2.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500" alt="Casual Blazer">
-                            <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
-                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <h3 class="text-lg font-normal text-black">Casual Blazer</h3>
-                        <p class="mt-1 text-base font-normal text-black">$ 290</p>
-                    </a>
-                </div>
-
-                {{-- Product 6 --}}
-                <div class="swiper-slide">
-                    <a href="#" class="group flex flex-col [&:hover_img]:scale-105">
-                        <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
-                            <img src="{{ asset('images/product-cat1.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500" alt="Designer Coat">
-                            <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
-                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <h3 class="text-lg font-normal text-black">Designer Coat</h3>
-                        <p class="mt-1 text-base font-normal text-black">$ 420</p>
-                    </a>
-                </div>
+                @forelse ($latestProducts as $product)
+                    <div class="swiper-slide">
+                        <x-product-card :product="$product" />
+                    </div>
+                @empty
+                    <div class="swiper-slide">
+                        <p class="text-center text-[#666] py-12">No products available at the moment.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
     </section>
@@ -309,51 +223,15 @@
         </div>
 
         <div class="grid grid-cols-3 gap-6">
-            {{-- Product 1 --}}
-            <a href="#" class="group flex flex-col animate [&:hover_img]:scale-105">
-                <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
-                    <img src="{{ asset('images/new-collection1.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500" alt="image">
-                    <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                            <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
-                        </svg>
-                    </button>
-                </div>
-                <h3 class="text-lg font-normal text-black">Beige Knitted Suit</h3>
-                <p class="mt-1 text-base font-normal text-black">$ 220</p>
-            </a>
-
-            {{-- Product 2 --}}
-            <a href="#" class="group flex flex-col animate animate-delay-100 [&:hover_img]:scale-105">
-                <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
-                    <img src="{{ asset('images/new-collection2.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500" alt="image">
-                    <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                            <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
-                        </svg>
-                    </button>
-                </div>
-                <h3 class="text-lg font-normal text-black">Men's Summer T-shirt</h3>
-                <p class="mt-1 text-base font-normal text-black">$ 180</p>
-            </a>
-
-            {{-- Product 3 --}}
-            <a href="#" class="group flex flex-col animate animate-delay-200 [&:hover_img]:scale-105">
-                <div class="relative mb-4 overflow-hidden h-[500px] bg-cream-100">
-                    <img src="{{ asset('images/new-collection3.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1 transition-transform duration-500" alt="image">
-                    <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white">
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                            <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
-                        </svg>
-                    </button>
-                </div>
-                <h3 class="text-lg font-normal text-black">Business Suit Set</h3>
-                <p class="mt-1 text-base font-normal text-black">$ 485</p>
-            </a>
+             @forelse ($latestProducts as $product)
+                <x-product-card :product="$product" />
+            @empty
+                <p class="col-span-3 text-center text-[#666]">No products available at the moment.</p>
+            @endforelse
         </div>
     </section>
 
-    {{-- Made for the N.Y KNITWEAR --}}
+    {{-- CTA --}}
     <section class="relative h-[600px] overflow-hidden">
         <img src="{{ asset('images/cat-all.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="N.Y KNITWEAR">
         <div class="absolute inset-0 bg-black/40"></div>
@@ -391,70 +269,15 @@
 
         <div class="brands-swiper swiper relative">
             <div class="swiper-wrapper">
-                {{-- Brand 1 --}}
-                <div class="swiper-slide">
-                    <a href="" class="flex flex-col [&:hover_img]:scale-105">
-                        <div class="relative mb-6 h-[400px] overflow-hidden">
-                            <img src="{{ asset('images/blog1.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Amara Cashmere">
-                        </div>
-                        <h3 class="mb-3 font-serif text-2xl font-normal text-black">Amara Cashmere</h3>
-                        <p class="text-sm leading-relaxed text-gray-600">Italian handcrafted cashmere. Minimalist cuts, soft textures, and a neutral palette for everyday elegance.</p>
-                    </a>
-                </div>
-
-                {{-- Brand 2 --}}
-                <div class="swiper-slide">
-                    <a href="" class="flex flex-col [&:hover_img]:scale-105">
-                        <div class="relative mb-6 h-[400px] overflow-hidden">
-                            <img src="{{ asset('images/blog2.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Maison Laine">
-                        </div>
-                        <h3 class="mb-3 font-serif text-2xl font-normal text-black">Maison Laine</h3>
-                        <p class="text-sm leading-relaxed text-gray-600">Parisian knitwear with an avant-garde approach. Structural silhouettes, organic wool, and impeccable attention to detail.</p>
-                    </a>
-                </div>
-
-                {{-- Brand 3 --}}
-                <div class="swiper-slide">
-                    <a href="" class="flex flex-col [&:hover_img]:scale-105">
-                        <div class="relative mb-6 h-[400px] overflow-hidden">
-                            <img src="{{ asset('images/hero2.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Norde Knit Studio">
-                        </div>
-                        <h3 class="mb-3 font-serif text-2xl font-normal text-black">Norde Knit Studio</h3>
-                        <p class="text-sm leading-relaxed text-gray-600">Scandinavian design with Japanese attention to quality. Oversized forms, natural fibers, and warm simplicity.</p>
-                    </a>
-                </div>
-
-                <div class="swiper-slide">
-                    <a href="" class="flex flex-col [&:hover_img]:scale-105">
-                        <div class="relative mb-6 h-[400px] overflow-hidden">
-                            <img src="{{ asset('images/product-cat1.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Amara Cashmere">
-                        </div>
-                        <h3 class="mb-3 font-serif text-2xl font-normal text-black">Amara Cashmere</h3>
-                        <p class="text-sm leading-relaxed text-gray-600">Italian handcrafted cashmere. Minimalist cuts, soft textures, and a neutral palette for everyday elegance.</p>
-                    </a>
-                </div>
-
-                {{-- Brand 2 --}}
-                <div class="swiper-slide">
-                    <a href="" class="flex flex-col [&:hover_img]:scale-105">
-                        <div class="relative mb-6 h-[400px] overflow-hidden">
-                            <img src="{{ asset('images/product-cat2.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Maison Laine">
-                        </div>
-                        <h3 class="mb-3 font-serif text-2xl font-normal text-black">Maison Laine</h3>
-                        <p class="text-sm leading-relaxed text-gray-600">Parisian knitwear with an avant-garde approach. Structural silhouettes, organic wool, and impeccable attention to detail.</p>
-                    </a>
-                </div>
-
-                {{-- Brand 3 --}}
-                <div class="swiper-slide">
-                    <a href="" class="flex flex-col [&:hover_img]:scale-105">
-                        <div class="relative mb-6 h-[400px] overflow-hidden">
-                            <img src="{{ asset('images/product-cat3.webp') }}" class="h-full w-full object-cover transition-transform duration-500" alt="Norde Knit Studio">
-                        </div>
-                        <h3 class="mb-3 font-serif text-2xl font-normal text-black">Norde Knit Studio</h3>
-                        <p class="text-sm leading-relaxed text-gray-600">Scandinavian design with Japanese attention to quality. Oversized forms, natural fibers, and warm simplicity.</p>
-                    </a>
-                </div>
+                @forelse ($featuredBoutiques as $boutique)
+                    <div class="swiper-slide">
+                        <x-boutique-card :boutique="$boutique" />
+                    </div>
+                @empty
+                    <div class="swiper-slide">
+                        <p class="text-center text-[#666] py-12">No boutiques available at the moment.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
 

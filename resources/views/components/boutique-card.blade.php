@@ -1,13 +1,13 @@
 @props(['boutique'])
 
-<a href="{{ route('boutiques.show', $boutique) }}" class="block flex flex-col [&:hover_img]:scale-105">
+<a href="{{ route('boutiques.show', $boutique) }}" class="flex flex-col aspect-[1/0.8] [&:hover_img]:scale-105">
     @if ($boutique->cover_image)
-        <div class="h-[400px] overflow-hidden bg-cream-100">
+        <div class="h-full overflow-hidden bg-cream-100">
             <img src="{{ Storage::url($boutique->cover_image) }}" alt="{{ $boutique->name }}"
                  class="h-full w-full object-cover transition-transform duration-500">
         </div>
     @else
-        <div class="h-[400px] flex items-center justify-center bg-cream-100">
+        <div class="h-full flex items-center justify-center bg-cream-100">
             <span class="font-serif text-6xl font-bold text-black">{{ substr($boutique->name, 0, 1) }}</span>
         </div>
     @endif
