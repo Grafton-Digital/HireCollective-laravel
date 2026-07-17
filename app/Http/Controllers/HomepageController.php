@@ -23,7 +23,7 @@ class HomepageController extends Controller
         $latestProducts = Product::where('is_active', true)
             ->whereHas('boutique', fn ($q) => $q->where('is_active', true))
             ->latest()
-            ->take(8)
+            ->take(3)
             ->get();
 
         return view('pages.home', compact('sections', 'featuredBoutiques', 'latestProducts'));
