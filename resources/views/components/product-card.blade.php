@@ -32,7 +32,7 @@
     </div>
 
     {{-- Info --}}
-    <div class="flex flex-row justify-between items center text-[13px] mt-2 gap-1">
+    <div class="flex flex-row justify-between items-center text-[13px] mt-2 gap-1">
         <span class="font-medium text-black">{{ $product->name }}</span>
         <span>
             @if ($product->is_variable && $product->variants->count())

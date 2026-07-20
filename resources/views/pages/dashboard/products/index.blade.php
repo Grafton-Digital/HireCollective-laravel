@@ -5,7 +5,7 @@
                 <h1 class="text-3xl font-semibold text-gray-900">Products</h1>
                 <p class="mt-2 text-sm text-gray-500">{{ $products->total() }} products</p>
             </div>
-            <a href="{{ route('dashboard.products.create') }}" class=" bg-gray-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-gray-800">
+            <a href="{{ route('account.products.create') }}" class=" bg-gray-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-gray-800">
                 Add Product
             </a>
         </div>
@@ -39,7 +39,7 @@
                             <x-availability-badge :available="$product->is_available" />
                         </td>
                         <td class="px-4 py-3 text-right text-sm">
-                            <a href="{{ route('dashboard.products.edit', $product) }}" class="text-gray-600 hover:text-gray-900">Edit</a>
+                            <a href="{{ route('account.products.edit', $product) }}" class="text-gray-600 hover:text-gray-900">Edit</a>
                         </td>
                     </tr>
                 @empty

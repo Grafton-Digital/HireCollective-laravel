@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\Components\AvailabilityCalendar;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Boutique;
 use App\Models\Product;
@@ -70,11 +71,6 @@ class ProductResource extends Resource
                     ->maxLength(50)
                     ->placeholder('e.g. 8, 10, 12, 14')
                     ->visible(fn (Get $get): bool => ! $get('is_variable')),
-                Forms\Components\TextInput::make('color')
-                    ->label('Colour')
-                    ->maxLength(255)
-                    ->placeholder('e.g. Cream, Black')
-                    ->required(),
                 Forms\Components\Toggle::make('is_available')
                     ->default(true),
                 Forms\Components\Toggle::make('is_active')
@@ -141,6 +137,13 @@ class ProductResource extends Resource
                     ->multiple()
                     ->preload(),
             ])->columns(3),
+
+            Section::make('Availability Calendar')->schema([
+                AvailabilityCalendar::make('availability')
+                    ->label('Availability Calendar')
+                    ->helperText('Click on dates to toggle availability. Green = available, Red = unavailable, Yellow = need to confirm')
+                    ->columnSpanFull(),
+            ]),
         ]);
     }
 

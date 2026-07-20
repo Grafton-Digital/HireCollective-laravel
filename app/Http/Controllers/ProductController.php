@@ -57,10 +57,15 @@ class ProductController extends Controller
 
         $product->load(['variants', 'images' => fn ($q) => $q->orderBy('sort_order'), 'categories', 'colours', 'occasions']);
 
+        // Get related products from same categories but different boutiques
+        $categoryIds = $product->categories->pluck('id');
+
         $related = Product::with(['boutique', 'variants'])
             ->where('is_active', true)
             ->where('id', '!=', $product->id)
-            ->where('boutique_id', $boutique->id)
+            ->where('boutique_id', '!=', $boutique->id)
+            ->whereHas('boutique', fn ($q) => $q->where('is_active', true))
+            ->when($categoryIds->isNotEmpty(), fn ($q) => $q->whereHas('categories', fn ($cq) => $cq->whereIn('categories.id', $categoryIds)))
             ->inRandomOrder()
             ->take(4)
             ->get();

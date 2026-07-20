@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'price',
     'price_per_day',
     'size',
-    'color',
     'category_id',
     'is_variable',
     'is_available',

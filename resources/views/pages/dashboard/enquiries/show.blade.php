@@ -53,7 +53,7 @@
             <span class="text-sm text-gray-500">Status:</span>
             @foreach (['new', 'read', 'archived'] as $status)
                 @if ($enquiry->status !== $status)
-                    <form method="POST" action="{{ route('dashboard.enquiries.update', $enquiry) }}">
+                    <form method="POST" action="{{ route('account.enquiries.update', $enquiry) }}">
                         @csrf
                         @method('PATCH')
                         <input type="hidden" name="status" value="{{ $status }}">
@@ -69,6 +69,6 @@
             @endforeach
         </div>
 
-        <a href="{{ route('dashboard.enquiries.index') }}" class="inline-block text-sm text-gray-500 hover:text-gray-700">&larr; Back to enquiries</a>
+        <a href="{{ route('account.enquiries.index') }}" class="inline-block text-sm text-gray-500 hover:text-gray-700">&larr; Back to enquiries</a>
     </div>
 </x-layouts.account>

@@ -5,6 +5,7 @@ namespace Tests\Feature\Filament;
 use App\Filament\Resources\ProductEnquiryResource;
 use App\Filament\Resources\ProductResource;
 use App\Models\Boutique;
+use App\Models\Colour;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -14,6 +15,15 @@ use Tests\TestCase;
 class ProductEnquiryTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected Colour $colour;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->colour = Colour::create(['name' => 'Black', 'slug' => 'black', 'hex_code' => '#000000']);
+    }
 
     public function test_boutique_owner_can_submit_product_enquiry(): void
     {
@@ -30,8 +40,9 @@ class ProductEnquiryTest extends TestCase
             ->fillForm([
                 'name' => 'Test Product',
                 'slug' => 'test-product',
-                'price' => 100,
+                'price_per_day' => 100,
                 'is_variable' => false,
+                'colours' => [$this->colour->id],
             ])
             ->call('create')
             ->assertHasNoFormErrors();
@@ -185,8 +196,9 @@ class ProductEnquiryTest extends TestCase
                 'boutique_id' => $boutique->id,
                 'name' => 'Admin Product',
                 'slug' => 'admin-product',
-                'price' => 150,
+                'price_per_day' => 150,
                 'is_variable' => false,
+                'colours' => [$this->colour->id],
             ])
             ->call('create')
             ->assertHasNoFormErrors();

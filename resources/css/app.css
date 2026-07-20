@@ -108,3 +108,33 @@
     opacity: 1 !important;
   }
 }
+
+/* Calendar Availability Styles */
+.calendar-day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.calendar-day.available {
+  background-color: #dcfce7;
+  color: #14532d;
+}
+
+.calendar-day.unavailable {
+  background-color: #fee2e2;
+  color: #7f1d1d;
+}
+
+.calendar-day.confirm {
+  background-color: #fef3c7;
+  color: #713f12;
+}
+
+.calendar-day.other-month {
+  color: #d1d5db;
+}

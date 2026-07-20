@@ -154,7 +154,7 @@
 
     {{-- Product grid --}}
     <section class="px-[60px] py-6">
-        <div class="grid grid-cols-4 gap-5">
+        <div class="grid grid-cols-3 gap-5">
             @forelse ($products as $product)
                 <x-product-card :product="$product" />
             @empty

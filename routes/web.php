@@ -36,30 +36,28 @@ Route::get('/boutique/apply', [BoutiqueApplicationController::class, 'create'])-
 Route::post('/boutique/apply', [BoutiqueApplicationController::class, 'store'])->middleware('throttle:3,60')->name('boutique.application.store');
 Route::get('/boutique/application/confirmation', [BoutiqueApplicationController::class, 'confirmation'])->name('boutique.application.confirmation');
 
-// Boutique owner products
-Route::middleware(['auth', 'boutique_owner'])->prefix('dashboard')->name('dashboard.')->group(function () {
-    Route::get('/products', [DashboardProductController::class, 'index'])->name('products.index');
+// Boutique owner account
+Route::middleware(['auth', 'boutique_owner'])->prefix('account')->name('account.')->group(function () {
+    Route::get('/', fn () => redirect()->route('account.overview'));
+    Route::get('/overview', [AccountController::class, 'overview'])->name('overview');
+    Route::get('/boutique-info', [AccountController::class, 'boutiqueInfo'])->name('boutique-info');
+    Route::get('/settings', [AccountController::class, 'settings'])->name('settings');
+    Route::get('/help-support', [AccountController::class, 'helpSupport'])->name('help-support');
+    Route::patch('/profile', [AccountController::class, 'update'])->name('update');
+    Route::patch('/password', [AccountController::class, 'updatePassword'])->name('password.update');
+
+    // Products
+    Route::get('/products', [AccountController::class, 'products'])->name('products');
     Route::get('/products/create', [DashboardProductController::class, 'create'])->name('products.create');
     Route::post('/products', [DashboardProductController::class, 'store'])->name('products.store');
     Route::get('/products/{product}/edit', [DashboardProductController::class, 'edit'])->name('products.edit');
     Route::put('/products/{product}', [DashboardProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [DashboardProductController::class, 'destroy'])->name('products.destroy');
 
+    // Enquiries
     Route::get('/enquiries', [DashboardEnquiryController::class, 'index'])->name('enquiries.index');
     Route::get('/enquiries/{enquiry}', [DashboardEnquiryController::class, 'show'])->name('enquiries.show');
     Route::patch('/enquiries/{enquiry}', [DashboardEnquiryController::class, 'update'])->name('enquiries.update');
-});
-
-// Boutique owner account
-Route::middleware(['auth', 'boutique_owner'])->prefix('account')->name('account.')->group(function () {
-    Route::get('/', fn () => redirect()->route('account.overview'));
-    Route::get('/overview', [AccountController::class, 'overview'])->name('overview');
-    Route::get('/boutique-info', [AccountController::class, 'boutiqueInfo'])->name('boutique-info');
-    Route::get('/products', [AccountController::class, 'products'])->name('products');
-    Route::get('/settings', [AccountController::class, 'settings'])->name('settings');
-    Route::get('/help-support', [AccountController::class, 'helpSupport'])->name('help-support');
-    Route::patch('/profile', [AccountController::class, 'update'])->name('update');
-    Route::patch('/password', [AccountController::class, 'updatePassword'])->name('password.update');
 });
 
 // Auth profile (Breeze)

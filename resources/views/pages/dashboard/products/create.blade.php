@@ -6,7 +6,7 @@
 
         <p class="mb-8 text-sm text-gray-500">Fill in the product details below. Fields marked with * are required.</p>
 
-        <form method="POST" action="{{ route('dashboard.products.store') }}" enctype="multipart/form-data"
+        <form method="POST" action="{{ route('account.products.store') }}" enctype="multipart/form-data"
             x-data="productForm()"
             @submit.prevent="submitForm"
             @file-selected-main.window="mainImage = $event.detail"
@@ -68,23 +68,87 @@
                         </div>
                     </div>
 
-                    {{-- Colour and Category --}}
+                    {{-- Colours and Category --}}
                     <div class="mb-6 grid grid-cols-2 gap-4">
-                        <div>
-                            <label for="color" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Colour *</label>
-                            <input
-                                type="text"
-                                name="color"
-                                id="color"
-                                value="{{ old('color') }}"
-                                placeholder="e.g. Cream, Black"
-                                required
-                                class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
-                            >
-                            @error('color') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                        <div x-data="colourSelector(@js($colours->toArray()), @js(old('colours', [])))">
+                            <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Colours *</label>
+
+                            {{-- Selected colours as tags --}}
+                            <div class="mb-2 flex flex-wrap gap-2" x-show="selectedColours.length > 0">
+                                <template x-for="(colourId, index) in selectedColours" :key="colourId">
+                                    <div class="inline-flex items-center gap-1 bg-gray-100 px-2 py-1 text-xs">
+                                        <span x-text="getColourName(colourId)"></span>
+                                        <button type="button" @click="removeColour(colourId)" class="text-gray-500 hover:text-gray-700">
+                                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+
+                            {{-- Dropdown toggle --}}
+                            <div class="relative">
+                                <button
+                                    type="button"
+                                    @click="open = !open"
+                                    class="flex w-full items-center justify-between border border-gray-300 bg-white px-3 py-2 text-left text-sm shadow-sm hover:bg-gray-50 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                                >
+                                    <span x-text="selectedColours.length === 0 ? 'Select colours' : selectedColours.length + ' selected'" class="text-gray-700"></span>
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </button>
+
+                                {{-- Dropdown menu --}}
+                                <div
+                                    x-show="open"
+                                    @click.away="open = false"
+                                    x-transition
+                                    class="absolute z-10 mt-1 w-full border border-gray-300 bg-white shadow-lg"
+                                >
+                                    {{-- Search input --}}
+                                    <div class="border-b border-gray-200 p-2">
+                                        <input
+                                            type="text"
+                                            x-model="search"
+                                            placeholder="Search colours..."
+                                            class="w-full border-gray-300 px-2 py-1 text-sm focus:border-gray-400 focus:ring-gray-400"
+                                        >
+                                    </div>
+
+                                    {{-- Options list --}}
+                                    <div class="max-h-48 overflow-y-auto">
+                                        <template x-for="colour in filteredColours" :key="colour.id">
+                                            <label
+                                                class="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50"
+                                                :class="{ 'bg-gray-100': selectedColours.includes(colour.id) }"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    :value="colour.id"
+                                                    x-model="selectedColours"
+                                                    class="border-gray-300 text-gray-900 focus:ring-gray-400"
+                                                >
+                                                <span x-text="colour.name"></span>
+                                            </label>
+                                        </template>
+                                        <div x-show="filteredColours.length === 0" class="px-3 py-2 text-sm text-gray-500">
+                                            No colours found
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Hidden inputs for form submission --}}
+                            <template x-for="colourId in selectedColours" :key="colourId">
+                                <input type="hidden" name="colours[]" :value="colourId">
+                            </template>
+
+                            @error('colours') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
 
-                        <div>
+                        <div class="mt-auto">
                             <label for="category" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Category</label>
                             <select
                                 name="category"
@@ -159,7 +223,7 @@
                                 <div class="text-center text-xs font-medium text-gray-500">Sa</div>
                                 <div class="text-center text-xs font-medium text-gray-500">Su</div>
 
-                                <template x-for="day in calendarDays" :key="day.date">
+                                <template x-for="(day, index) in calendarDays" :key="index">
                                     <button
                                         type="button"
                                         @click="toggleDate(day.date)"
@@ -479,7 +543,6 @@
                     const firstDayOfWeek = firstDay.getDay() === 0 ? 7 : firstDay.getDay();
                     const days = [];
 
-                    // Previous month days
                     for (let i = firstDayOfWeek - 1; i > 0; i--) {
                         days.push({
                             day: prevLastDay.getDate() - i + 1,
@@ -489,7 +552,6 @@
                         });
                     }
 
-                    // Current month days
                     for (let i = 1; i <= lastDay.getDate(); i++) {
                         const dateStr = `${this.currentYear}-${String(this.currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
                         days.push({
@@ -500,7 +562,6 @@
                         });
                     }
 
-                    // Next month days
                     const remainingDays = 35 - days.length;
                     for (let i = 1; i <= remainingDays; i++) {
                         days.push({
@@ -542,5 +603,6 @@
                 }
             }
         }
+
     </script>
 </x-layouts.account>

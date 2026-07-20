@@ -4,6 +4,7 @@ namespace Tests\Feature\Filament;
 
 use App\Filament\Resources\ProductResource;
 use App\Models\Boutique;
+use App\Models\Colour;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,6 +14,15 @@ use Tests\TestCase;
 class BoutiqueOwnerProductTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected Colour $colour;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->colour = Colour::create(['name' => 'Black', 'slug' => 'black', 'hex_code' => '#000000']);
+    }
 
     public function test_boutique_owner_can_create_product(): void
     {
@@ -31,10 +41,10 @@ class BoutiqueOwnerProductTest extends TestCase
                 'slug' => 'test-product',
                 'description' => 'Test description',
                 'is_variable' => false,
-                'price' => 100,
+                'price_per_day' => 100,
                 'is_available' => true,
                 'is_active' => true,
-                'images' => [],
+                'colours' => [$this->colour->id],
             ])
             ->call('create')
             ->assertHasNoFormErrors();
@@ -42,7 +52,6 @@ class BoutiqueOwnerProductTest extends TestCase
         $this->assertDatabaseHas(Product::class, [
             'name' => 'Test Product',
             'boutique_id' => $boutique->id,
-            'price' => 100,
         ]);
     }
 
@@ -64,10 +73,10 @@ class BoutiqueOwnerProductTest extends TestCase
                 'slug' => 'test-product',
                 'description' => 'Test description',
                 'is_variable' => false,
-                'price' => 100,
+                'price_per_day' => 100,
                 'is_available' => true,
                 'is_active' => true,
-                'images' => [],
+                'colours' => [$this->colour->id],
             ])
             ->call('create')
             ->assertHasNoFormErrors();
@@ -87,13 +96,18 @@ class BoutiqueOwnerProductTest extends TestCase
         $product = Product::factory()->create([
             'boutique_id' => $boutique->id,
             'name' => 'Original Name',
+            'price_per_day' => 100,
         ]);
+
+        $product->colours()->attach($this->colour->id);
 
         $this->actingAs($owner);
 
         Livewire::test(ProductResource\Pages\EditProduct::class, ['record' => $product->id])
             ->fillForm([
                 'name' => 'Updated Name',
+                'price_per_day' => 100,
+                'colours' => [$this->colour->id],
             ])
             ->call('save')
             ->assertHasNoFormErrors();

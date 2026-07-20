@@ -49,6 +49,11 @@ class ProductController extends Controller
 
         $validated = $request->validated();
 
+        // Decode availability JSON string to array
+        if (isset($validated['availability']) && is_string($validated['availability'])) {
+            $validated['availability'] = json_decode($validated['availability'], true) ?? [];
+        }
+
         // Generate unique slug
         $slug = $validated['slug'] ?? Str::slug($validated['name']);
         $originalSlug = $slug;
@@ -85,6 +90,11 @@ class ProductController extends Controller
 
         $product->save();
 
+        // Sync colours
+        if (isset($validated['colours'])) {
+            $product->colours()->sync($validated['colours']);
+        }
+
         return redirect()->route('account.products')
             ->with('success', 'Product created successfully.');
     }
@@ -106,6 +116,11 @@ class ProductController extends Controller
         $this->authorize('update', $product);
 
         $validated = $request->validated();
+
+        // Decode availability JSON string to array
+        if (isset($validated['availability']) && is_string($validated['availability'])) {
+            $validated['availability'] = json_decode($validated['availability'], true) ?? [];
+        }
 
         // Map 'category' to 'category_id'
         if (isset($validated['category'])) {
@@ -146,6 +161,11 @@ class ProductController extends Controller
         $product->images = array_merge($keptImages, $newGalleryPaths);
 
         $product->save();
+
+        // Sync colours
+        if (isset($validated['colours'])) {
+            $product->colours()->sync($validated['colours']);
+        }
 
         return redirect()->route('account.products')
             ->with('success', 'Product updated successfully.');

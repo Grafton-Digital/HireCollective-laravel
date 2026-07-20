@@ -2,13 +2,13 @@
     <x-slot:header>Enquiries</x-slot:header>
 
     <div class="flex items-center gap-4">
-        <a href="{{ route('dashboard.enquiries.index') }}"
+        <a href="{{ route('account.enquiries.index') }}"
            class="text-sm {{ !request('status') ? 'font-medium text-gray-900' : 'text-gray-500 hover:text-gray-700' }}">All</a>
-        <a href="{{ route('dashboard.enquiries.index', ['status' => 'new']) }}"
+        <a href="{{ route('account.enquiries.index', ['status' => 'new']) }}"
            class="text-sm {{ request('status') === 'new' ? 'font-medium text-gray-900' : 'text-gray-500 hover:text-gray-700' }}">New</a>
-        <a href="{{ route('dashboard.enquiries.index', ['status' => 'read']) }}"
+        <a href="{{ route('account.enquiries.index', ['status' => 'read']) }}"
            class="text-sm {{ request('status') === 'read' ? 'font-medium text-gray-900' : 'text-gray-500 hover:text-gray-700' }}">Read</a>
-        <a href="{{ route('dashboard.enquiries.index', ['status' => 'archived']) }}"
+        <a href="{{ route('account.enquiries.index', ['status' => 'archived']) }}"
            class="text-sm {{ request('status') === 'archived' ? 'font-medium text-gray-900' : 'text-gray-500 hover:text-gray-700' }}">Archived</a>
     </div>
 
@@ -26,7 +26,7 @@
                 @forelse ($enquiries as $enquiry)
                     <tr>
                         <td class="px-4 py-3 text-sm">
-                            <a href="{{ route('dashboard.enquiries.show', $enquiry) }}" class="font-medium text-gray-900 hover:underline">
+                            <a href="{{ route('account.enquiries.show', $enquiry) }}" class="font-medium text-gray-900 hover:underline">
                                 {{ $enquiry->customer_name }}
                             </a>
                             <p class="text-xs text-gray-500">{{ $enquiry->customer_email }}</p>
