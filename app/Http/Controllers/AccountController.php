@@ -55,36 +55,26 @@ class AccountController extends Controller
             'remove_cover_image' => ['nullable', 'in:0,1'],
             'boutique_name' => ['required', 'string', 'max:255'],
             'contact_email' => ['required', 'email', 'max:255'],
-            'designer' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
-            'location' => ['nullable', 'string', 'max:255'],
+            'county' => ['required', 'string', 'max:255'],
             'instagram' => ['nullable', 'string', 'max:255'],
-            'founded' => ['nullable', 'string', 'max:4'],
             'description' => ['nullable', 'string'],
         ]);
 
         $boutique = $request->user()->boutique;
-        $user = $request->user();
 
         if ($boutique) {
-            $location = explode(',', $validated['location'] ?? '');
             $socialLinks = $boutique->social_links ?? [];
 
             if (isset($validated['instagram'])) {
                 $socialLinks['instagram'] = $validated['instagram'];
             }
 
-            // Update user name (designer)
-            $user->update([
-                'name' => $validated['designer'],
-            ]);
-
             $updateData = [
                 'name' => $validated['boutique_name'],
                 'contact_email' => $validated['contact_email'],
                 'phone' => $validated['phone'] ?? null,
-                'city' => trim($location[0] ?? ''),
-                'county' => trim($location[1] ?? ''),
+                'county' => $validated['county'],
                 'description' => $validated['description'] ?? null,
                 'social_links' => $socialLinks,
             ];

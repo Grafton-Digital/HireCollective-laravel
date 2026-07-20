@@ -40,6 +40,7 @@ class Boutique extends Model
     protected function casts(): array
     {
         return [
+            'approved_at' => 'datetime',
             'opening_hours' => 'array',
             'social_links' => 'array',
             'is_active' => 'boolean',
@@ -87,6 +88,7 @@ class Boutique extends Model
         $this->update([
             'status' => self::STATUS_APPROVED,
             'is_active' => true,
+            'approved_at' => now(),
         ]);
 
         if ($this->pending_email && $this->pending_password) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\County;
 use App\Models\Boutique;
 use App\Models\Category;
 use App\Models\Colour;
@@ -22,13 +23,20 @@ class ProductController extends Controller
             ->when($request->query('occasion'), fn ($q, $slug) => $q->whereHas('occasions', fn ($cq) => $cq->where('slug', $slug)))
             ->when($request->query('boutique'), fn ($q, $slug) => $q->whereHas('boutique', fn ($bq) => $bq->where('slug', $slug)))
             ->when($request->query('designer'), fn ($q, $designer) => $q->where('designer', $designer))
+            ->when($request->query('county'), fn ($q, $county) => $q->where('county', $county))
             ->when($request->query('size'), fn ($q, $size) => $q->whereHas('variants', fn ($vq) => $vq->where('size', $size)))
-            ->when($request->query('search'), fn ($q, $search) => $q->where('name', 'like', "%{$search}%"))
+            ->when($request->query('search'), fn ($q, $search) => $q->where(function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('designer', 'like', "%{$search}%");
+            }))
             ->when($request->query('price'), function ($q, $price) {
                 match ($price) {
                     '0-50' => $q->where('price', '<=', 50),
                     '50-100' => $q->whereBetween('price', [50, 100]),
-                    '100+' => $q->where('price', '>=', 100),
+                    '100-150' => $q->whereBetween('price', [100, 150]),
+                    '150-200' => $q->whereBetween('price', [150, 200]),
+                    '200+' => $q->where('price', '>=', 200),
+                    'one-size' => $q->where('size', 'One Size'),
                     default => $q,
                 };
             });
@@ -45,8 +53,14 @@ class ProductController extends Controller
         $colours = Colour::orderBy('name')->get();
         $occasions = Occasion::orderBy('name')->get();
         $boutiques = Boutique::where('is_active', true)->orderBy('name')->get();
+        $designers = Product::where('is_active', true)
+            ->whereNotNull('designer')
+            ->distinct()
+            ->orderBy('designer')
+            ->pluck('designer');
+        $counties = County::cases();
 
-        return view('pages.products.index', compact('products', 'categories', 'colours', 'occasions', 'boutiques'));
+        return view('pages.products.index', compact('products', 'categories', 'colours', 'occasions', 'boutiques', 'designers', 'counties'));
     }
 
     public function show(Boutique $boutique, Product $product): View

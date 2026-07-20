@@ -138,20 +138,17 @@
                 </div>
 
                 <div>
-                    <label for="region" class="block text-xs font-semibold uppercase tracking-wider text-gray-700">Region</label>
+                    <label for="region" class="block text-xs font-semibold uppercase tracking-wider text-gray-700">County</label>
                     <select
                         name="region"
                         id="region"
                         required
                         class="mt-2 block w-full border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                     >
-                        <option value="">Select your region</option>
-                        <option value="Dublin" {{ old('region') == 'Dublin' ? 'selected' : '' }}>Dublin</option>
-                        <option value="Cork" {{ old('region') == 'Cork' ? 'selected' : '' }}>Cork</option>
-                        <option value="Galway" {{ old('region') == 'Galway' ? 'selected' : '' }}>Galway</option>
-                        <option value="Limerick" {{ old('region') == 'Limerick' ? 'selected' : '' }}>Limerick</option>
-                        <option value="Waterford" {{ old('region') == 'Waterford' ? 'selected' : '' }}>Waterford</option>
-                        <option value="Other" {{ old('region') == 'Other' ? 'selected' : '' }}>Other</option>
+                        <option value="">Select your county</option>
+                        @foreach (App\County::cases() as $county)
+                            <option value="{{ $county->value }}" {{ old('region') == $county->value ? 'selected' : '' }}>{{ $county->getLabel() }}</option>
+                        @endforeach
                     </select>
                     @error('region') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                 </div>

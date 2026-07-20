@@ -165,19 +165,6 @@
 
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label for="designer" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Designer</label>
-                                    <input
-                                        type="text"
-                                        name="designer"
-                                        id="designer"
-                                        value="{{ old('designer', $user->name) }}"
-                                        required
-                                        class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
-                                    >
-                                    @error('designer') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
-                                </div>
-
-                                <div>
                                     <label for="phone" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">WhatsApp</label>
                                     <input
                                         type="text"
@@ -188,21 +175,6 @@
                                         class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
                                     >
                                     @error('phone') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label for="location" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Location</label>
-                                    <input
-                                        type="text"
-                                        name="location"
-                                        id="location"
-                                        value="{{ old('location', $boutique ? $boutique->city.', '.$boutique->county : '') }}"
-                                        placeholder="London, UK"
-                                        class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
-                                    >
-                                    @error('location') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                                 </div>
 
                                 <div>
@@ -221,16 +193,21 @@
 
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label for="founded" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Founded</label>
-                                    <input
-                                        type="text"
-                                        name="founded"
-                                        id="founded"
-                                        value="{{ old('founded', $boutique?->created_at?->format('Y')) }}"
-                                        placeholder="2019"
+                                    <label for="county" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">County</label>
+                                    <select
+                                        name="county"
+                                        id="county"
+                                        required
                                         class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
                                     >
-                                    @error('founded') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                        <option value="">Select your county</option>
+                                        @foreach (App\County::cases() as $countyOption)
+                                            <option value="{{ $countyOption->value }}" {{ old('county', $boutique?->county) == $countyOption->value ? 'selected' : '' }}>
+                                                {{ $countyOption->getLabel() }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('county') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                                 </div>
 
                                 <div>

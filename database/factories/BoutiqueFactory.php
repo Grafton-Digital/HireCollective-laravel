@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\County;
 use App\Models\Boutique;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,7 +24,7 @@ class BoutiqueFactory extends Factory
             'slug' => fake()->unique()->slug(),
             'description' => fake()->paragraphs(2, true),
             'city' => fake()->city(),
-            'county' => fake()->state(),
+            'county' => fake()->randomElement(County::cases())->value,
             'contact_email' => fake()->companyEmail(),
             'phone' => fake()->phoneNumber(),
             'address' => fake()->streetAddress(),

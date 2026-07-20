@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\County;
 use App\Filament\Resources\BoutiqueResource\Pages;
 use App\Models\Boutique;
 use Filament\Actions;
@@ -61,8 +62,12 @@ class BoutiqueResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('city')
                     ->maxLength(100),
-                Forms\Components\TextInput::make('county')
-                    ->maxLength(100),
+                Forms\Components\Select::make('county')
+                    ->label('County')
+                    ->options(fn () => collect(County::cases())->mapWithKeys(fn ($county) => [$county->value => $county->getLabel()])->toArray())
+                    ->required()
+                    ->searchable()
+                    ->native(false),
                 Forms\Components\TextInput::make('contact_email')
                     ->email()
                     ->required()

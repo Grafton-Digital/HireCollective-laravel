@@ -1,7 +1,7 @@
 <x-layouts.account>
     <div class="mb-8 flex items-center justify-between">
         <div>
-            <h1 class="font-serif text-[32px] tracking-wide text-gray-900">Dashboard</h1>
+            <h1 class="font-serif text-[32px] tracking-wide text-gray-900">Boutique</h1>
             <p class="mt-1 text-sm text-gray-500">Manage your boutique profile and products</p>
         </div>
         @if(auth()->user()->boutique)
@@ -17,7 +17,7 @@
     @if(auth()->user()->boutique)
         <div class="bg-white p-8 shadow-sm">
             <div class="mb-6 flex items-start justify-between">
-                <h2 class="text-lg font-semibold text-gray-900">Boutique Information</h2>
+                <h2 class="text-lg font-semibold text-gray-900">Information</h2>
                 <a href="{{ route('account.settings') }}" class="inline-flex items-center gap-2 bg-black px-6 py-2 text-sm text-white hover:bg-gray-800">
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
@@ -42,11 +42,6 @@
                 </div>
 
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Designer</p>
-                    <p class="mt-1 text-sm text-gray-900">{{ auth()->user()->name ?? 'Not specified' }}</p>
-                </div>
-
-                <div>
                     <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">WhatsApp</p>
                     <p class="mt-1 text-sm text-gray-900">{{ $boutique->phone ?? 'Not specified' }}</p>
                 </div>
@@ -62,8 +57,8 @@
                 </div>
 
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Founded</p>
-                    <p class="mt-1 text-sm text-gray-900">{{ $boutique->created_at ? $boutique->created_at->format('Y') : 'Not specified' }}</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Member Since</p>
+                    <p class="mt-1 text-sm text-gray-900">{{ $boutique->approved_at ? $boutique->approved_at->format('j F Y') : ($boutique->created_at ? $boutique->created_at->format('j F Y') : 'Not specified') }}</p>
                 </div>
 
                 <div>
