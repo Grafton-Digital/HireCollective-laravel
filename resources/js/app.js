@@ -189,6 +189,58 @@ window.colourSelector = function(colours, selected = []) {
     };
 };
 
+// Favorites functionality
+window.migrateFavoritesFormat = function() {
+    let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+    if (favorites.length > 0 && typeof favorites[0] === 'number') {
+        favorites = favorites.map(id => ({
+            id: id,
+            addedAt: Date.now()
+        }));
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+    }
+
+    return favorites;
+};
+
+window.syncFavoritesWithUrl = function(routeUrl) {
+    const favorites = window.migrateFavoritesFormat();
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlIds = urlParams.getAll('ids[]').map(id => parseInt(id));
+    const favoriteIds = favorites.map(f => f.id);
+
+    const idsMatch = favoriteIds.length === urlIds.length &&
+                     favoriteIds.every(id => urlIds.includes(id)) &&
+                     urlIds.every(id => favoriteIds.includes(id));
+
+    if (!idsMatch) {
+        if (favoriteIds.length > 0) {
+            const params = new URLSearchParams();
+            favoriteIds.forEach(id => params.append('ids[]', id));
+            window.location.replace(`${routeUrl}?${params.toString()}`);
+        } else {
+            window.location.replace(routeUrl);
+        }
+    }
+};
+
+window.favoritesPageData = function() {
+    return {
+        favorites: JSON.parse(localStorage.getItem('favorites') || '[]'),
+        get favoriteCount() {
+            return this.favorites.length;
+        },
+        updateCount() {
+            this.favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        },
+        getAddedAtForProduct(productId) {
+            const favorite = this.favorites.find(f => f.id === productId);
+            return favorite ? favorite.addedAt : null;
+        }
+    };
+};
+
 Alpine.start();
 
 // Fade Up Animation on Scroll

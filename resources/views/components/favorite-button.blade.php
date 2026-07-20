@@ -4,21 +4,48 @@
     x-data="{
         liked: false,
         init() {
-            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-            this.liked = favorites.includes({{ $productId }});
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+            // Migrate old format to new format if needed
+            if (favorites.length > 0 && typeof favorites[0] === 'number') {
+                favorites = favorites.map(id => ({
+                    id: id,
+                    addedAt: Date.now()
+                }));
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+            }
+
+            this.liked = favorites.some(f => f.id === {{ $productId }});
         },
         toggleLike() {
-            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+            // Ensure new format
+            if (favorites.length > 0 && typeof favorites[0] === 'number') {
+                favorites = favorites.map(id => ({
+                    id: id,
+                    addedAt: Date.now()
+                }));
+            }
+
             const wasLiked = this.liked;
 
             if (this.liked) {
-                const index = favorites.indexOf({{ $productId }});
-                if (index > -1) {
-                    favorites.splice(index, 1);
-                }
+                // Remove from favorites
+                favorites = favorites.filter(f => f.id !== {{ $productId }});
+
+                // Also remove from viewed list
+                let viewedFavorites = JSON.parse(localStorage.getItem('viewedFavorites') || '[]');
+                viewedFavorites = viewedFavorites.filter(id => id !== {{ $productId }});
+                localStorage.setItem('viewedFavorites', JSON.stringify(viewedFavorites));
             } else {
-                favorites.push({{ $productId }});
+                // Add to favorites with timestamp
+                favorites.push({
+                    id: {{ $productId }},
+                    addedAt: Date.now()
+                });
             }
+
             localStorage.setItem('favorites', JSON.stringify(favorites));
             this.liked = !this.liked;
 

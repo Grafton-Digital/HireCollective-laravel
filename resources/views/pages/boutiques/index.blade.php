@@ -3,7 +3,7 @@
     <x-slot:metaDescription>Discover Ireland's finest luxury fashion hire boutiques. Dresses, hats, and bags for every occasion.</x-slot:metaDescription>
 
     {{-- Title section --}}
-    <section class="bg-cream-50 px-[60px] py-12">
+    <section class="px-[60px] py-12">
         <span class="text-[#c7a869] text-center text-sm block">DISCOVER</span>
         <h1 class="animate font-serif text-center text-[48px] uppercase font-normal text-black animate-visible">All Boutiques</h1>
         <p class="max-w-[520px] text-center text-sm leading-relaxed text-gray-600 mx-auto mb-6">Explore our curated selection of luxury knitwear boutiques, each handpicked for their exceptional craftsmanship and quality.</p>
@@ -62,7 +62,7 @@
     </section> -->
 
     {{-- Boutique grid --}}
-    <section class="bg-cream-50 px-[60px] pb-20">
+    <section class="px-[60px] pb-20">
         {{-- Results bar --}}
         <div class="flex items-center justify-between mb-6">
             <div class="text-sm text-gray-600">

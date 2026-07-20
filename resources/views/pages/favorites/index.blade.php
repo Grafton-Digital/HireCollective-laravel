@@ -3,38 +3,41 @@
 
     <script>
         (function() {
-            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            // Migrate old format to new format
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            if (favorites.length > 0 && typeof favorites[0] === 'number') {
+                favorites = favorites.map(id => ({
+                    id: id,
+                    addedAt: Date.now()
+                }));
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+            }
+
+            // Mark all current favorites as viewed
+            const favoriteIds = favorites.map(f => f.id);
+            localStorage.setItem('viewedFavorites', JSON.stringify(favoriteIds));
+
+            // Sync URL with localStorage
             const urlParams = new URLSearchParams(window.location.search);
             const urlIds = urlParams.getAll('ids[]').map(id => parseInt(id));
 
-            // Check if URL IDs match localStorage IDs
-            const idsMatch = favorites.length === urlIds.length &&
-                             favorites.every(id => urlIds.includes(id)) &&
-                             urlIds.every(id => favorites.includes(id));
+            const idsMatch = favoriteIds.length === urlIds.length &&
+                             favoriteIds.every(id => urlIds.includes(id)) &&
+                             urlIds.every(id => favoriteIds.includes(id));
 
             if (!idsMatch) {
-                // Reload with correct IDs from localStorage
-                if (favorites.length > 0) {
+                if (favoriteIds.length > 0) {
                     const params = new URLSearchParams();
-                    favorites.forEach(id => params.append('ids[]', id));
+                    favoriteIds.forEach(id => params.append('ids[]', id));
                     window.location.replace('{{ route('favorites.index') }}?' + params.toString());
                 } else {
-                    // No favorites - clear URL params
                     window.location.replace('{{ route('favorites.index') }}');
                 }
             }
         })();
     </script>
 
-    <div
-        x-data="{
-            favoriteCount: JSON.parse(localStorage.getItem('favorites') || '[]').length,
-            updateCount() {
-                this.favoriteCount = JSON.parse(localStorage.getItem('favorites') || '[]').length;
-            }
-        }"
-        @favorite-removed.window="updateCount()"
-    >
+    <div x-data="favoritesPageData()" @favorite-removed.window="updateCount(); if (favoriteCount === 0) location.reload()">
         {{-- Breadcrumb --}}
         <div class="flex items-center gap-2 bg-white px-[60px] py-3">
             <a href="{{ route('home') }}" class="text-xs text-[#666] hover:underline">Home</a>
@@ -50,8 +53,6 @@
             </div>
         </section>
 
-        <div class="h-px bg-[#E0E0E0]"></div>
-
         {{-- Product grid --}}
         <section class="bg-white px-[60px] py-8">
             @if ($products->isEmpty())
@@ -66,9 +67,9 @@
                     </a>
                 </div>
             @else
-                <div class="grid grid-cols-4 gap-5">
+                <div class="grid grid-cols-3 gap-5">
                     @foreach ($products as $product)
-                        <x-product-card :product="$product" :removable="true" />
+                        <x-favorite-product-card :product="$product" />
                     @endforeach
                 </div>
             @endif
