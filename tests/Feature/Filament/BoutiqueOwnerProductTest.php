@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Filament;
 
+use App\County;
 use App\Filament\Resources\ProductResource;
 use App\Models\Boutique;
 use App\Models\Colour;
@@ -37,6 +38,7 @@ class BoutiqueOwnerProductTest extends TestCase
         Livewire::test(ProductResource\Pages\CreateProduct::class)
             ->fillForm([
                 'boutique_id' => $boutique->id,
+                'county' => County::DUBLIN->value,
                 'name' => 'Test Product',
                 'slug' => 'test-product',
                 'description' => 'Test description',
@@ -69,6 +71,7 @@ class BoutiqueOwnerProductTest extends TestCase
         Livewire::test(ProductResource\Pages\CreateProduct::class)
             ->fillForm([
                 'boutique_id' => $boutique1->id,
+                'county' => County::CORK->value,
                 'name' => 'Test Product',
                 'slug' => 'test-product',
                 'description' => 'Test description',

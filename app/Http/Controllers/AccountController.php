@@ -23,7 +23,7 @@ class AccountController extends Controller
 
     public function products(Request $request): View
     {
-        $query = $request->user()->boutique->products()->with('category')->latest();
+        $query = $request->user()->boutique->products()->with(['category', 'colours'])->latest();
 
         if ($search = $request->input('search')) {
             $query->where('name', 'like', "%{$search}%");

@@ -62,7 +62,24 @@
                                 <td class="py-4 text-sm text-gray-900">{{ $product->name }}</td>
                                 <td class="py-4 text-sm text-gray-900">from €{{ number_format($product->price_per_day, 0) }}</td>
                                 <td class="py-4 text-sm text-gray-900">{{ $product->size ?? '-' }}</td>
-                                <td class="py-4 text-sm text-gray-900">{{ $product->color ?? '-' }}</td>
+                                <td class="py-4">
+                                    @if($product->colours && $product->colours->isNotEmpty())
+                                        <div class="flex items-center gap-1.5">
+                                            @foreach($product->colours->take(3) as $colour)
+                                                <div
+                                                    class="h-5 w-5 rounded-full border border-gray-200 shadow-sm"
+                                                    style="background-color: {{ $colour->hex_code ?? '#333' }};"
+                                                    title="{{ $colour->name }}"
+                                                ></div>
+                                            @endforeach
+                                            @if($product->colours->count() > 3)
+                                                <span class="text-xs text-gray-500">+{{ $product->colours->count() - 3 }}</span>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <span class="text-sm text-gray-400">-</span>
+                                    @endif
+                                </td>
                                 <td class="py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
                                         <a href="{{ route('account.products.edit', $product) }}" class="text-gray-400 hover:text-gray-900" title="Edit">

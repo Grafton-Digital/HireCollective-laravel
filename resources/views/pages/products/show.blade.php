@@ -86,10 +86,10 @@
                 @endif
 
                 {{-- Region --}}
-                @if ($boutique->city)
+                @if ($product->county)
                     <div class="flex items-center gap-2">
                         <span class="w-[150px] text-[11px] font-semibold tracking-[1px] text-black mt-[1px]">REGION</span>
-                        <span class="text-[13px] text-[#333]">{{ $boutique->city }}{{ $boutique->county ? ', ' . $boutique->county : '' }}</span>
+                        <span class="text-[13px] text-[#333]">{{ $product->county->getLabel() }}</span>
                     </div>
                 @endif
 

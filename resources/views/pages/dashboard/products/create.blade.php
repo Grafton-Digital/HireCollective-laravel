@@ -166,6 +166,25 @@
                         </div>
                     </div>
 
+                    {{-- Region --}}
+                    <div class="mb-6">
+                        <label for="county" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Region *</label>
+                        <select
+                            name="county"
+                            id="county"
+                            required
+                            class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                        >
+                            <option value="">Select region</option>
+                            @foreach(\App\County::cases() as $countyOption)
+                                <option value="{{ $countyOption->value }}" {{ old('county') == $countyOption->value ? 'selected' : '' }}>
+                                    {{ $countyOption->getLabel() }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('county') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                    </div>
+
                     {{-- Designer --}}
                     <div class="mb-6">
                         <label for="designer" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Designer</label>

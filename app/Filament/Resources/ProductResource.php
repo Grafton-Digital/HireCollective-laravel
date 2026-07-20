@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\County;
 use App\Filament\Forms\Components\AvailabilityCalendar;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Boutique;
@@ -39,6 +40,13 @@ class ProductResource extends Resource
                     ->native(false)
                     ->disabled(fn () => auth()->user()?->isBoutiqueOwner() && auth()->user()?->boutique_id)
                     ->dehydrated(),
+                Forms\Components\Select::make('county')
+                    ->label('Region')
+                    ->options(fn () => collect(County::cases())->mapWithKeys(fn ($county) => [$county->value => $county->getLabel()])->toArray())
+                    ->required()
+                    ->searchable()
+                    ->native(false)
+                    ->helperText('Select the region where this product is available'),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255)
@@ -167,6 +175,18 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('boutique.name')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('county')
+                    ->label('Region')
+                    ->sortable()
+                    ->searchable()
+                    ->placeholder('—')
+                    ->visible(fn () => auth()->user()?->isBoutiqueOwner() ?? false),
+                Tables\Columns\TextColumn::make('boutique.county')
+                    ->label('Boutique Region')
+                    ->sortable()
+                    ->searchable()
+                    ->placeholder('—')
+                    ->visible(fn () => auth()->user()?->isAdmin() ?? false),
                 Tables\Columns\TextColumn::make('price')
                     ->money('EUR')
                     ->sortable(),
@@ -193,6 +213,16 @@ class ProductResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('boutique')
                     ->relationship('boutique', 'name'),
+                Tables\Filters\SelectFilter::make('county')
+                    ->label('Region')
+                    ->options(fn () => collect(County::cases())->mapWithKeys(fn ($county) => [$county->value => $county->getLabel()])->toArray())
+                    ->query(fn ($query, $state) => $query->when(
+                        $state['value'] ?? null,
+                        fn ($query, $county) => $query->where(function ($query) use ($county) {
+                            $query->where('county', $county)
+                                ->orWhereHas('boutique', fn ($query) => $query->where('county', $county));
+                        })
+                    )),
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
                         Product::STATUS_PENDING => 'Pending',

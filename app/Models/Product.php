@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\County;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'boutique_id',
+    'county',
     'name',
     'designer',
     'slug',
@@ -41,6 +43,7 @@ class Product extends Model
     protected function casts(): array
     {
         return [
+            'county' => County::class,
             'price' => 'decimal:2',
             'price_per_day' => 'decimal:2',
             'images' => 'array',

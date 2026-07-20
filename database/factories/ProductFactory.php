@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\County;
 use App\Models\Boutique;
 use App\Models\Product;
 use App\Models\User;
@@ -23,12 +24,14 @@ class ProductFactory extends Factory
 
         return [
             'boutique_id' => Boutique::factory(),
+            'county' => fake()->randomElement(County::cases()),
             'name' => fake()->words(3, true),
             'designer' => fake()->randomElement($designers),
             'slug' => fake()->unique()->slug(),
             'description' => fake()->paragraph(),
             'is_variable' => false,
             'price' => fake()->randomFloat(2, 50, 200),
+            'price_per_day' => fake()->randomFloat(2, 50, 200),
             'is_available' => true,
             'is_active' => true,
             'status' => Product::STATUS_APPROVED,

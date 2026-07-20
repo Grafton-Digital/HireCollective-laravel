@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\County;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProductRequest extends FormRequest
@@ -19,6 +20,7 @@ class UpdateProductRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'price_per_day' => ['required', 'numeric', 'min:0'],
             'size' => ['nullable', 'string', 'max:255'],
+            'county' => ['required', 'string', 'in:'.implode(',', array_map(fn ($c) => $c->value, County::cases()))],
             'colours' => ['required', 'array', 'min:1'],
             'colours.*' => ['exists:colours,id'],
             'category' => ['nullable', 'exists:categories,id'],
