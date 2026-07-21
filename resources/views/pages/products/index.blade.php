@@ -108,8 +108,6 @@
         </div>
     </section>
 
-    <div class="h-px bg-[#E0E0E0]"></div>
-
     {{-- Product grid --}}
     <section class="px-[60px] py-6">
         <div class="grid grid-cols-3 gap-5">

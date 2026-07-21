@@ -29,7 +29,7 @@
     </div>
 
     {{-- Info --}}
-    <div class="mt-2 flex flex-col gap-0.5">
+    <div @class(['mt-2 flex gap-0.5', 'flex-col' => $showBoutique && $product->boutique, 'flex-row justify-between' => !($showBoutique && $product->boutique)])>
         @if ($showBoutique && $product->boutique)
             <span class="text-[11px] tracking-[0.5px] text-[#666]">{{ strtoupper($product->boutique->name) }}</span>
         @endif

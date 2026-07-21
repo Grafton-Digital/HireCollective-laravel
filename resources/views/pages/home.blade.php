@@ -240,8 +240,8 @@
             <h2 class="animate font-serif text-center text-white">
                 <span class="mt-2 block text-[48px] font-bold uppercase tracking-[1px] leading-[1.2]"><span class="font-normal">For</span><br> Colaboration</span>
             </h2>
-            <p class="text-white max-w-[500px] text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem ducimus sunt deleniti, tempora, porro animi, minus labore excepturi deserunt reiciendis distinctio maiores laboriosam facilis. Modi tempora maiores quae temporibus excepturi.</p>
-            <div class="animate animate-delay-100 flex items-center gap-4">
+            <p class="animate animate-delay-100 text-white max-w-[500px] text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem ducimus sunt deleniti, tempora, porro animi, minus labore excepturi deserunt reiciendis distinctio maiores laboriosam facilis. Modi tempora maiores quae temporibus excepturi.</p>
+            <div class="animate animate-delay-200 flex items-center gap-4">
                 <a href="{{ route('products.index') }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
                    Contact Us
                 </a>
