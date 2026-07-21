@@ -109,6 +109,7 @@
                     @for ($i = 6; $i <= 18; $i += 2)
                         <option value="{{ $i }}" {{ request('size') == $i ? 'selected' : '' }}>{{ $i }}</option>
                     @endfor
+                    <option value="One Size" {{ request('size') === 'One Size' ? 'selected' : '' }}>One Size</option>
                 </select>
             </div>
             <div class="flex flex-1 flex-col gap-1.5">
@@ -129,17 +130,6 @@
                     @foreach($designers as $designer)
                         <option value="{{ $designer }}" {{ request('designer') == $designer ? 'selected' : '' }}>
                             {{ $designer }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="flex flex-1 flex-col gap-1.5">
-                <label class="text-2xs font-medium tracking-[1px] uppercase text-black">County</label>
-                <select name="county" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
-                    <option value="">All Counties</option>
-                    @foreach($counties as $county)
-                        <option value="{{ $county }}" {{ request('county') == $county ? 'selected' : '' }}>
-                            {{ $county }}
                         </option>
                     @endforeach
                 </select>
@@ -169,6 +159,11 @@
             <button type="submit" class="flex h-10 w-[120px] items-center justify-center bg-black text-xs font-medium tracking-[1.5px] text-white hover:bg-gray-800">
                 SEARCH
             </button>
+            @if(request()->hasAny(['category', 'size', 'colour', 'designer', 'price_range', 'occasion']))
+                <a href="{{ route('boutiques.show', $boutique) }}" class="flex h-10 w-[120px] items-center justify-center border border-black text-xs font-medium tracking-[1.5px] text-black hover:bg-black hover:text-white">
+                    CLEAR
+                </a>
+            @endif
         </form>
     </section>
 
@@ -189,7 +184,6 @@
         </div>
     </section>
 
-    {{-- Dresses section --}}
     <section id="products" class="px-[60px] py-8">
         <div class="grid grid-cols-3 gap-4">
             @forelse ($products as $product)
@@ -198,6 +192,22 @@
                 <p class="col-span-3 text-center text-[#666]">No items available at the moment.</p>
             @endforelse
         </div>
+
+        @if ($products->hasPages())
+            <div class="flex items-center justify-center gap-2 py-6">
+                @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
+                    <a href="{{ $url }}"
+                       class="{{ $page == $products->currentPage() ? 'bg-black text-white' : 'border border-black text-black hover:bg-black hover:text-white' }} flex h-8 w-8 items-center justify-center text-[13px] font-medium">
+                        {{ $page }}
+                    </a>
+                @endforeach
+                @if ($products->hasMorePages())
+                    <a href="{{ $products->nextPageUrl() }}">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>
+                    </a>
+                @endif
+            </div>
+        @endif
     </section>
 
     {{-- Bottom section: About / Availability / Contact --}}

@@ -1,4 +1,4 @@
-@props(['product', 'removable' => false])
+@props(['product', 'removable' => false, 'showBoutique' => false])
 
 <div
     @if($removable)
@@ -22,23 +22,24 @@
                 <span class="text-sm text-[#999]">No image</span>
             </div>
         @endif
-        <!-- @if ($product->is_available)
-            <span class="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-[#E8F5E9] px-2 py-1 text-2xs font-medium text-[#2E7D32]">
-                <svg class="h-2.5 w-2.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
-                Available
-            </span>
-        @endif -->
+        @if ($product->created_at >= now()->subMonth())
+            <span class="absolute top-3 left-3 bg-orange-500 px-2.5 py-1 text-[11px] font-semibold tracking-[0.5px] text-white">NEW</span>
+        @endif
         <x-favorite-button :product-id="$product->id" />
     </div>
 
     {{-- Info --}}
-    <div class="flex flex-row justify-between items-center text-[13px] mt-2 gap-1">
-        <span class="font-medium text-black">{{ $product->name }}</span>
-        <span>
+    <div class="mt-2 flex flex-col gap-0.5">
+        @if ($showBoutique && $product->boutique)
+            <span class="text-[11px] tracking-[0.5px] text-[#666]">{{ strtoupper($product->boutique->name) }}</span>
+        @endif
+        <span class="text-[13px] font-medium text-black">{{ $product->name }}</span>
+        <span class="text-[13px] text-[#333]">
+            from 
             @if ($product->is_variable && $product->variants->count())
                 from €{{ number_format($product->variants->min('price_per_day'), 0) }}
             @elseif ($product->price_per_day)
-                from €{{ number_format($product->price_per_day, 0) }}
+                €{{ number_format($product->price_per_day, 0) }}
             @endif
         </span>
     </div>

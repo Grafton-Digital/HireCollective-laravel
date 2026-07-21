@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\County;
-use App\Models\Boutique;
 use App\Models\Category;
 use App\Models\Colour;
 use App\Models\Occasion;
@@ -11,9 +10,9 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class ProductController extends Controller
+class NewArrivalsController extends Controller
 {
-    public function index(Request $request): View
+    public function __invoke(Request $request): View
     {
         $query = Product::with(['boutique', 'variants'])
             ->where('is_active', true)
@@ -21,14 +20,9 @@ class ProductController extends Controller
             ->when($request->query('category'), fn ($q, $slug) => $q->whereHas('categories', fn ($cq) => $cq->where('slug', $slug)))
             ->when($request->query('colour'), fn ($q, $slug) => $q->whereHas('colours', fn ($cq) => $cq->where('slug', $slug)))
             ->when($request->query('occasion'), fn ($q, $slug) => $q->whereHas('occasions', fn ($cq) => $cq->where('slug', $slug)))
-            ->when($request->query('boutique'), fn ($q, $slug) => $q->whereHas('boutique', fn ($bq) => $bq->where('slug', $slug)))
             ->when($request->query('designer'), fn ($q, $designer) => $q->where('designer', $designer))
             ->when($request->query('county'), fn ($q, $county) => $q->where('county', $county))
             ->when($request->query('size'), fn ($q, $size) => $q->where('size', $size))
-            ->when($request->query('search'), fn ($q, $search) => $q->where(function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('designer', 'like', "%{$search}%");
-            }))
             ->when($request->query('price'), function ($q, $price) {
                 match ($price) {
                     '0-50' => $q->where('price_per_day', '<=', 50),
@@ -36,7 +30,6 @@ class ProductController extends Controller
                     '100-150' => $q->whereBetween('price_per_day', [100, 150]),
                     '150-200' => $q->whereBetween('price_per_day', [150, 200]),
                     '200+' => $q->where('price_per_day', '>=', 200),
-                    'one-size' => $q->where('size', 'One Size'),
                     default => $q,
                 };
             });
@@ -47,12 +40,11 @@ class ProductController extends Controller
             default => $query->latest(),
         };
 
-        $products = $query->paginate(16)->withQueryString();
+        $products = $query->paginate(9)->withQueryString();
 
         $categories = Category::orderBy('name')->get();
         $colours = Colour::orderBy('name')->get();
         $occasions = Occasion::orderBy('name')->get();
-        $boutiques = Boutique::where('is_active', true)->orderBy('name')->get();
         $designers = Product::where('is_active', true)
             ->whereNotNull('designer')
             ->distinct()
@@ -60,30 +52,6 @@ class ProductController extends Controller
             ->pluck('designer');
         $counties = County::cases();
 
-        return view('pages.products.index', compact('products', 'categories', 'colours', 'occasions', 'boutiques', 'designers', 'counties'));
-    }
-
-    public function show(Boutique $boutique, Product $product): View
-    {
-        if (! $boutique->is_active || ! $product->is_active || $product->boutique_id !== $boutique->id) {
-            abort(404);
-        }
-
-        $product->load(['variants', 'images' => fn ($q) => $q->orderBy('sort_order'), 'categories', 'colours', 'occasions']);
-
-        // Get related products from same categories but different boutiques
-        $categoryIds = $product->categories->pluck('id');
-
-        $related = Product::with(['boutique', 'variants'])
-            ->where('is_active', true)
-            ->where('id', '!=', $product->id)
-            ->where('boutique_id', '!=', $boutique->id)
-            ->whereHas('boutique', fn ($q) => $q->where('is_active', true))
-            ->when($categoryIds->isNotEmpty(), fn ($q) => $q->whereHas('categories', fn ($cq) => $cq->whereIn('categories.id', $categoryIds)))
-            ->inRandomOrder()
-            ->take(4)
-            ->get();
-
-        return view('pages.products.show', compact('boutique', 'product', 'related'));
+        return view('pages.new-arrivals.index', compact('products', 'categories', 'colours', 'occasions', 'designers', 'counties'));
     }
 }

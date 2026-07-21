@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Boutique;
+use App\Models\Category;
 use App\Models\Enquiry;
 use App\Models\Product;
 use App\Models\ProductImage;
@@ -15,6 +16,7 @@ use App\Policies\ProductPolicy;
 use App\Policies\ProductVariantPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -32,5 +34,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ProductVariant::class, ProductVariantPolicy::class);
         Gate::policy(ProductImage::class, ProductImagePolicy::class);
         Gate::policy(Enquiry::class, EnquiryPolicy::class);
+
+        View::composer('components.header', function ($view) {
+            $view->with('navCategories', Category::orderBy('name')->get());
+        });
     }
 }

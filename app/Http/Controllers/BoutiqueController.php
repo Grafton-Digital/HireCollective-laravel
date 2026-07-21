@@ -6,7 +6,6 @@ use App\Models\Boutique;
 use App\Models\Category;
 use App\Models\Colour;
 use App\Models\Occasion;
-use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -49,20 +48,20 @@ class BoutiqueController extends Controller
             ->when($request->query('colour'), fn ($q, $slug) => $q->whereHas('colours', fn ($cq) => $cq->where('slug', $slug)))
             ->when($request->query('occasion'), fn ($q, $slug) => $q->whereHas('occasions', fn ($cq) => $cq->where('slug', $slug)))
             ->when($request->query('designer'), fn ($q, $designer) => $q->where('designer', $designer))
-            ->when($request->query('size'), fn ($q, $size) => $q->whereHas('variants', fn ($vq) => $vq->where('size', $size)))
+            ->when($request->query('size'), fn ($q, $size) => $q->where('size', $size))
             ->when($request->query('price_range'), function ($q, $range) {
                 if ($range === '200+') {
-                    return $q->where('price', '>=', 200);
+                    return $q->where('price_per_day', '>=', 200);
                 }
                 [$min, $max] = explode('-', $range);
 
-                return $q->whereBetween('price', [(int) $min, (int) $max]);
+                return $q->whereBetween('price_per_day', [(int) $min, (int) $max]);
             });
 
         $products = match ($request->query('sort')) {
             'name' => $query->orderBy('name'),
-            'price_asc' => $query->orderBy('price', 'asc'),
-            'price_desc' => $query->orderBy('price', 'desc'),
+            'price_asc' => $query->orderBy('price_per_day', 'asc'),
+            'price_desc' => $query->orderBy('price_per_day', 'desc'),
             default => $query->latest(),
         };
 
@@ -71,22 +70,18 @@ class BoutiqueController extends Controller
         $categories = Category::orderBy('name')->get();
         $colours = Colour::orderBy('name')->get();
         $occasions = Occasion::orderBy('name')->get();
-        $counties = Boutique::where('is_active', true)
-            ->whereNotNull('county')
-            ->distinct()
-            ->orderBy('county')
-            ->pluck('county');
-        $designers = Product::where('is_active', true)
+        $designers = $boutique->products()
+            ->where('is_active', true)
             ->whereNotNull('designer')
             ->distinct()
             ->orderBy('designer')
             ->pluck('designer');
 
         $priceRange = [
-            'min' => $boutique->products()->where('is_active', true)->min('price') ?? 0,
-            'max' => $boutique->products()->where('is_active', true)->max('price') ?? 500,
+            'min' => $boutique->products()->where('is_active', true)->min('price_per_day') ?? 0,
+            'max' => $boutique->products()->where('is_active', true)->max('price_per_day') ?? 500,
         ];
 
-        return view('pages.boutiques.show', compact('boutique', 'products', 'categories', 'colours', 'occasions', 'counties', 'designers', 'priceRange'));
+        return view('pages.boutiques.show', compact('boutique', 'products', 'categories', 'colours', 'occasions', 'designers', 'priceRange'));
     }
 }

@@ -172,7 +172,7 @@
         <div class="flex flex-col">
             {{-- Top row: 2 items --}}
             <div class="grid grid-cols-2">
-                <a href="{{ route('products.index', ['category' => 'pants']) }}" class="group relative h-[400px] overflow-hidden">
+                <a href="{{ route('products.index') }}" class="group relative h-[400px] overflow-hidden">
                     <img src="{{ asset('images/cat-all.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
                     <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
                         <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">All products</span>
@@ -194,13 +194,13 @@
                         <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">Dresses</span>
                     </div>
                 </a>
-                <a href="{{ route('products.index', ['category' => 'sweaters']) }}" class="group relative h-[400px] overflow-hidden">
+                <a href="{{ route('products.index', ['category' => 'hats']) }}" class="group relative h-[400px] overflow-hidden">
                     <img src="{{ asset('images/cat-hats.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
                     <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
                         <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">Hats</span>
                     </div>
                 </a>
-                <a href="{{ route('products.index', ['category' => 'outerwear']) }}" class="group relative h-[400px] overflow-hidden">
+                <a href="{{ route('products.index', ['category' => 'bags']) }}" class="group relative h-[400px] overflow-hidden">
                     <img src="{{ asset('images/cat-bags.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
                     <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
                         <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">Bags</span>

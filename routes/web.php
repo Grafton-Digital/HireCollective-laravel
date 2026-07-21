@@ -9,6 +9,7 @@ use App\Http\Controllers\Dashboard\ProductController as DashboardProductControll
 use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\HomepageController;
+use App\Http\Controllers\NewArrivalsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -21,6 +22,7 @@ Route::get('/boutiques/{boutique:slug}', [BoutiqueController::class, 'show'])->n
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/boutiques/{boutique:slug}/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/favorites', [FavoritesController::class, 'index'])->name('favorites.index');
+Route::get('/new-arrivals', NewArrivalsController::class)->name('new-arrivals');
 
 // Enquiry (public, rate-limited)
 Route::get('/enquiry/confirmation', [EnquiryController::class, 'confirmation'])->name('enquiry.confirmation');
