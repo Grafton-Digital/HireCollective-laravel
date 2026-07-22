@@ -241,6 +241,65 @@ window.favoritesPageData = function() {
     };
 };
 
+window.bookingForm = function(productId) {
+    return {
+        loading: false,
+        submitted: false,
+        errors: {},
+        form: {
+            product_id: productId,
+            product_variant_id: '',
+            customer_name: '',
+            customer_email: '',
+            customer_phone: '',
+            desired_dates: '',
+            message: '',
+        },
+
+        async submitForm() {
+            this.loading = true;
+            this.errors = {};
+
+            try {
+                const response = await fetch('/enquiry', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: JSON.stringify(this.form),
+                });
+
+                if (response.ok) {
+                    this.submitted = true;
+                } else if (response.status === 422) {
+                    const data = await response.json();
+                    const fieldErrors = data.errors || {};
+                    for (const [key, messages] of Object.entries(fieldErrors)) {
+                        this.errors[key] = messages[0];
+                    }
+                }
+            } catch (e) {
+                this.errors.message = 'Something went wrong. Please try again.';
+            }
+
+            this.loading = false;
+        },
+
+        resetForm() {
+            this.submitted = false;
+            this.errors = {};
+            this.form.product_variant_id = '';
+            this.form.customer_name = '';
+            this.form.customer_email = '';
+            this.form.customer_phone = '';
+            this.form.desired_dates = '';
+            this.form.message = '';
+        }
+    };
+};
+
 Alpine.start();
 
 // Fade Up Animation on Scroll

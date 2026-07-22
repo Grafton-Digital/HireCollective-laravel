@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreEnquiryRequest;
 use App\Models\Enquiry;
 use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -21,7 +22,7 @@ class EnquiryController extends Controller
         return view('pages.enquiry.create', compact('product'));
     }
 
-    public function store(StoreEnquiryRequest $request): RedirectResponse
+    public function store(StoreEnquiryRequest $request): JsonResponse|RedirectResponse
     {
         $validated = $request->validated();
 
@@ -33,6 +34,10 @@ class EnquiryController extends Controller
         $enquiry->boutique_id = $product->boutique_id;
         $enquiry->status = 'new';
         $enquiry->save();
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true]);
+        }
 
         return redirect()->route('enquiry.confirmation')->with('enquiry_product', $product->name);
     }

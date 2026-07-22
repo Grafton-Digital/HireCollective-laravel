@@ -164,9 +164,13 @@
             </div>
 
             {{-- Request to Book Button --}}
-            <a href="{{ route('enquiry.create', $product) }}" class="mt-4 flex h-12 items-center justify-center bg-[#2C2C2C] text-[13px] font-semibold tracking-[1.5px] text-white hover:bg-black">
+            <button
+                type="button"
+                x-on:click="$dispatch('open-modal', 'request-booking')"
+                class="mt-4 flex h-12 w-full items-center justify-center bg-[#2C2C2C] text-[13px] font-semibold tracking-[1.5px] text-white hover:bg-black"
+            >
                 REQUEST TO BOOK
-            </a>
+            </button>
 
             {{-- Description --}}
             @if ($product->description)
@@ -179,6 +183,95 @@
             @endif
         </div>
     </section>
+
+    {{-- Request a Booking Modal --}}
+    <x-modal name="request-booking" maxWidth="md" focusable>
+        <div class="p-8" x-data="bookingForm({{ $product->id }})" x-cloak>
+            <template x-if="!submitted">
+                <div>
+                    <div class="flex items-center justify-between">
+                        <h2 class="font-serif text-[28px] italic text-black">Request a Booking</h2>
+                        <button type="button" x-on:click="$dispatch('close-modal', 'request-booking')" class="text-gray-400 hover:text-gray-600">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="mt-2 text-[13px] text-[#666]">Fill in the details below and we will get back to you within 24 hours.</p>
+
+                    <form @submit.prevent="submitForm" class="mt-6 flex flex-col gap-5">
+                        @if ($product->is_variable && $product->variants->isNotEmpty())
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-[11px] font-semibold tracking-[1px] text-black">SIZE</label>
+                                <select x-model="form.product_variant_id" class="h-11 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                                    <option value="">Select a size</option>
+                                    @foreach ($product->variants as $variant)
+                                        <option value="{{ $variant->id }}">{{ $variant->size }} — €{{ number_format($variant->price, 2) }}</option>
+                                    @endforeach
+                                </select>
+                                <p x-show="errors.product_variant_id" x-text="errors.product_variant_id" class="text-[11px] text-red-600"></p>
+                            </div>
+                        @endif
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[11px] font-semibold tracking-[1px] text-black">FULL NAME</label>
+                            <input type="text" x-model="form.customer_name" placeholder="Enter your full name"
+                                   class="h-11 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                            <p x-show="errors.customer_name" x-text="errors.customer_name" class="text-[11px] text-red-600"></p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[11px] font-semibold tracking-[1px] text-black">EMAIL ADDRESS</label>
+                            <input type="email" x-model="form.customer_email" placeholder="your@email.com"
+                                   class="h-11 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                            <p x-show="errors.customer_email" x-text="errors.customer_email" class="text-[11px] text-red-600"></p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[11px] font-semibold tracking-[1px] text-black">PHONE NUMBER</label>
+                            <input type="tel" x-model="form.customer_phone" placeholder="+44 000 000 0000"
+                                   class="h-11 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                            <p x-show="errors.customer_phone" x-text="errors.customer_phone" class="text-[11px] text-red-600"></p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[11px] font-semibold tracking-[1px] text-black">EVENT DATE</label>
+                            <input type="date" x-model="form.desired_dates"
+                                   class="h-11 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                            <p x-show="errors.desired_dates" x-text="errors.desired_dates" class="text-[11px] text-red-600"></p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[11px] font-semibold tracking-[1px] text-black">MESSAGE</label>
+                            <textarea x-model="form.message" rows="4" placeholder="Tell us about your event and any special requirements..."
+                                      class="w-full border border-[#D0D0D0] bg-white px-3 py-2.5 text-[13px] text-[#333]"></textarea>
+                            <p x-show="errors.message" x-text="errors.message" class="text-[11px] text-red-600"></p>
+                        </div>
+
+                        <button type="submit" :disabled="loading"
+                                class="mt-2 flex h-12 items-center justify-center bg-black text-[13px] font-semibold tracking-[1.5px] text-white hover:bg-gray-800 disabled:opacity-50">
+                            <span x-show="!loading">SEND REQUEST</span>
+                            <span x-show="loading">SENDING...</span>
+                        </button>
+                    </form>
+                </div>
+            </template>
+
+            <template x-if="submitted">
+                <div class="py-8 text-center">
+                    <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <h3 class="mt-4 font-serif text-[24px] italic text-black">Request Sent!</h3>
+                    <p class="mt-2 text-[13px] text-[#666]">We'll get back to you within 24 hours.</p>
+                    <button type="button" x-on:click="$dispatch('close-modal', 'request-booking'); resetForm()"
+                            class="mt-6 inline-flex h-10 items-center justify-center border border-gray-300 px-6 text-[13px] font-medium text-gray-700 hover:bg-gray-50">
+                        CLOSE
+                    </button>
+                </div>
+            </template>
+        </div>
+    </x-modal>
 
     {{-- You may also like --}}
     @if (isset($related) && $related->isNotEmpty())

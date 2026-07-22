@@ -1,8 +1,25 @@
 <x-layouts.account>
-    <x-slot:header>Enquiry from {{ $enquiry->customer_name }}</x-slot:header>
+    <div class="mb-6">
+        <a href="{{ route('account.enquiries.index') }}" class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Back to Booking Requests
+        </a>
+    </div>
 
     <div class="max-w-2xl space-y-6">
-        <div class=" border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <h1 class="font-serif text-[28px] tracking-wide text-gray-900">{{ $enquiry->customer_name }}</h1>
+            <span class="inline-flex px-3 py-1 text-xs font-medium
+                {{ $enquiry->status === 'new' ? 'bg-amber-100 text-amber-700' : '' }}
+                {{ $enquiry->status === 'confirmed' ? 'bg-green-100 text-green-700' : '' }}
+                {{ $enquiry->status === 'completed' ? 'bg-blue-100 text-blue-700' : '' }}
+                {{ $enquiry->status === 'cancelled' ? 'bg-red-100 text-red-700' : '' }}
+            ">{{ ucfirst($enquiry->status) }}</span>
+        </div>
+
+        <div class="border border-gray-200 p-6">
             <dl class="grid gap-4 sm:grid-cols-2">
                 <div>
                     <dt class="text-xs font-medium uppercase text-gray-500">Customer</dt>
@@ -32,7 +49,7 @@
                 @endif
                 @if ($enquiry->desired_dates)
                     <div>
-                        <dt class="text-xs font-medium uppercase text-gray-500">Preferred Dates</dt>
+                        <dt class="text-xs font-medium uppercase text-gray-500">Event Date</dt>
                         <dd class="mt-1 text-sm text-gray-900">{{ $enquiry->desired_dates }}</dd>
                     </div>
                 @endif
@@ -48,27 +65,43 @@
             </div>
         </div>
 
-        {{-- Status update --}}
-        <div class="flex items-center gap-3">
-            <span class="text-sm text-gray-500">Status:</span>
-            @foreach (['new', 'read', 'archived'] as $status)
-                @if ($enquiry->status !== $status)
-                    <form method="POST" action="{{ route('account.enquiries.update', $enquiry) }}">
-                        @csrf
-                        @method('PATCH')
-                        <input type="hidden" name="status" value="{{ $status }}">
-                        <button type="submit" class=" border border-gray-300 px-3 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50">
-                            Mark as {{ ucfirst($status) }}
-                        </button>
-                    </form>
-                @else
-                    <span class=" bg-gray-100 px-3 py-1 text-xs font-medium text-gray-900">
-                        {{ ucfirst($status) }}
-                    </span>
-                @endif
-            @endforeach
+        {{-- Status actions --}}
+        <div class="flex items-center gap-3 border-t border-gray-200 pt-6">
+            @if ($enquiry->status === 'new')
+                <form method="POST" action="{{ route('account.enquiries.update', $enquiry) }}">
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" name="status" value="confirmed">
+                    <button type="submit" class="bg-black px-5 py-2 text-xs font-semibold tracking-wide text-white hover:bg-gray-800">
+                        CONFIRM BOOKING
+                    </button>
+                </form>
+                <form method="POST" action="{{ route('account.enquiries.update', $enquiry) }}">
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" name="status" value="cancelled">
+                    <button type="submit" class="border border-gray-300 px-5 py-2 text-xs font-semibold tracking-wide text-gray-700 hover:bg-gray-50">
+                        DECLINE
+                    </button>
+                </form>
+            @elseif ($enquiry->status === 'confirmed')
+                <form method="POST" action="{{ route('account.enquiries.update', $enquiry) }}">
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" name="status" value="completed">
+                    <button type="submit" class="bg-black px-5 py-2 text-xs font-semibold tracking-wide text-white hover:bg-gray-800">
+                        MARK COMPLETED
+                    </button>
+                </form>
+                <form method="POST" action="{{ route('account.enquiries.update', $enquiry) }}">
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" name="status" value="cancelled">
+                    <button type="submit" class="border border-gray-300 px-5 py-2 text-xs font-semibold tracking-wide text-gray-700 hover:bg-gray-50">
+                        CANCEL
+                    </button>
+                </form>
+            @endif
         </div>
-
-        <a href="{{ route('account.enquiries.index') }}" class="inline-block text-sm text-gray-500 hover:text-gray-700">&larr; Back to enquiries</a>
     </div>
 </x-layouts.account>

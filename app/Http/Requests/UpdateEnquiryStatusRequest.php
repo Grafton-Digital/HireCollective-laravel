@@ -15,7 +15,7 @@ class UpdateEnquiryStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['required', Rule::in(['new', 'read', 'archived'])],
+            'status' => ['required', Rule::in(['new', 'confirmed', 'completed', 'cancelled'])],
         ];
     }
 }

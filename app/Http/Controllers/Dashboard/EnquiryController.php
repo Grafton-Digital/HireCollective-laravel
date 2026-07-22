@@ -13,8 +13,6 @@ class EnquiryController extends Controller
 {
     public function index(Request $request): View
     {
-        $this->authorize('viewAny', Enquiry::class);
-
         $enquiries = $request->user()->boutique->enquiries()
             ->with('product')
             ->when($request->query('status'), fn ($q, $status) => $q->where('status', $status))
@@ -27,7 +25,7 @@ class EnquiryController extends Controller
 
     public function show(Request $request, Enquiry $enquiry): View
     {
-        $this->authorize('view', $enquiry);
+        abort_unless($enquiry->boutique_id === $request->user()->boutique_id, 403);
 
         $enquiry->load(['product', 'variant']);
 
@@ -36,12 +34,12 @@ class EnquiryController extends Controller
 
     public function update(UpdateEnquiryStatusRequest $request, Enquiry $enquiry): RedirectResponse
     {
-        $this->authorize('update', $enquiry);
+        abort_unless($enquiry->boutique_id === $request->user()->boutique_id, 403);
 
         $enquiry->status = $request->validated()['status'];
         $enquiry->save();
 
-        return redirect()->route('dashboard.enquiries.show', $enquiry)
-            ->with('success', 'Enquiry status updated.');
+        return redirect()->route('account.enquiries.show', $enquiry)
+            ->with('success', 'Booking request status updated.');
     }
 }
