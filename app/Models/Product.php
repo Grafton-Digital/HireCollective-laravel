@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use App\County;
+use App\Notifications\ProductApprovedNotification;
+use App\Notifications\ProductRejectedNotification;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Notification;
 
 #[Fillable([
     'boutique_id',
@@ -120,6 +123,13 @@ class Product extends Model
             'status' => self::STATUS_APPROVED,
             'is_active' => true,
         ]);
+
+        $ownerEmail = $this->submittedBy?->email ?? $this->boutique?->contact_email;
+
+        if ($ownerEmail) {
+            Notification::route('mail', $ownerEmail)
+                ->notify(new ProductApprovedNotification($this));
+        }
     }
 
     public function reject(): void
@@ -128,5 +138,12 @@ class Product extends Model
             'status' => self::STATUS_REJECTED,
             'is_active' => false,
         ]);
+
+        $ownerEmail = $this->submittedBy?->email ?? $this->boutique?->contact_email;
+
+        if ($ownerEmail) {
+            Notification::route('mail', $ownerEmail)
+                ->notify(new ProductRejectedNotification($this));
+        }
     }
 }

@@ -4,9 +4,11 @@ namespace App\Filament\Resources\ProductResource\Pages;
 
 use App\Filament\Resources\ProductResource;
 use App\Models\Product;
+use App\Notifications\NewProductSubmittedNotification;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Notification;
 
 class CreateProduct extends CreateRecord
 {
@@ -64,6 +66,16 @@ class CreateProduct extends CreateRecord
         }
 
         return 'Product created';
+    }
+
+    protected function afterCreate(): void
+    {
+        $user = auth()->user();
+
+        if ($user && $user->isBoutiqueOwner()) {
+            Notification::route('mail', config('app.admin_email'))
+                ->notify(new NewProductSubmittedNotification($this->record));
+        }
     }
 
     protected function getRedirectUrl(): string
