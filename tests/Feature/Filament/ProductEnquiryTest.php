@@ -144,7 +144,7 @@ class ProductEnquiryTest extends TestCase
             ->assertCanSeeTableRecords([$pendingProduct, $approvedProduct]);
     }
 
-    public function test_boutique_owner_cannot_edit_pending_product(): void
+    public function test_boutique_owner_can_edit_own_product(): void
     {
         $owner = User::factory()->create(['role' => 'boutique_owner']);
         $boutique = Boutique::factory()->create([
@@ -155,13 +155,13 @@ class ProductEnquiryTest extends TestCase
 
         $product = Product::factory()->create([
             'boutique_id' => $boutique->id,
-            'status' => Product::STATUS_PENDING,
+            'status' => Product::STATUS_APPROVED,
             'submitted_by' => $owner->id,
         ]);
 
         $this->actingAs($owner);
 
-        $this->assertFalse($owner->can('update', $product));
+        $this->assertTrue($owner->can('update', $product));
     }
 
     public function test_boutique_owner_can_edit_approved_product(): void

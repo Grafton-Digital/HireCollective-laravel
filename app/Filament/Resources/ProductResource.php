@@ -76,6 +76,7 @@ class ProductResource extends Resource
                     ->visible(fn (Get $get): bool => ! $get('is_variable')),
                 Forms\Components\TextInput::make('size')
                     ->label('Size')
+                    ->required()
                     ->maxLength(50)
                     ->placeholder('e.g. 8, 10, 12, 14')
                     ->visible(fn (Get $get): bool => ! $get('is_variable')),
@@ -187,7 +188,8 @@ class ProductResource extends Resource
                     ->searchable()
                     ->placeholder('—')
                     ->visible(fn () => auth()->user()?->isAdmin() ?? false),
-                Tables\Columns\TextColumn::make('price')
+                Tables\Columns\TextColumn::make('price_per_day')
+                    ->label('Price/day')
                     ->money('EUR')
                     ->sortable(),
                 Tables\Columns\IconColumn::make('is_variable')

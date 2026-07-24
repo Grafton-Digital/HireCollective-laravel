@@ -74,6 +74,8 @@ class ProductController extends Controller
 
         $product = new Product($validated);
         $product->boutique_id = $request->user()->boutique_id;
+        $product->status = Product::STATUS_APPROVED;
+        $product->is_active = true;
 
         if ($request->hasFile('featured_image')) {
             $product->featured_image = $request->file('featured_image')->store('products', 'public');

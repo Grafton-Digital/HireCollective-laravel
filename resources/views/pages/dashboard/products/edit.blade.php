@@ -6,13 +6,14 @@
 
         <p class="mb-8 text-sm text-gray-500">Update product details below. Fields marked with * are required.</p>
 
-        <form method="POST" action="{{ route('account.products.update', $product) }}" enctype="multipart/form-data"
+        <form method="POST" action="{{ route('account.products.update', $product) }}" enctype="multipart/form-data" novalidate
             x-data="productForm()"
             @submit.prevent="submitForm"
             @file-selected-main.window="mainImage = $event.detail"
             @files-selected-gallery.window="galleryImages = $event.detail">
             @csrf
             @method('PUT')
+
 
             <div class="grid grid-cols-2 gap-8">
 
@@ -31,7 +32,7 @@
                             @input="generateSlug($event.target.value)"
                             class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
                         >
-                        @error('name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                        <p x-show="errors.name" x-text="errors.name?.[0]" class="mt-1 text-xs text-red-600"></p>
                     </div>
 
                     {{-- Hidden Slug Field --}}
@@ -52,23 +53,25 @@
                                     step="0.01"
                                     min="0"
                                     required
-                                    class="block w-full border-gray-300 pl-8 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                    class="block w-full pl-8 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                    :class="errors.price_per_day ? 'border-red-500' : 'border-gray-300'"
                                 >
                             </div>
-                            @error('price_per_day') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            <p x-show="errors.price_per_day" x-text="errors.price_per_day?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
 
                         <div>
-                            <label for="size" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Available Size</label>
+                            <label for="size" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Available Size *</label>
                             <input
                                 type="text"
                                 name="size"
                                 id="size"
                                 value="{{ old('size', $product->size) }}"
                                 placeholder="e.g. 8, 10, 12, 14"
-                                class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                class="block w-full text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                :class="errors.size ? 'border-red-500' : 'border-gray-300'"
                             >
-                            @error('size') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            <p x-show="errors.size" x-text="errors.size?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
                     </div>
 
@@ -149,15 +152,16 @@
                                 <input type="hidden" name="colours[]" :value="colourId">
                             </template>
 
-                            @error('colours') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            <p x-show="errors.colours" x-text="errors.colours?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
 
                         <div class="mt-auto">
-                            <label for="category" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Category</label>
+                            <label for="category" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Category *</label>
                             <select
                                 name="category"
                                 id="category"
-                                class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                class="block w-full text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                :class="errors.category ? 'border-red-500' : 'border-gray-300'"
                             >
                                 <option value="">Select category</option>
                                 @foreach($categories as $category)
@@ -166,7 +170,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @error('category') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            <p x-show="errors.category" x-text="errors.category?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
                     </div>
 
@@ -188,7 +192,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @error('county') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            <p x-show="errors.county" x-text="errors.county?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
 
                         {{-- Designer --}}
@@ -202,7 +206,7 @@
                                 placeholder="Type designer name"
                                 class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
                             >
-                            @error('designer') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            <p x-show="errors.designer" x-text="errors.designer?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
 
                     </div>
@@ -341,7 +345,7 @@
                             name="featured_image"
                         >
 
-                        @error('featured_image') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                        <p x-show="errors.featured_image" x-text="errors.featured_image?.[0]" class="mt-1 text-xs text-red-600"></p>
                     </div>
 
                     {{-- Product Gallery (Carousel) --}}
@@ -406,7 +410,7 @@
                             </template>
                         </div>
 
-                        @error('gallery') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                        <p x-show="errors.gallery" x-text="errors.gallery?.[0]" class="mt-1 text-xs text-red-600"></p>
                     </div>
 
                 </div>
@@ -433,10 +437,12 @@
             return {
                 mainImage: null,
                 galleryImages: [],
+                errors: {},
                 generateSlug(name) {
                     // Only auto-generate on create, not on edit
                 },
                 submitForm(e) {
+                    this.errors = {};
                     const form = e.target;
                     const formData = new FormData(form);
 
@@ -448,11 +454,9 @@
                         formData.append('gallery[]', file);
                     });
 
-                    // Send kept existing images paths (extract from full URLs)
                     const galleryUploader = window.Alpine ? Alpine.$data(document.querySelector('[x-data*="galleryUploader"]')) : null;
                     if (galleryUploader && galleryUploader.existingImages) {
                         const keptPaths = galleryUploader.existingImages.map(url => {
-                            // Extract path after /storage/
                             const match = url.match(/\/storage\/(.+)$/);
                             return match ? match[1] : null;
                         }).filter(Boolean);
@@ -470,14 +474,22 @@
                     .then(response => {
                         if (response.ok || response.redirected) {
                             window.location.href = '{{ route("account.products") }}';
+                        } else if (response.status === 422) {
+                            return response.json().then(data => {
+                                this.errors = data.errors || {};
+                                this.$nextTick(() => {
+                                    const firstError = form.querySelector('.border-red-500');
+                                    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                });
+                            });
                         } else {
                             return response.json().then(data => {
-                                alert('Error: ' + (data.message || 'Failed to save'));
+                                this.errors = { general: [data.message || 'Failed to save product'] };
                             });
                         }
                     })
-                    .catch(error => {
-                        alert('Failed to save product');
+                    .catch(() => {
+                        this.errors = { general: ['Failed to save product. Please try again.'] };
                     });
                 }
             }

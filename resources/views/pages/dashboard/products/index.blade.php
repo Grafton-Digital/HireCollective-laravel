@@ -33,13 +33,23 @@
                             @endif
                         </td>
                         <td class="px-4 py-3 text-sm">
-                            <x-availability-badge :available="$product->is_active" label-on="Active" label-off="Draft" />
+                            @if ($product->isPending())
+                                <span class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">Pending Review</span>
+                            @elseif ($product->isApproved())
+                                <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">Approved</span>
+                            @elseif ($product->isRejected())
+                                <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">Rejected</span>
+                            @endif
                         </td>
                         <td class="px-4 py-3 text-sm">
                             <x-availability-badge :available="$product->is_available" />
                         </td>
                         <td class="px-4 py-3 text-right text-sm">
-                            <a href="{{ route('account.products.edit', $product) }}" class="text-gray-600 hover:text-gray-900">Edit</a>
+                            @if (!$product->isPending())
+                                <a href="{{ route('account.products.edit', $product) }}" class="text-gray-600 hover:text-gray-900">Edit</a>
+                            @else
+                                <span class="text-gray-400">Awaiting approval</span>
+                            @endif
                         </td>
                     </tr>
                 @empty

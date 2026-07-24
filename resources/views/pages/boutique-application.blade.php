@@ -6,15 +6,16 @@
                 <p class="mt-3 text-sm text-gray-600">Submit your boutique application. We review each request within 48 hours.</p>
             </div>
 
-            <form method="POST" action="{{ route('boutique.application.store') }}" enctype="multipart/form-data" class="space-y-6"
+            <form method="POST" action="{{ route('boutique.application.store') }}" enctype="multipart/form-data" class="space-y-6" novalidate
                 x-data="applicationForm()"
                 @submit.prevent="submitForm"
                 @file-selected-logo.window="logoFile = $event.detail"
                 @file-selected-cover.window="coverFile = $event.detail">
                 @csrf
 
+
                 <div>
-                    <label for="name" class="block text-xs font-semibold uppercase tracking-wider text-gray-700">Boutique Name</label>
+                    <label for="name" class="block text-xs font-semibold uppercase tracking-wider text-gray-700">Boutique Name *</label>
                     <input
                         type="text"
                         name="name"
@@ -22,9 +23,10 @@
                         value="{{ old('name') }}"
                         required
                         placeholder="Enter your boutique name"
-                        class="mt-2 block w-full border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                        class="mt-2 block w-full px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                        :class="errors.name ? 'border-red-500' : 'border-gray-300'"
                     >
-                    @error('name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                    <p x-show="errors.name" x-text="errors.name?.[0]" class="mt-1 text-xs text-red-600"></p>
                 </div>
 
                 {{-- Logo and Cover Image --}}
@@ -73,7 +75,7 @@
                                 accept="image/*"
                                 class="hidden"
                             >
-                            @error('logo') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            <p x-show="errors.logo" x-text="errors.logo?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
 
                         {{-- Cover Image --}}
@@ -118,39 +120,41 @@
                                 accept="image/*"
                                 class="hidden"
                             >
-                            @error('cover_image') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            <p x-show="errors.cover_image" x-text="errors.cover_image?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
                     </div>
                     <p class="mt-2 text-xs text-gray-500">PNG, JPG up to 5MB. Logo: square, Cover: 1200×400 recommended</p>
                 </div>
 
                 <div>
-                    <label for="bio" class="block text-xs font-semibold uppercase tracking-wider text-gray-700">Short Bio</label>
+                    <label for="bio" class="block text-xs font-semibold uppercase tracking-wider text-gray-700">Short Bio *</label>
                     <textarea
                         name="bio"
                         id="bio"
                         rows="4"
                         required
                         placeholder="Tell us about your boutique, your style, and what makes you unique..."
-                        class="mt-2 block w-full border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                        class="mt-2 block w-full px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                        :class="errors.bio ? 'border-red-500' : 'border-gray-300'"
                     >{{ old('bio') }}</textarea>
-                    @error('bio') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                    <p x-show="errors.bio" x-text="errors.bio?.[0]" class="mt-1 text-xs text-red-600"></p>
                 </div>
 
                 <div>
-                    <label for="region" class="block text-xs font-semibold uppercase tracking-wider text-gray-700">County</label>
+                    <label for="region" class="block text-xs font-semibold uppercase tracking-wider text-gray-700">County *</label>
                     <select
                         name="region"
                         id="region"
                         required
-                        class="mt-2 block w-full border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                        class="mt-2 block w-full px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                        :class="errors.region ? 'border-red-500' : 'border-gray-300'"
                     >
                         <option value="">Select your county</option>
                         @foreach (App\County::cases() as $county)
                             <option value="{{ $county->value }}" {{ old('region') == $county->value ? 'selected' : '' }}>{{ $county->getLabel() }}</option>
                         @endforeach
                     </select>
-                    @error('region') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                    <p x-show="errors.region" x-text="errors.region?.[0]" class="mt-1 text-xs text-red-600"></p>
                 </div>
 
                 <div class="border-t pt-6">
@@ -171,10 +175,11 @@
                                     value="{{ old('contact_email') }}"
                                     required
                                     placeholder="your@email.com"
-                                    class="block w-full border-gray-300 py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                    class="block w-full py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                    :class="errors.contact_email ? 'border-red-500' : 'border-gray-300'"
                                 >
                             </div>
-                            @error('contact_email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            <p x-show="errors.contact_email" x-text="errors.contact_email?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
 
                         <div>
@@ -191,10 +196,11 @@
                                     id="phone"
                                     value="{{ old('phone') }}"
                                     placeholder="+44 000 000 000"
-                                    class="block w-full border-gray-300 py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                    class="block w-full py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                    :class="errors.phone ? 'border-red-500' : 'border-gray-300'"
                                 >
                             </div>
-                            @error('phone') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            <p x-show="errors.phone" x-text="errors.phone?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
 
                         <div>
@@ -211,10 +217,11 @@
                                     id="instagram"
                                     value="{{ old('instagram') }}"
                                     placeholder="@handle"
-                                    class="block w-full border-gray-300 py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                    class="block w-full py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                    :class="errors.instagram ? 'border-red-500' : 'border-gray-300'"
                                 >
                             </div>
-                            @error('instagram') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            <p x-show="errors.instagram" x-text="errors.instagram?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
                     </div>
                 </div>
@@ -224,7 +231,7 @@
 
                     <div class="space-y-4">
                         <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email *</label>
                             <input
                                 type="email"
                                 name="email"
@@ -232,22 +239,24 @@
                                 value="{{ old('email') }}"
                                 required
                                 placeholder="your@email.com"
-                                class="mt-1 block w-full border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                class="mt-1 block w-full px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                :class="errors.email ? 'border-red-500' : 'border-gray-300'"
                             >
-                            @error('email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            <p x-show="errors.email" x-text="errors.email?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
 
                         <div>
-                            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                            <label for="password" class="block text-sm font-medium text-gray-700">Password *</label>
                             <input
                                 type="password"
                                 name="password"
                                 id="password"
                                 required
                                 placeholder="Create a password"
-                                class="mt-1 block w-full border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                class="mt-1 block w-full px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                :class="errors.password ? 'border-red-500' : 'border-gray-300'"
                             >
-                            @error('password') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            <p x-show="errors.password" x-text="errors.password?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
 
                         <div>
@@ -281,7 +290,9 @@
             return {
                 logoFile: null,
                 coverFile: null,
+                errors: {},
                 submitForm(e) {
+                    this.errors = {};
                     const form = e.target;
                     const formData = new FormData(form);
 
@@ -304,22 +315,22 @@
                     .then(response => {
                         if (response.ok || response.redirected) {
                             window.location.href = '{{ route("boutique.application.confirmation") }}';
+                        } else if (response.status === 422) {
+                            return response.json().then(data => {
+                                this.errors = data.errors || {};
+                                this.$nextTick(() => {
+                                    const firstError = form.querySelector('.border-red-500');
+                                    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                });
+                            });
                         } else {
                             return response.json().then(data => {
-                                if (data.errors) {
-                                    let errorMsg = 'Please fix the following errors:\n';
-                                    Object.values(data.errors).forEach(errors => {
-                                        errors.forEach(error => errorMsg += '- ' + error + '\n');
-                                    });
-                                    alert(errorMsg);
-                                } else {
-                                    alert('Error: ' + (data.message || 'Failed to submit application'));
-                                }
+                                this.errors = { general: [data.message || 'Failed to submit application'] };
                             });
                         }
                     })
-                    .catch(error => {
-                        alert('Failed to submit application. Please try again.');
+                    .catch(() => {
+                        this.errors = { general: ['Failed to submit application. Please try again.'] };
                     });
                 }
             }

@@ -61,10 +61,10 @@ class ProductEnquiryResource extends Resource
                 Forms\Components\Toggle::make('is_variable')
                     ->label('Has size variants')
                     ->live(),
-                Forms\Components\TextInput::make('price')
+                Forms\Components\TextInput::make('price_per_day')
+                    ->label('Price per day')
                     ->numeric()
-                    ->prefix('€')
-                    ->visible(fn ($get): bool => ! $get('is_variable')),
+                    ->prefix('€'),
                 Forms\Components\Toggle::make('is_available')
                     ->default(true),
                 Forms\Components\Toggle::make('is_active')
@@ -98,41 +98,27 @@ class ProductEnquiryResource extends Resource
                     ->disk('public')
                     ->directory('products/featured')
                     ->visibility('public'),
-                Forms\Components\Repeater::make('images')
-                    ->relationship()
-                    ->schema([
-                        Forms\Components\FileUpload::make('path')
-                            ->image()
-                            ->required()
-                            ->disk('public')
-                            ->directory('products/gallery')
-                            ->visibility('public'),
-                        Forms\Components\TextInput::make('sort_order')
-                            ->numeric()
-                            ->default(0),
-                        Forms\Components\Toggle::make('is_featured')
-                            ->default(false),
-                    ])
-                    ->columns(3)
-                    ->defaultItems(0)
-                    ->addActionLabel('Add image')
+                Forms\Components\FileUpload::make('images')
+                    ->label('Gallery')
+                    ->image()
+                    ->multiple()
+                    ->disk('public')
+                    ->directory('products/gallery')
+                    ->visibility('public')
                     ->columnSpanFull(),
             ]),
 
             Section::make('Categorisation')->schema([
-                Forms\Components\Select::make('categories')
-                    ->relationship('categories', 'name')
-                    ->multiple()
+                Forms\Components\Select::make('category_id')
+                    ->label('Category')
+                    ->relationship('category', 'name')
+                    ->searchable()
                     ->preload(),
                 Forms\Components\Select::make('colours')
                     ->relationship('colours', 'name')
                     ->multiple()
                     ->preload(),
-                Forms\Components\Select::make('occasions')
-                    ->relationship('occasions', 'name')
-                    ->multiple()
-                    ->preload(),
-            ])->columns(3),
+            ])->columns(2),
 
             Section::make('Approval')->schema([
                 Forms\Components\Select::make('status')
@@ -173,8 +159,9 @@ class ProductEnquiryResource extends Resource
                 Tables\Columns\TextColumn::make('boutique.name')
                     ->label('Boutique')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('price')
-                    ->money('GBP')
+                Tables\Columns\TextColumn::make('price_per_day')
+                    ->label('Price/day')
+                    ->money('EUR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('submittedBy.name')
                     ->label('Submitted By')
