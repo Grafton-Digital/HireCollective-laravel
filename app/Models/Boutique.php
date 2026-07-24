@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Notifications\BoutiqueApplicationApprovedNotification;
+use App\Notifications\BoutiqueApplicationRejectedNotification;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Notification;
 
 #[Fillable([
     'name',
@@ -85,16 +88,18 @@ class Boutique extends Model
 
     public function approve(): void
     {
+        $ownerEmail = $this->pending_email;
+
         $this->update([
             'status' => self::STATUS_APPROVED,
             'is_active' => true,
             'approved_at' => now(),
         ]);
 
-        if ($this->pending_email && $this->pending_password) {
+        if ($ownerEmail && $this->pending_password) {
             $user = User::create([
                 'name' => $this->name,
-                'email' => $this->pending_email,
+                'email' => $ownerEmail,
                 'password' => $this->pending_password,
                 'role' => 'boutique_owner',
                 'boutique_id' => $this->id,
@@ -106,10 +111,20 @@ class Boutique extends Model
                 'pending_password' => null,
             ]);
         }
+
+        if ($ownerEmail) {
+            Notification::route('mail', $ownerEmail)
+                ->notify(new BoutiqueApplicationApprovedNotification($this));
+        }
     }
 
     public function reject(): void
     {
         $this->update(['status' => self::STATUS_REJECTED]);
+
+        if ($this->pending_email) {
+            Notification::route('mail', $this->pending_email)
+                ->notify(new BoutiqueApplicationRejectedNotification($this));
+        }
     }
 }
