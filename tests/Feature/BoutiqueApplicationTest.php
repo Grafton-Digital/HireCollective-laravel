@@ -4,9 +4,11 @@ namespace Tests\Feature;
 
 use App\Models\Boutique;
 use App\Models\User;
+use App\Notifications\NewBoutiqueApplicationNotification;
 use Filament\Panel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -25,6 +27,7 @@ class BoutiqueApplicationTest extends TestCase
     public function test_boutique_can_be_created_via_application(): void
     {
         Storage::fake('public');
+        Notification::fake();
 
         $response = $this->post(route('boutique.application.store'), [
             'name' => 'Test Boutique',
@@ -49,7 +52,9 @@ class BoutiqueApplicationTest extends TestCase
             'pending_email' => 'owner@example.com',
         ]);
 
-        Storage::disk('public')->assertExists($boutique->cover_image);
+        Notification::assertSentOnDemand(
+            NewBoutiqueApplicationNotification::class,
+        );
     }
 
     public function test_validation_errors_are_shown_for_invalid_application(): void

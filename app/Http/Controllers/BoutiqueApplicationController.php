@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BoutiqueApplicationRequest;
 use App\Models\Boutique;
+use App\Notifications\NewBoutiqueApplicationNotification;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -46,6 +48,9 @@ class BoutiqueApplicationController extends Controller
         }
 
         $boutique->save();
+
+        Notification::route('mail', config('app.admin_email'))
+            ->notify(new NewBoutiqueApplicationNotification($boutique));
 
         return redirect()->route('boutique.application.confirmation')
             ->with('success', 'Your boutique application has been submitted successfully. We will review it within 48 hours.');
