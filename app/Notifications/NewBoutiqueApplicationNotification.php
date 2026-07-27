@@ -25,11 +25,8 @@ class NewBoutiqueApplicationNotification extends Notification
     {
         return (new MailMessage)
             ->subject('New Boutique Application: '.$this->boutique->name)
-            ->greeting('New boutique application received!')
-            ->line("**{$this->boutique->name}** has submitted an application.")
-            ->line("Region: {$this->boutique->county}")
-            ->line("Contact: {$this->boutique->contact_email}")
-            ->action('Review Application', url('/admin/boutique-enquiries'))
-            ->line('Please review and approve or reject this application.');
+            ->markdown('emails.new-boutique-application', [
+                'boutique' => $this->boutique,
+            ]);
     }
 }

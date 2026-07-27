@@ -288,9 +288,9 @@
                 <p class="animate animate-delay-100 text-white max-w-[500px] text-center">{{ $content['collaboration']['text'] }}</p>
             @endif
             <div class="animate animate-delay-200 flex items-center gap-4">
-                <a href="{{ $content['collaboration']['button_link'] ?? '/products' }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
+                <button type="button" x-data @click="$dispatch('open-modal', 'collaboration-enquiry')" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
                     {{ $content['collaboration']['button_text'] ?? 'Contact Us' }}
-                </a>
+                </button>
             </div>
         </div>
     </section>
@@ -364,4 +364,73 @@
             </div>
         </div>
     </section>
+
+    {{-- Collaboration Enquiry Modal --}}
+    <x-modal name="collaboration-enquiry" maxWidth="md" focusable>
+        <div class="p-8" x-data="collaborationForm()" x-cloak>
+            <template x-if="!submitted">
+                <div>
+                    <div class="flex items-center justify-between">
+                        <h2 class="font-serif text-[28px] italic text-black">Collaboration Enquiry</h2>
+                        <button type="button" x-on:click="$dispatch('close-modal', 'collaboration-enquiry')" class="text-gray-400 hover:text-gray-600">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="mt-2 text-[13px] text-[#666]">Interested in collaborating? Fill out the form below and our partnerships team will be in touch.</p>
+
+                    <form @submit.prevent="submitForm" class="mt-6 flex flex-col gap-5">
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[11px] font-semibold tracking-[1px] text-black">YOUR NAME *</label>
+                            <input type="text" x-model="form.name" placeholder="Full name"
+                                   class="h-11 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                            <p x-show="errors.name" x-text="errors.name" class="text-[11px] text-red-600"></p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[11px] font-semibold tracking-[1px] text-black">COMPANY / BRAND</label>
+                            <input type="text" x-model="form.company" placeholder="Your brand or company name"
+                                   class="h-11 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                            <p x-show="errors.company" x-text="errors.company" class="text-[11px] text-red-600"></p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[11px] font-semibold tracking-[1px] text-black">EMAIL *</label>
+                            <input type="email" x-model="form.email" placeholder="your@email.com"
+                                   class="h-11 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                            <p x-show="errors.email" x-text="errors.email" class="text-[11px] text-red-600"></p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[11px] font-semibold tracking-[1px] text-black">MESSAGE *</label>
+                            <textarea x-model="form.message" rows="4" placeholder="Tell us about your collaboration idea..."
+                                      class="w-full border border-[#D0D0D0] bg-white px-3 py-2.5 text-[13px] text-[#333]"></textarea>
+                            <p x-show="errors.message" x-text="errors.message" class="text-[11px] text-red-600"></p>
+                        </div>
+
+                        <button type="submit" :disabled="loading"
+                                class="mt-2 flex h-12 items-center justify-center bg-black text-[13px] font-semibold tracking-[1.5px] text-white hover:bg-gray-800 disabled:opacity-50">
+                            <span x-show="!loading">SEND ENQUIRY</span>
+                            <span x-show="loading">SENDING...</span>
+                        </button>
+                    </form>
+                </div>
+            </template>
+
+            <template x-if="submitted">
+                <div class="py-8 text-center">
+                    <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <h3 class="mt-4 font-serif text-[24px] italic text-black">Enquiry Sent!</h3>
+                    <p class="mt-2 text-[13px] text-[#666]">Thank you for your interest. We'll be in touch shortly.</p>
+                    <button type="button" x-on:click="$dispatch('close-modal', 'collaboration-enquiry'); resetForm()"
+                            class="mt-6 inline-flex h-10 items-center justify-center border border-gray-300 px-6 text-[13px] font-medium text-gray-700 hover:bg-gray-50">
+                        CLOSE
+                    </button>
+                </div>
+            </template>
+        </div>
+    </x-modal>
 </x-layouts.public>

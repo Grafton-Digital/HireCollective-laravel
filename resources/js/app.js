@@ -300,6 +300,60 @@ window.bookingForm = function(productId) {
     };
 };
 
+window.collaborationForm = function() {
+    return {
+        loading: false,
+        submitted: false,
+        errors: {},
+        form: {
+            name: '',
+            company: '',
+            email: '',
+            message: '',
+        },
+
+        async submitForm() {
+            this.loading = true;
+            this.errors = {};
+
+            try {
+                const response = await fetch('/collaboration', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: JSON.stringify(this.form),
+                });
+
+                if (response.ok) {
+                    this.submitted = true;
+                } else if (response.status === 422) {
+                    const data = await response.json();
+                    const fieldErrors = data.errors || {};
+                    for (const [key, messages] of Object.entries(fieldErrors)) {
+                        this.errors[key] = messages[0];
+                    }
+                }
+            } catch (e) {
+                this.errors.message = 'Something went wrong. Please try again.';
+            }
+
+            this.loading = false;
+        },
+
+        resetForm() {
+            this.submitted = false;
+            this.errors = {};
+            this.form.name = '';
+            this.form.company = '';
+            this.form.email = '';
+            this.form.message = '';
+        }
+    };
+};
+
 Alpine.start();
 
 // Fade Up Animation on Scroll

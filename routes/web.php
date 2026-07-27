@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\BoutiqueApplicationController;
 use App\Http\Controllers\BoutiqueController;
+use App\Http\Controllers\CollaborationController;
 use App\Http\Controllers\Dashboard\EnquiryController as DashboardEnquiryController;
 use App\Http\Controllers\Dashboard\ProductController as DashboardProductController;
 use App\Http\Controllers\EnquiryController;
@@ -28,6 +29,9 @@ Route::get('/new-arrivals', NewArrivalsController::class)->name('new-arrivals');
 Route::get('/enquiry/confirmation', [EnquiryController::class, 'confirmation'])->name('enquiry.confirmation');
 Route::get('/enquiry/{product}', [EnquiryController::class, 'create'])->name('enquiry.create');
 Route::post('/enquiry', [EnquiryController::class, 'store'])->middleware('throttle:5,1')->name('enquiry.store');
+
+// Collaboration enquiry (public, rate-limited)
+Route::post('/collaboration', [CollaborationController::class, 'store'])->middleware('throttle:5,1')->name('collaboration.store');
 
 // Static pages
 Route::get('/how-it-works', [HowItWorksController::class, 'index'])->name('how-it-works');
