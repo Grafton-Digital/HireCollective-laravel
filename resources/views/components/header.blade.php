@@ -38,7 +38,7 @@
         <nav class="hidden items-center gap-6 md:flex">
             <a href="{{ route('new-arrivals') }}" class="text-xs text-red-500 font-normal tracking-[1px] hover:underline">NEW</a>
             <a href="{{ route('products.index') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">All PRODUCTS</a>
-            <a href="{{ route('about') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">HOW IT WORKS</a>
+            <a href="{{ route('how-it-works') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">HOW IT WORKS</a>
         </nav>
     </div>
 
@@ -131,7 +131,7 @@
                 <a href="{{ route('products.index', ['category' => $navCategory->slug]) }}" class="text-[18px] font-normal tracking-[1px] text-black hover:underline">{{ strtoupper($navCategory->name) }}</a>
             @endforeach
             <a href="{{ route('boutiques.index') }}" class="text-[18px] font-normal tracking-[1px] text-black hover:underline">BOUTIQUES</a>
-            <a href="{{ route('about') }}" class="text-[18px] font-normal tracking-[1px] text-black hover:underline">HOW IT WORKS</a>
+            <a href="{{ route('how-it-works') }}" class="text-[18px] font-normal tracking-[1px] text-black hover:underline">HOW IT WORKS</a>
         </nav>
     </div>
 </header>
