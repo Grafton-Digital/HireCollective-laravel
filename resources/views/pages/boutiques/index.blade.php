@@ -49,7 +49,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-x-5 gap-y-20">
+        <div class="grid grid-cols-3 gap-5">
             @forelse ($boutiques as $boutique)
                 <x-boutique-card :boutique="$boutique" />
             @empty
@@ -62,6 +62,34 @@
                 {{ $boutiques->links('vendor.pagination.custom') }}
             </div>
         @endif
+    </section>
+
+    {{-- Register your boutique --}}
+    <section class="relative h-[600px] overflow-hidden">
+        @if (!empty($content['register']['image']))
+            <img src="{{ Storage::disk('public')->url($content['register']['image']) }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="Register your boutique">
+        @else
+            <img src="{{ asset('images/bg-img.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="Register your boutique">
+        @endif
+        <div class="absolute inset-0 bg-black/40"></div>
+
+        <div class="relative flex h-full flex-col items-center justify-center gap-8 px-[60px]">
+            <h2 class="animate max-w-[400px] font-serif text-center text-white">
+                <span class="mt-2 block text-[48px] font-bold uppercase tracking-[1px] leading-[1.2]">{{ $content['register']['heading'] ?? 'Register your boutique' }}</span>
+            </h2>
+
+            <div class="animate animate-delay-100 flex items-center gap-4">
+                @auth
+                    <a href="{{ route('account.overview') }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
+                       Go to Account
+                    </a>
+                @else
+                    <a href="{{ $content['register']['button_link'] ?? '/boutique/apply' }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
+                       {{ $content['register']['button_text'] ?? 'Register Now' }}
+                    </a>
+                @endauth
+            </div>
+        </div>
     </section>
     
 </x-layouts.public>

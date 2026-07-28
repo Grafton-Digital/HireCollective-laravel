@@ -8,6 +8,7 @@ use App\Notifications\NewBoutiqueApplicationNotification;
 use Filament\Panel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -38,8 +39,8 @@ class BoutiqueApplicationTest extends TestCase
             'phone' => '+353 123 456 789',
             'instagram' => '@testboutique',
             'email' => 'owner@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+            'password' => 'Password123',
+            'password_confirmation' => 'Password123',
         ]);
 
         $response->assertRedirect(route('boutique.application.confirmation'));
@@ -65,7 +66,44 @@ class BoutiqueApplicationTest extends TestCase
             'password' => 'short',
         ]);
 
-        $response->assertSessionHasErrors(['name', 'email', 'password', 'banner_image', 'bio', 'region', 'contact_email']);
+        $response->assertSessionHasErrors(['name', 'email', 'password', 'bio', 'region', 'contact_email']);
+    }
+
+    public function test_weak_password_is_rejected(): void
+    {
+        $this->withoutMiddleware(ThrottleRequests::class);
+
+        $base = [
+            'name' => 'Test Boutique',
+            'bio' => 'A test bio',
+            'region' => 'Dublin',
+            'contact_email' => 'boutique@example.com',
+            'email' => 'owner@example.com',
+        ];
+
+        // Too short
+        $this->postJson(route('boutique.application.store'), $base + [
+            'password' => 'Ab1',
+            'password_confirmation' => 'Ab1',
+        ])->assertUnprocessable()->assertJsonValidationErrors('password');
+
+        // No uppercase
+        $this->postJson(route('boutique.application.store'), $base + [
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ])->assertUnprocessable()->assertJsonValidationErrors('password');
+
+        // No number
+        $this->postJson(route('boutique.application.store'), $base + [
+            'password' => 'PasswordOnly',
+            'password_confirmation' => 'PasswordOnly',
+        ])->assertUnprocessable()->assertJsonValidationErrors('password');
+
+        // No lowercase
+        $this->postJson(route('boutique.application.store'), $base + [
+            'password' => 'PASSWORD123',
+            'password_confirmation' => 'PASSWORD123',
+        ])->assertUnprocessable()->assertJsonValidationErrors('password');
     }
 
     public function test_user_is_created_when_boutique_is_approved(): void

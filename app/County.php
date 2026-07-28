@@ -6,6 +6,7 @@ use Filament\Support\Contracts\HasLabel;
 
 enum County: string implements HasLabel
 {
+    case ALL_IRELAND = 'All Ireland';
     case CARLOW = 'Carlow';
     case CAVAN = 'Cavan';
     case CLARE = 'Clare';

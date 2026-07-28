@@ -39,7 +39,7 @@ Route::get('/page/{page:slug}', [PageController::class, 'show'])->name('pages.sh
 
 // Boutique application (public, rate-limited)
 Route::get('/boutique/apply', [BoutiqueApplicationController::class, 'create'])->name('boutique.application.create');
-Route::post('/boutique/apply', [BoutiqueApplicationController::class, 'store'])->middleware('throttle:3,60')->name('boutique.application.store');
+Route::post('/boutique/apply', [BoutiqueApplicationController::class, 'store'])->middleware('throttle:30,60')->name('boutique.application.store');
 Route::get('/boutique/application/confirmation', [BoutiqueApplicationController::class, 'confirmation'])->name('boutique.application.confirmation');
 
 // Boutique owner account

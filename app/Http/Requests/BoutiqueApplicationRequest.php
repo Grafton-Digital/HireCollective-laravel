@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class BoutiqueApplicationRequest extends FormRequest
 {
@@ -23,7 +24,7 @@ class BoutiqueApplicationRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:50'],
             'instagram' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
         ];
     }
 }

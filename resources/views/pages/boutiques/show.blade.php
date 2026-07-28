@@ -211,7 +211,7 @@
     </section>
 
     {{-- Bottom section: About / Availability / Contact --}}
-    <section class="flex gap-10 border-t border-[#E0E0E0] bg-cream-50 px-[60px] py-8">
+    <!-- <section class="flex gap-10 border-t border-[#E0E0E0] bg-cream-50 px-[60px] py-8">
         {{-- About column --}}
         <div class="flex flex-1 flex-col gap-3">
             <h3 class="text-xs font-semibold tracking-[1px] text-black">ABOUT {{ strtoupper($boutique->name) }}</h3>
@@ -272,5 +272,5 @@
                 </div>
             @endif
         </div>
-    </section>
+    </section> -->
 </x-layouts.public>
