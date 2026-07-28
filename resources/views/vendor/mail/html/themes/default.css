@@ -103,9 +103,11 @@ img {
 }
 
 .header a {
-    color: #18181b;
-    font-size: 19px;
-    font-weight: bold;
+    color: #000000;
+    font-family: 'Cormorant Garamond', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+    font-size: 26px;
+    font-weight: 300;
+    letter-spacing: 3px;
     text-decoration: none;
 }
 
