@@ -9,13 +9,39 @@
     searchOpen: false,
     favoritesCount: 0,
     init() {
-        this.updateFavoritesCount();
+        this.validateFavorites();
     },
     updateFavoritesCount() {
         const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
         this.favoritesCount = favorites.length;
+    },
+    validateFavorites() {
+        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        if (favorites.length === 0) {
+            this.favoritesCount = 0;
+            return;
+        }
+        const ids = favorites.map(f => f.id);
+        fetch('{{ route('favorites.validate') }}', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content},
+            body: JSON.stringify({ids: ids})
+        })
+        .then(r => r.json())
+        .then(data => {
+            const validIds = data.valid_ids;
+            const cleaned = favorites.filter(f => validIds.includes(f.id));
+            if (cleaned.length !== favorites.length) {
+                localStorage.setItem('favorites', JSON.stringify(cleaned));
+                window.dispatchEvent(new CustomEvent('favorites-updated'));
+            }
+            this.favoritesCount = cleaned.length;
+        })
+        .catch(() => {
+            this.favoritesCount = favorites.length;
+        });
     }
-}" @favorite-added.window="updateFavoritesCount()" @favorite-removed.window="updateFavoritesCount()">
+}" @favorite-added.window="updateFavoritesCount()" @favorite-removed.window="updateFavoritesCount()" @favorites-updated.window="updateFavoritesCount()">
     {{-- Left section: Burger menu + links --}}
     <div class="flex items-center gap-6">
         {{-- Burger menu button --}}

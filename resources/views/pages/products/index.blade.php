@@ -100,6 +100,17 @@
 
         <div class="flex items-center gap-2">
             <span class="w-[80px] px-2 text-xs text-[#666]">{{ $products->total() }} {{ Str::plural(request('category', 'item'), $products->total()) }}</span>
+            @if ($products->total() > 24)
+                <select name="per_page" onchange="window.location.href='{{ route('products.index') }}?' + new URLSearchParams({...Object.fromEntries(new URLSearchParams(window.location.search)), per_page: this.value, page: 1})" class="h-9 rounded border border-[#D0D0D0] pl-3 pr-8 text-xs text-black">
+                    <option value="24" {{ request('per_page', '24') == '24' ? 'selected' : '' }}>24 per page</option>
+                    @if ($products->total() > 48)
+                        <option value="48" {{ request('per_page') == '48' ? 'selected' : '' }}>48 per page</option>
+                    @endif
+                    @if ($products->total() > 96)
+                        <option value="96" {{ request('per_page') == '96' ? 'selected' : '' }}>96 per page</option>
+                    @endif
+                </select>
+            @endif
             <select name="sort" onchange="window.location.href='{{ route('products.index') }}?' + new URLSearchParams({...Object.fromEntries(new URLSearchParams(window.location.search)), sort: this.value})" class="h-9 rounded border border-[#D0D0D0] pl-3 pr-8 text-xs text-black">
                 <option value="newest" {{ request('sort', 'newest') === 'newest' ? 'selected' : '' }}>Newest</option>
                 <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>Price: Low–High</option>

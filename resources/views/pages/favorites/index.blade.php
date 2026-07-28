@@ -30,11 +30,19 @@
                 } else {
                     window.location.replace('{{ route('favorites.index') }}');
                 }
+            } else {
+                // Remove stale favorites that no longer exist in the database
+                const validIds = @json($validIds);
+                const cleaned = favorites.filter(f => validIds.includes(f.id));
+                if (cleaned.length !== favorites.length) {
+                    localStorage.setItem('favorites', JSON.stringify(cleaned));
+                    window.dispatchEvent(new CustomEvent('favorites-updated'));
+                }
             }
         })();
     </script>
 
-    <div x-data="favoritesPageData()" @favorite-removed.window="updateCount(); if (favoriteCount === 0) location.reload()">
+    <div x-data="favoritesPageData()" @favorite-removed.window="updateCount(); if (favoriteCount === 0) location.reload()" @favorites-updated.window="updateCount()">
         {{-- Breadcrumb --}}
         <div class="flex items-center gap-2 bg-white px-[60px] py-3">
             <a href="{{ route('home') }}" class="text-xs text-[#666] hover:underline">Home</a>

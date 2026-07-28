@@ -24,6 +24,8 @@ class FavoritesController extends Controller
                 });
         }
 
-        return view('pages.favorites.index', compact('products'));
+        $validIds = $products->pluck('id')->values();
+
+        return view('pages.favorites.index', compact('products', 'validIds'));
     }
 }

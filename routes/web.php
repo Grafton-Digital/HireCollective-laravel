@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Api\FavoritesValidationController;
 use App\Http\Controllers\BoutiqueApplicationController;
 use App\Http\Controllers\BoutiqueController;
 use App\Http\Controllers\CollaborationController;
@@ -23,6 +24,7 @@ Route::get('/boutiques/{boutique:slug}', [BoutiqueController::class, 'show'])->n
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/boutiques/{boutique:slug}/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/favorites', [FavoritesController::class, 'index'])->name('favorites.index');
+Route::post('/api/favorites/validate', FavoritesValidationController::class)->name('favorites.validate');
 Route::get('/new-arrivals', NewArrivalsController::class)->name('new-arrivals');
 
 // Enquiry (public, rate-limited)
