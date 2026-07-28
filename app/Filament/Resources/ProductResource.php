@@ -199,14 +199,6 @@ class ProductResource extends Resource
                     ->boolean(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('status')
-                    ->badge()
-                    ->colors([
-                        'warning' => Product::STATUS_PENDING,
-                        'success' => Product::STATUS_APPROVED,
-                        'danger' => Product::STATUS_REJECTED,
-                    ])
-                    ->visible(fn () => auth()->user()?->isBoutiqueOwner() ?? false),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -225,13 +217,6 @@ class ProductResource extends Resource
                                 ->orWhereHas('boutique', fn ($query) => $query->where('county', $county));
                         })
                     )),
-                Tables\Filters\SelectFilter::make('status')
-                    ->options([
-                        Product::STATUS_PENDING => 'Pending',
-                        Product::STATUS_APPROVED => 'Approved',
-                        Product::STATUS_REJECTED => 'Rejected',
-                    ])
-                    ->visible(fn () => auth()->user()?->isAdmin() ?? false),
                 Tables\Filters\TernaryFilter::make('is_active'),
                 Tables\Filters\TernaryFilter::make('is_available'),
             ])
