@@ -33,11 +33,6 @@
             if (this.liked) {
                 // Remove from favorites
                 favorites = favorites.filter(f => f.id !== {{ $productId }});
-
-                // Also remove from viewed list
-                let viewedFavorites = JSON.parse(localStorage.getItem('viewedFavorites') || '[]');
-                viewedFavorites = viewedFavorites.filter(id => id !== {{ $productId }});
-                localStorage.setItem('viewedFavorites', JSON.stringify(viewedFavorites));
             } else {
                 // Add to favorites with timestamp
                 favorites.push({

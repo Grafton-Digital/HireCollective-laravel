@@ -13,11 +13,8 @@
                 localStorage.setItem('favorites', JSON.stringify(favorites));
             }
 
-            // Mark all current favorites as viewed
-            const favoriteIds = favorites.map(f => f.id);
-            localStorage.setItem('viewedFavorites', JSON.stringify(favoriteIds));
-
             // Sync URL with localStorage
+            const favoriteIds = favorites.map(f => f.id);
             const urlParams = new URLSearchParams(window.location.search);
             const urlIds = urlParams.getAll('ids[]').map(id => parseInt(id));
 

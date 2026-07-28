@@ -7,21 +7,15 @@
 <header class="relative flex items-center justify-between bg-cream-50 px-4 py-4 md:px-[60px]" x-data="{
     mobileMenuOpen: false,
     searchOpen: false,
-    newFavoritesCount: 0,
+    favoritesCount: 0,
     init() {
-        this.updateNewFavoritesCount();
+        this.updateFavoritesCount();
     },
-    updateNewFavoritesCount() {
+    updateFavoritesCount() {
         const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-        const viewedFavorites = JSON.parse(localStorage.getItem('viewedFavorites') || '[]');
-
-        // Count how many favorites haven't been viewed
-        const favoriteIds = favorites.map(f => f.id);
-        const newIds = favoriteIds.filter(id => !viewedFavorites.includes(id));
-
-        this.newFavoritesCount = newIds.length;
+        this.favoritesCount = favorites.length;
     }
-}" @favorite-added.window="updateNewFavoritesCount()" @favorite-removed.window="updateNewFavoritesCount()">
+}" @favorite-added.window="updateFavoritesCount()" @favorite-removed.window="updateFavoritesCount()">
     {{-- Left section: Burger menu + links --}}
     <div class="flex items-center gap-6">
         {{-- Burger menu button --}}
@@ -55,8 +49,8 @@
         <a href="{{ route('favorites.index') }}" class="relative h-5 w-5">
             <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>
             <span
-                x-show="newFavoritesCount > 0"
-                x-text="newFavoritesCount"
+                x-show="favoritesCount > 0"
+                x-text="favoritesCount"
                 class="absolute -right-2 -top-2 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white"
                 style="display: none;"
             ></span>
