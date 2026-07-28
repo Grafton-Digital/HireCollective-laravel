@@ -50,9 +50,7 @@ class AccountController extends Controller
     {
         $validated = $request->validate([
             'logo' => ['nullable', 'image', 'max:2048'],
-            'cover_image' => ['nullable', 'image', 'max:2048'],
             'remove_logo' => ['nullable', 'in:0,1'],
-            'remove_cover_image' => ['nullable', 'in:0,1'],
             'boutique_name' => ['required', 'string', 'max:255'],
             'contact_email' => ['required', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
@@ -83,12 +81,6 @@ class AccountController extends Controller
                 $updateData['logo'] = null;
             } elseif ($request->hasFile('logo')) {
                 $updateData['logo'] = $request->file('logo')->store('boutiques/logos', 'public');
-            }
-
-            if ($request->input('remove_cover_image') === '1') {
-                $updateData['cover_image'] = null;
-            } elseif ($request->hasFile('cover_image')) {
-                $updateData['cover_image'] = $request->file('cover_image')->store('boutiques/covers', 'public');
             }
 
             $boutique->update($updateData);

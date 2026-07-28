@@ -37,10 +37,6 @@ class BoutiqueApplicationController extends Controller
             $boutique->logo = $request->file('logo')->store('boutiques/logos', 'public');
         }
 
-        if ($request->hasFile('cover_image')) {
-            $boutique->cover_image = $request->file('cover_image')->store('boutiques/covers', 'public');
-        }
-
         if (! empty($validated['instagram'])) {
             $boutique->social_links = [
                 'instagram' => $validated['instagram'],

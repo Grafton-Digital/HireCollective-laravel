@@ -33,8 +33,7 @@
                     <form method="POST" action="{{ route('account.update') }}" enctype="multipart/form-data" class="mt-6"
                         x-data="boutiqueForm()"
                         @submit.prevent="submitForm"
-                        @file-selected-logo.window="logoFile = $event.detail"
-                        @file-selected-cover.window="coverFile = $event.detail">
+                        @file-selected-logo.window="logoFile = $event.detail">
                         @csrf
                         @method('PATCH')
 
@@ -43,7 +42,6 @@
                         @endphp
 
                         <input type="hidden" name="remove_logo" x-ref="removeLogo" value="0">
-                        <input type="hidden" name="remove_cover_image" x-ref="removeCover" value="0">
 
                         <div class="space-y-5">
                             <div class="grid grid-cols-2 gap-4">
@@ -91,49 +89,6 @@
                                     @error('logo') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                                 </div>
 
-                                <div x-data="fileUpload('cover_image', '{{ $boutique?->cover_image ? Storage::url($boutique->cover_image) : '' }}')" x-ref="coverUpload">
-                                    <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Cover Photo</label>
-                                    <div
-                                        @dragover.prevent="isDragging = true"
-                                        @dragleave.prevent="isDragging = false"
-                                        @drop.prevent="handleDrop($event)"
-                                        @click="$refs.fileInput.click()"
-                                        :class="isDragging ? 'border-gray-900 bg-gray-50' : 'border-gray-300'"
-                                        class="relative flex h-32 cursor-pointer flex-col items-center justify-center border-2 border-dashed bg-white transition-colors hover:border-gray-400"
-                                    >
-                                        <template x-if="!preview && !existingImage">
-                                            <div class="text-center">
-                                                <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                                                </svg>
-                                                <p class="mt-2 text-xs text-gray-500">Drag & drop or click to upload</p>
-                                            </div>
-                                        </template>
-                                        <template x-if="preview || existingImage">
-                                            <div class="relative h-full w-full">
-                                                <img :src="preview || existingImage" class="h-full w-full object-cover">
-                                                <button
-                                                    type="button"
-                                                    @click.stop="clearFile()"
-                                                    class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center bg-black bg-opacity-50 text-white hover:bg-opacity-70"
-                                                >
-                                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </template>
-                                    </div>
-                                    <input
-                                        type="file"
-                                        name="cover_image"
-                                        x-ref="fileInput"
-                                        @change="handleFileSelect($event)"
-                                        accept="image/*"
-                                        class="hidden"
-                                    >
-                                    @error('cover_image') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
-                                </div>
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
@@ -406,16 +361,12 @@
         function boutiqueForm() {
             return {
                 logoFile: null,
-                coverFile: null,
                 submitForm(e) {
                     const form = e.target;
                     const formData = new FormData(form);
 
                     if (this.logoFile) {
                         formData.set('logo', this.logoFile);
-                    }
-                    if (this.coverFile) {
-                        formData.set('cover_image', this.coverFile);
                     }
 
                     fetch(form.action, {
@@ -458,11 +409,10 @@
                         this.currentFile = files[0];
                         this.processFile(files[0]);
 
-                        const eventName = fieldName === 'logo' ? 'file-selected-logo' : 'file-selected-cover';
-                        window.dispatchEvent(new CustomEvent(eventName, { detail: files[0] }));
+                        window.dispatchEvent(new CustomEvent('file-selected-logo', { detail: files[0] }));
 
                         const form = this.$el.closest('form');
-                        const removeInput = form.querySelector(fieldName === 'logo' ? 'input[name="remove_logo"]' : 'input[name="remove_cover_image"]');
+                        const removeInput = form.querySelector('input[name="remove_logo"]');
                         if (removeInput) {
                             removeInput.value = '0';
                         }
@@ -474,13 +424,10 @@
                         this.currentFile = files[0];
                         this.processFile(files[0]);
 
-                        // Dispatch event to form (for consistency)
-                        const eventName = fieldName === 'logo' ? 'file-selected-logo' : 'file-selected-cover';
-                        window.dispatchEvent(new CustomEvent(eventName, { detail: files[0] }));
+                        window.dispatchEvent(new CustomEvent('file-selected-logo', { detail: files[0] }));
 
-                        // Mark as not removing
                         const form = this.$el.closest('form');
-                        const removeInput = form.querySelector(fieldName === 'logo' ? 'input[name="remove_logo"]' : 'input[name="remove_cover_image"]');
+                        const removeInput = form.querySelector('input[name="remove_logo"]');
                         if (removeInput) {
                             removeInput.value = '0';
                         }
@@ -502,14 +449,11 @@
                     this.currentFile = null;
                     this.$refs.fileInput.value = '';
 
-                    // Dispatch event to clear file in form
-                    const eventName = fieldName === 'logo' ? 'file-selected-logo' : 'file-selected-cover';
-                    window.dispatchEvent(new CustomEvent(eventName, { detail: null }));
+                    window.dispatchEvent(new CustomEvent('file-selected-logo', { detail: null }));
 
-                    // Mark for removal on server (only if there was an existing image)
                     const form = this.$el.closest('form');
                     if (existingUrl) {
-                        const removeInput = form.querySelector(fieldName === 'logo' ? 'input[name="remove_logo"]' : 'input[name="remove_cover_image"]');
+                        const removeInput = form.querySelector('input[name="remove_logo"]');
                         if (removeInput) {
                             removeInput.value = '1';
                         }

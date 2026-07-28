@@ -65,13 +65,7 @@ class BoutiqueEnquiryResource extends Resource
                     ->directory('boutiques/logos')
                     ->visibility('public')
                     ->disabled(),
-                Forms\Components\FileUpload::make('cover_image')
-                    ->image()
-                    ->disk('public')
-                    ->directory('boutiques/covers')
-                    ->visibility('public')
-                    ->disabled(),
-            ])->columns(2),
+            ]),
 
             Section::make('Location & Contact')->schema([
                 Forms\Components\TextInput::make('address')

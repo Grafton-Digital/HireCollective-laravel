@@ -25,8 +25,8 @@ class BoutiqueApplicationApprovedNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Your Boutique Has Been Approved!')
-            ->greeting("Congratulations, {$this->boutique->name}!")
-            ->line('Your boutique application has been approved. You can now log in to your account and start managing your boutique.')
+            ->greeting('Congratulations!')
+            ->line("Your boutique \"{$this->boutique->name}\" has been approved. You can now log in to your account and start managing your boutique.")
             ->action('Log In', url('/login'))
             ->line('Thank you for joining HireCollective!');
     }

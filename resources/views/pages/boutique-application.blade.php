@@ -10,7 +10,7 @@
                 x-data="applicationForm()"
                 @submit.prevent="submitForm"
                 @file-selected-logo.window="logoFile = $event.detail"
-                @file-selected-cover.window="coverFile = $event.detail">
+                >
                 @csrf
 
                 <div x-show="errors.general" x-cloak class="border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -35,7 +35,7 @@
                 {{-- Logo and Cover Image --}}
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-2">Images</label>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 gap-4">
                         {{-- Logo --}}
                         <div x-data="fileUpload('logo')" x-ref="logoUpload">
                             <label class="mb-2 block text-xs font-medium text-gray-700">Logo</label>
@@ -81,52 +81,8 @@
                             <p x-show="errors.logo" x-text="errors.logo?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
 
-                        {{-- Cover Image --}}
-                        <div x-data="fileUpload('cover_image')" x-ref="coverUpload">
-                            <label class="mb-2 block text-xs font-medium text-gray-700">Cover Photo</label>
-                            <div
-                                @dragover.prevent="isDragging = true"
-                                @dragleave.prevent="isDragging = false"
-                                @drop.prevent="handleDrop($event)"
-                                @click="$refs.fileInput.click()"
-                                :class="isDragging ? 'border-gray-900 bg-gray-50' : 'border-gray-300'"
-                                class="relative flex h-32 cursor-pointer flex-col items-center justify-center border-2 border-dashed bg-white transition-colors hover:border-gray-400"
-                            >
-                                <template x-if="!preview">
-                                    <div class="text-center">
-                                        <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                                        </svg>
-                                        <p class="mt-2 text-xs text-gray-500">Drag & drop or click</p>
-                                    </div>
-                                </template>
-                                <template x-if="preview">
-                                    <div class="relative h-full w-full">
-                                        <img :src="preview" class="h-full w-full object-cover">
-                                        <button
-                                            type="button"
-                                            @click.stop="clearFile()"
-                                            class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center bg-black bg-opacity-50 text-white hover:bg-opacity-70"
-                                        >
-                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </template>
-                            </div>
-                            <input
-                                type="file"
-                                name="cover_image"
-                                x-ref="fileInput"
-                                @change="handleFileSelect($event)"
-                                accept="image/*"
-                                class="hidden"
-                            >
-                            <p x-show="errors.cover_image" x-text="errors.cover_image?.[0]" class="mt-1 text-xs text-red-600"></p>
-                        </div>
                     </div>
-                    <p class="mt-2 text-xs text-gray-500">PNG, JPG up to 5MB. Logo: square, Cover: 1200×400 recommended</p>
+                    <p class="mt-2 text-xs text-gray-500">PNG, JPG up to 5MB. Logo: square recommended</p>
                 </div>
 
                 <div>
@@ -321,7 +277,6 @@
         function applicationForm() {
             return {
                 logoFile: null,
-                coverFile: null,
                 errors: {},
                 password: '',
                 passwordConfirmation: '',
@@ -342,10 +297,6 @@
 
                     if (this.logoFile) {
                         formData.set('logo', this.logoFile);
-                    }
-
-                    if (this.coverFile) {
-                        formData.set('cover_image', this.coverFile);
                     }
 
                     formData.set('password', this.password);

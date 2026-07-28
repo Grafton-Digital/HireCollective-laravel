@@ -50,12 +50,7 @@ class BoutiqueResource extends Resource
                     ->disk('public')
                     ->directory('boutiques/logos')
                     ->visibility('public'),
-                Forms\Components\FileUpload::make('cover_image')
-                    ->image()
-                    ->disk('public')
-                    ->directory('boutiques/covers')
-                    ->visibility('public'),
-            ])->columns(2),
+            ]),
 
             Section::make('Location & Contact')->schema([
                 Forms\Components\TextInput::make('address')

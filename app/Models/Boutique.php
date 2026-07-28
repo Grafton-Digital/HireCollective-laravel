@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Notification;
     'slug',
     'description',
     'logo',
-    'cover_image',
     'address',
     'city',
     'county',
