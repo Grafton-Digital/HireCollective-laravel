@@ -2,7 +2,8 @@
 
 <a href="{{ route('boutiques.show', $boutique) }}" class="flex flex-col bg-cream-50 aspect-[1/0.8] [&:hover_img]:scale-105">
     @if ($boutique->logo)
-        <div class="h-full overflow-hidden flex items-center justify-center p-[20%]">
+        <div class="h-full overflow-hidden flex items-center justify-center p-[20%]"
+             @if($boutique->logo_background_color) style="background-color: {{ $boutique->logo_background_color }}" @endif>
             <img src="{{ Storage::url($boutique->logo) }}" alt="{{ $boutique->name }}"
                  class="max-h-full max-w-full object-contain transition-transform duration-500">
         </div>

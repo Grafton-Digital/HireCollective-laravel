@@ -14,6 +14,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class BoutiqueResource extends Resource
@@ -28,6 +29,26 @@ class BoutiqueResource extends Resource
     {
         return $schema->schema([
             Section::make('Details')->schema([
+                Forms\Components\Placeholder::make('owner')
+                    ->content(function ($record) {
+                        if (! $record) {
+                            return 'N/A';
+                        }
+
+                        $owner = $record->users()->where('role', 'boutique_owner')->first();
+
+                        if (! $owner) {
+                            return 'No owner assigned';
+                        }
+
+                        $url = UserResource::getUrl('edit', ['record' => $owner]);
+
+                        return new HtmlString(
+                            '<a href="'.$url.'" class="text-primary-600 hover:underline">'.e($owner->name).'</a>'
+                        );
+                    })
+                    ->visible(fn ($record) => $record !== null)
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255)

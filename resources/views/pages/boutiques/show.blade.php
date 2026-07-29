@@ -16,7 +16,8 @@
 
         <div class="flex py-16 gap-x-12">
 
-            <div class="flex w-[200px] h-auto overflow-hidden">
+            <div class="flex w-[200px] h-auto overflow-hidden p-4"
+                 @if($boutique->logo_background_color) style="background-color: {{ $boutique->logo_background_color }}" @endif>
                 @if ($boutique->logo)
                     <img src="{{ Storage::url($boutique->logo) }}" alt="{{ $boutique->name }}" class="h-full w-full object-contain">
                 @else

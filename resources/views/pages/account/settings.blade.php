@@ -48,12 +48,14 @@
                                 <div x-data="fileUpload('logo', '{{ $boutique?->logo ? Storage::url($boutique->logo) : '' }}')" x-ref="logoUpload">
                                     <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Logo</label>
                                     <div
+                                        id="logo-preview-box"
                                         @dragover.prevent="isDragging = true"
                                         @dragleave.prevent="isDragging = false"
                                         @drop.prevent="handleDrop($event)"
                                         @click="$refs.fileInput.click()"
                                         :class="isDragging ? 'border-gray-900 bg-gray-50' : 'border-gray-300'"
-                                        class="relative flex h-32 cursor-pointer flex-col items-center justify-center border-2 border-dashed bg-white transition-colors hover:border-gray-400"
+                                        class="relative flex h-32 cursor-pointer flex-col items-center justify-center border-2 border-dashed transition-colors hover:border-gray-400"
+                                        style="background-color: {{ $boutique?->logo_background_color ?? '#ffffff' }}"
                                     >
                                         <template x-if="!preview && !existingImage">
                                             <div class="text-center">
@@ -65,7 +67,7 @@
                                         </template>
                                         <template x-if="preview || existingImage">
                                             <div class="relative h-full w-full">
-                                                <img :src="preview || existingImage" class="h-full w-full object-cover">
+                                                <img :src="preview || existingImage" class="h-full w-full object-contain">
                                                 <button
                                                     type="button"
                                                     @click.stop="clearFile()"
@@ -90,6 +92,37 @@
                                 </div>
 
                                 <div>
+                                    <label for="logo_background_color" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Logo Background</label>
+                                    <div class="flex items-center gap-3">
+                                        <input
+                                            type="color"
+                                            name="logo_background_color"
+                                            id="logo_background_color"
+                                            value="{{ old('logo_background_color', $boutique?->logo_background_color ?? '#ffffff') }}"
+                                            @input="document.getElementById('logo-preview-box').style.backgroundColor = $event.target.value"
+                                            class="h-10 w-14 cursor-pointer border border-gray-300 p-1"
+                                        >
+                                        <span class="text-xs text-gray-500">Pick a background colour for your logo</span>
+                                    </div>
+                                    @error('logo_background_color') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="boutique_name" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Boutique Name</label>
+                                    <input
+                                        type="text"
+                                        name="boutique_name"
+                                        id="boutique_name"
+                                        value="{{ old('boutique_name', $boutique?->name) }}"
+                                        required
+                                        class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                    >
+                                    @error('boutique_name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+
+                                <div>
                                     <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Account Email</label>
                                     <input
                                         type="email"
@@ -99,18 +132,6 @@
                                     >
                                     <p class="mt-1 text-xs text-gray-500">This is your login email and cannot be changed.</p>
                                 </div>
-                            </div>
-                            <div>
-                                <label for="boutique_name" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Boutique Name</label>
-                                <input
-                                    type="text"
-                                    name="boutique_name"
-                                    id="boutique_name"
-                                    value="{{ old('boutique_name', $boutique?->name) }}"
-                                    required
-                                    class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
-                                >
-                                @error('boutique_name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
@@ -384,23 +405,14 @@
                         method: 'POST',
                         body: formData,
                         headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'Accept': 'application/json'
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                         }
                     })
                     .then(response => {
-                        if (response.redirected) {
-                            window.location.href = response.url;
-                        } else if (response.ok) {
-                            window.location.reload();
-                        } else {
-                            return response.json().then(data => {
-                                alert('Error: ' + (data.message || 'Failed to save'));
-                            });
-                        }
+                        window.location.href = '{{ route("account.settings") }}';
                     })
-                    .catch(error => {
-                        alert('Failed to save changes');
+                    .catch(() => {
+                        window.location.href = '{{ route("account.settings") }}';
                     });
                 }
             }

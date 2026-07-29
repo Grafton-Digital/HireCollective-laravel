@@ -59,13 +59,14 @@ class AccountController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'logo' => ['nullable', 'image', 'max:2048'],
+            'logo' => ['nullable', 'file', 'mimes:jpeg,png,gif,webp,avif,svg', 'max:2048'],
             'remove_logo' => ['nullable', 'in:0,1'],
             'boutique_name' => ['required', 'string', 'max:255'],
             'contact_email' => ['required', 'email', 'max:255'],
             'website' => ['nullable', 'url', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
             'county' => ['required', 'string', 'max:255'],
+            'logo_background_color' => ['nullable', 'string', 'max:7'],
             'instagram' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
         ]);
@@ -86,6 +87,7 @@ class AccountController extends Controller
                 'phone' => $validated['phone'] ?? null,
                 'county' => $validated['county'],
                 'description' => $validated['description'] ?? null,
+                'logo_background_color' => $validated['logo_background_color'] ?? null,
                 'social_links' => $socialLinks,
             ];
 
