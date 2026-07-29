@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Notification;
     'county',
     'contact_email',
     'phone',
+    'website',
     'opening_hours',
     'social_links',
     'is_active',

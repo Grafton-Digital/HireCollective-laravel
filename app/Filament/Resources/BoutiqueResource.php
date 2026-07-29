@@ -53,16 +53,15 @@ class BoutiqueResource extends Resource
             ]),
 
             Section::make('Location & Contact')->schema([
-                Forms\Components\TextInput::make('address')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('city')
-                    ->maxLength(100),
                 Forms\Components\Select::make('county')
                     ->label('County')
                     ->options(fn () => collect(County::cases())->mapWithKeys(fn ($county) => [$county->value => $county->getLabel()])->toArray())
                     ->required()
                     ->searchable()
                     ->native(false),
+                Forms\Components\TextInput::make('website')
+                    ->url()
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('contact_email')
                     ->email()
                     ->required()
@@ -89,6 +88,7 @@ class BoutiqueResource extends Resource
     {
         return $table
             ->modifyQueryUsing(fn ($query) => static::scopeToUserBoutiques($query))
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\ImageColumn::make('logo')
                     ->disk('public')
@@ -97,7 +97,6 @@ class BoutiqueResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('city'),
                 Tables\Columns\TextColumn::make('county'),
                 Tables\Columns\TextColumn::make('products_count')
                     ->counts('products')

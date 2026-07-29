@@ -118,7 +118,28 @@
 
                 <div class="border-t pt-6">
                     <p class="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-700">Contact Links</p>
-                    <div class="grid gap-4 sm:grid-cols-3">
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label for="website" class="sr-only">Website</label>
+                            <div class="relative">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                                    </svg>
+                                </div>
+                                <input
+                                    type="url"
+                                    name="website"
+                                    id="website"
+                                    value="{{ old('website', $prefill['website'] ?? '') }}"
+                                    placeholder="https://yourboutique.com"
+                                    class="block w-full py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                    :class="errors.website ? 'border-red-500' : 'border-gray-300'"
+                                >
+                            </div>
+                            <p x-show="errors.website" x-text="errors.website?.[0]" class="mt-1 text-xs text-red-600"></p>
+                        </div>
+
                         <div>
                             <label for="contact_email" class="sr-only">Email</label>
                             <div class="relative">

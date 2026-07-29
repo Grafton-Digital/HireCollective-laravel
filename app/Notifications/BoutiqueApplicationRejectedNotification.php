@@ -28,6 +28,7 @@ class BoutiqueApplicationRejectedNotification extends Notification
             'name' => $this->boutique->name,
             'bio' => $this->boutique->description,
             'region' => $this->boutique->county,
+            'website' => $this->boutique->website,
             'contact_email' => $this->boutique->contact_email,
             'phone' => $this->boutique->phone,
             'email' => $this->boutique->pending_email,

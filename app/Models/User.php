@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 #[Fillable(['name', 'email', 'password', 'role', 'boutique_id'])]
 #[Hidden(['password', 'remember_token'])]
@@ -18,6 +19,31 @@ class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    protected static function booted(): void
+    {
+        static::deleting(function (User $user) {
+            if ($user->isBoutiqueOwner() && $user->boutique) {
+                $boutique = $user->boutique;
+
+                foreach ($boutique->products as $product) {
+                    if ($product->featured_image) {
+                        Storage::disk('public')->delete($product->featured_image);
+                    }
+                    if (is_array($product->images)) {
+                        Storage::disk('public')->delete($product->images);
+                    }
+                    $product->images()->each(fn ($image) => tap($image, fn () => Storage::disk('public')->delete($image->path))->delete());
+                }
+
+                if ($boutique->logo) {
+                    Storage::disk('public')->delete($boutique->logo);
+                }
+
+                $boutique->delete();
+            }
+        });
+    }
 
     protected function casts(): array
     {

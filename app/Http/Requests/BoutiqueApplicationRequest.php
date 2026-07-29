@@ -19,6 +19,7 @@ class BoutiqueApplicationRequest extends FormRequest
             'logo' => ['nullable', 'image', 'max:5120'],
             'bio' => ['required', 'string', 'max:1000'],
             'region' => ['required', 'string', 'max:255'],
+            'website' => ['nullable', 'url', 'max:255'],
             'contact_email' => ['required', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
             'instagram' => ['nullable', 'string', 'max:255'],

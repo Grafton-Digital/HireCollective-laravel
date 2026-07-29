@@ -68,11 +68,10 @@ class BoutiqueEnquiryResource extends Resource
             ]),
 
             Section::make('Location & Contact')->schema([
-                Forms\Components\TextInput::make('address')
-                    ->disabled(),
-                Forms\Components\TextInput::make('city')
-                    ->disabled(),
                 Forms\Components\TextInput::make('county')
+                    ->disabled(),
+                Forms\Components\TextInput::make('website')
+                    ->url()
                     ->disabled(),
                 Forms\Components\TextInput::make('contact_email')
                     ->email()
@@ -111,6 +110,7 @@ class BoutiqueEnquiryResource extends Resource
     {
         return $table
             ->modifyQueryUsing(fn ($query) => $query->where('status', Boutique::STATUS_PENDING)->with('submittedBy'))
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\ImageColumn::make('logo')
                     ->disk('public')
@@ -119,7 +119,6 @@ class BoutiqueEnquiryResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('city'),
                 Tables\Columns\TextColumn::make('county'),
                 Tables\Columns\TextColumn::make('submittedBy.name')
                     ->label('Submitted By')

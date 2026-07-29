@@ -13,7 +13,16 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->modalDescription(function () {
+                    if ($this->record->isBoutiqueOwner() && $this->record->boutique) {
+                        $productsCount = $this->record->boutique->products()->count();
+
+                        return "This user is a boutique owner. Deleting them will also permanently remove their boutique \"{$this->record->boutique->name}\" and all {$productsCount} associated product(s). This action cannot be undone.";
+                    }
+
+                    return 'Are you sure you would like to do this?';
+                }),
         ];
     }
 }

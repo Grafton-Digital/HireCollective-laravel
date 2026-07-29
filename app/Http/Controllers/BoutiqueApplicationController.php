@@ -39,6 +39,7 @@ class BoutiqueApplicationController extends Controller
         $boutique->county = $validated['region'];
         $boutique->contact_email = $validated['contact_email'];
         $boutique->phone = $validated['phone'] ?? null;
+        $boutique->website = $validated['website'] ?? null;
         $boutique->pending_email = $validated['email'];
         $boutique->pending_password = $validated['password'];
         $boutique->status = Boutique::STATUS_PENDING;
