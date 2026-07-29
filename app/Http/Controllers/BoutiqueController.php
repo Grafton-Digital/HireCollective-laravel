@@ -16,11 +16,7 @@ class BoutiqueController extends Controller
         $query = Boutique::where('is_active', true)
             ->when($request->query('county'), fn ($q, $county) => $q->where('county', $county))
             ->when($request->query('category'), fn ($q, $cat) => $q->whereHas('products.categories', fn ($cq) => $cq->where('slug', $cat)))
-            ->when($request->query('search'), fn ($q, $search) => $q->where(function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('city', 'like', "%{$search}%")
-                    ->orWhere('county', 'like', "%{$search}%");
-            }));
+            ->when($request->query('search'), fn ($q, $search) => $q->where('name', 'like', "%{$search}%"));
 
         $boutiques = match ($request->query('sort')) {
             'name' => $query->orderBy('name'),
