@@ -50,6 +50,15 @@
                     Booking Requests
                 </a>
 
+                <a href="{{ route('account.trainings') }}"
+                   class="flex items-center gap-3  px-3 py-2.5 text-sm {{ request()->routeIs('account.trainings') ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Trainings
+                </a>
+
                 <a href="{{ route('account.settings') }}"
                    class="flex items-center gap-3  px-3 py-2.5 text-sm {{ request()->routeIs('account.settings') ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

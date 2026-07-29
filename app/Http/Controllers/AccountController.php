@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Training;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
@@ -39,6 +40,15 @@ class AccountController extends Controller
         return view('pages.account.settings', [
             'user' => $request->user(),
         ]);
+    }
+
+    public function trainings(): View
+    {
+        $trainings = Training::where('is_published', true)
+            ->orderBy('sort_order')
+            ->get();
+
+        return view('pages.account.trainings', compact('trainings'));
     }
 
     public function helpSupport(): View

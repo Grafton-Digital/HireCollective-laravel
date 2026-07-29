@@ -28,6 +28,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('Hire Collective')
+            ->brandLogoHeight('1.5rem')
+            ->homeUrl('/')
             ->colors([
                 'primary' => Color::Amber,
             ])

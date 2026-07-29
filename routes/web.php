@@ -50,6 +50,7 @@ Route::middleware(['auth', 'boutique_owner'])->prefix('account')->name('account.
     Route::get('/overview', [AccountController::class, 'overview'])->name('overview');
     Route::get('/boutique-info', [AccountController::class, 'boutiqueInfo'])->name('boutique-info');
     Route::get('/settings', [AccountController::class, 'settings'])->name('settings');
+    Route::get('/trainings', [AccountController::class, 'trainings'])->name('trainings');
     Route::get('/help-support', [AccountController::class, 'helpSupport'])->name('help-support');
     Route::patch('/profile', [AccountController::class, 'update'])->name('update');
     Route::patch('/password', [AccountController::class, 'updatePassword'])->name('password.update');
