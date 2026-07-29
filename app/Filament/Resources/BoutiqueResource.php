@@ -47,6 +47,7 @@ class BoutiqueResource extends Resource
             Section::make('Images')->schema([
                 Forms\Components\FileUpload::make('logo')
                     ->image()
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/avif', 'image/svg+xml'])
                     ->disk('public')
                     ->directory('boutiques/logos')
                     ->visibility('public'),

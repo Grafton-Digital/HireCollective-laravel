@@ -16,7 +16,7 @@ class BoutiqueApplicationRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255', 'unique:boutiques,name'],
-            'logo' => ['nullable', 'image', 'max:5120'],
+            'logo' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,avif,svg', 'max:5120'],
             'bio' => ['required', 'string', 'max:1000'],
             'region' => ['required', 'string', 'max:255'],
             'website' => ['nullable', 'url', 'max:255'],
