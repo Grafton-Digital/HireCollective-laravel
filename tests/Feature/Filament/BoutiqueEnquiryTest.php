@@ -90,9 +90,11 @@ class BoutiqueEnquiryTest extends TestCase
         $this->actingAs($admin);
 
         Livewire::test(BoutiqueEnquiryResource\Pages\EditBoutiqueEnquiry::class, ['record' => $boutique->id])
-            ->callAction('reject');
+            ->callAction('reject', data: [
+                'rejection_reason' => 'Your logo does not meet our quality standards.',
+            ]);
 
-        $this->assertEquals(Boutique::STATUS_REJECTED, $boutique->fresh()->status);
+        $this->assertNull($boutique->fresh());
         $this->assertNull($owner->fresh()->boutique_id);
     }
 

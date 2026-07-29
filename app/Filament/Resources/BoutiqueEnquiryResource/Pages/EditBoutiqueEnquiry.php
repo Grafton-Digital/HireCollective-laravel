@@ -5,6 +5,7 @@ namespace App\Filament\Resources\BoutiqueEnquiryResource\Pages;
 use App\Filament\Resources\BoutiqueEnquiryResource;
 use App\Models\Boutique;
 use Filament\Actions;
+use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Icons\Heroicon;
@@ -37,8 +38,15 @@ class EditBoutiqueEnquiry extends EditRecord
                 ->icon(Heroicon::OutlinedXCircle)
                 ->color('danger')
                 ->requiresConfirmation()
-                ->action(function () {
-                    $this->record->reject();
+                ->schema([
+                    Textarea::make('rejection_reason')
+                        ->label('Reason for rejection')
+                        ->placeholder('Explain what needs to be changed...')
+                        ->required()
+                        ->rows(4),
+                ])
+                ->action(function (array $data) {
+                    $this->record->reject($data['rejection_reason']);
 
                     Notification::make()
                         ->warning()

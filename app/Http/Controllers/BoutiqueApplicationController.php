@@ -6,15 +6,26 @@ use App\Http\Requests\BoutiqueApplicationRequest;
 use App\Models\Boutique;
 use App\Notifications\NewBoutiqueApplicationNotification;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class BoutiqueApplicationController extends Controller
 {
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('pages.boutique-application');
+        $prefill = [];
+
+        if ($request->hasValidSignature() && $request->has('prefill')) {
+            $decoded = json_decode(base64_decode($request->query('prefill')), true);
+
+            if (is_array($decoded)) {
+                $prefill = $decoded;
+            }
+        }
+
+        return view('pages.boutique-application', compact('prefill'));
     }
 
     public function store(BoutiqueApplicationRequest $request): RedirectResponse
@@ -23,7 +34,7 @@ class BoutiqueApplicationController extends Controller
 
         $boutique = new Boutique;
         $boutique->name = $validated['name'];
-        $boutique->slug = Str::slug($validated['name']);
+        $boutique->slug = $this->generateUniqueSlug($validated['name']);
         $boutique->description = $validated['bio'];
         $boutique->county = $validated['region'];
         $boutique->contact_email = $validated['contact_email'];
@@ -55,5 +66,19 @@ class BoutiqueApplicationController extends Controller
     public function confirmation(): View
     {
         return view('pages.boutique-application-confirmation');
+    }
+
+    private function generateUniqueSlug(string $name): string
+    {
+        $slug = Str::slug($name);
+        $original = $slug;
+        $counter = 1;
+
+        while (Boutique::where('slug', $slug)->exists()) {
+            $slug = $original.'-'.$counter;
+            $counter++;
+        }
+
+        return $slug;
     }
 }

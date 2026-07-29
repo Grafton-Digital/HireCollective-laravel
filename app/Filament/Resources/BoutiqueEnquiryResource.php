@@ -151,8 +151,15 @@ class BoutiqueEnquiryResource extends Resource
                     ->icon(Heroicon::OutlinedXCircle)
                     ->color('danger')
                     ->requiresConfirmation()
-                    ->action(function (Boutique $record) {
-                        $record->reject();
+                    ->schema([
+                        Forms\Components\Textarea::make('rejection_reason')
+                            ->label('Reason for rejection')
+                            ->placeholder('Explain what needs to be changed...')
+                            ->required()
+                            ->rows(4),
+                    ])
+                    ->action(function (Boutique $record, array $data) {
+                        $record->reject($data['rejection_reason']);
 
                         Notification::make()
                             ->warning()

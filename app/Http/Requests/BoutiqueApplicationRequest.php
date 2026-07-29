@@ -15,7 +15,7 @@ class BoutiqueApplicationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:boutiques,name'],
             'logo' => ['nullable', 'image', 'max:5120'],
             'bio' => ['required', 'string', 'max:1000'],
             'region' => ['required', 'string', 'max:255'],

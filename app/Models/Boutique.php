@@ -117,13 +117,15 @@ class Boutique extends Model
         }
     }
 
-    public function reject(): void
+    public function reject(string $reason): void
     {
-        $this->update(['status' => self::STATUS_REJECTED]);
+        $email = $this->pending_email;
 
-        if ($this->pending_email) {
-            Notification::route('mail', $this->pending_email)
-                ->notify(new BoutiqueApplicationRejectedNotification($this));
+        if ($email) {
+            Notification::route('mail', $email)
+                ->notify(new BoutiqueApplicationRejectedNotification($this, $reason));
         }
+
+        $this->delete();
     }
 }

@@ -23,7 +23,7 @@
                         type="text"
                         name="name"
                         id="name"
-                        value="{{ old('name') }}"
+                        value="{{ old('name', $prefill['name'] ?? '') }}"
                         required
                         placeholder="Enter your boutique name"
                         class="mt-2 block w-full px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
@@ -95,7 +95,7 @@
                         placeholder="Tell us about your boutique, your style, and what makes you unique..."
                         class="mt-2 block w-full px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                         :class="errors.bio ? 'border-red-500' : 'border-gray-300'"
-                    >{{ old('bio') }}</textarea>
+                    >{{ old('bio', $prefill['bio'] ?? '') }}</textarea>
                     <p x-show="errors.bio" x-text="errors.bio?.[0]" class="mt-1 text-xs text-red-600"></p>
                 </div>
 
@@ -110,7 +110,7 @@
                     >
                         <option value="">Select your county</option>
                         @foreach (App\County::cases() as $county)
-                            <option value="{{ $county->value }}" {{ old('region') == $county->value ? 'selected' : '' }}>{{ $county->getLabel() }}</option>
+                            <option value="{{ $county->value }}" {{ old('region', $prefill['region'] ?? '') == $county->value ? 'selected' : '' }}>{{ $county->getLabel() }}</option>
                         @endforeach
                     </select>
                     <p x-show="errors.region" x-text="errors.region?.[0]" class="mt-1 text-xs text-red-600"></p>
@@ -131,7 +131,7 @@
                                     type="email"
                                     name="contact_email"
                                     id="contact_email"
-                                    value="{{ old('contact_email') }}"
+                                    value="{{ old('contact_email', $prefill['contact_email'] ?? '') }}"
                                     required
                                     placeholder="your@email.com"
                                     class="block w-full py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
@@ -153,7 +153,7 @@
                                     type="tel"
                                     name="phone"
                                     id="phone"
-                                    value="{{ old('phone') }}"
+                                    value="{{ old('phone', $prefill['phone'] ?? '') }}"
                                     placeholder="+44 000 000 000"
                                     class="block w-full py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                                     :class="errors.phone ? 'border-red-500' : 'border-gray-300'"
@@ -174,7 +174,7 @@
                                     type="text"
                                     name="instagram"
                                     id="instagram"
-                                    value="{{ old('instagram') }}"
+                                    value="{{ old('instagram', $prefill['instagram'] ?? '') }}"
                                     placeholder="@handle"
                                     class="block w-full py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                                     :class="errors.instagram ? 'border-red-500' : 'border-gray-300'"
@@ -195,7 +195,7 @@
                                 type="email"
                                 name="email"
                                 id="email"
-                                value="{{ old('email') }}"
+                                value="{{ old('email', $prefill['email'] ?? '') }}"
                                 required
                                 placeholder="your@email.com"
                                 class="mt-1 block w-full px-4 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
@@ -264,9 +264,11 @@
                 <div class="pt-4">
                     <button
                         type="submit"
-                        class="w-full bg-black px-6 py-4 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-gray-800"
+                        :disabled="submitting"
+                        class="w-full bg-black px-6 py-4 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Submit Application
+                        <span x-show="!submitting">Submit Application</span>
+                        <span x-show="submitting" x-cloak>Submitting...</span>
                     </button>
                 </div>
             </form>
@@ -278,6 +280,7 @@
             return {
                 logoFile: null,
                 errors: {},
+                submitting: false,
                 password: '',
                 passwordConfirmation: '',
                 showPassword: false,
@@ -292,6 +295,7 @@
                 },
                 submitForm(e) {
                     this.errors = {};
+                    this.submitting = true;
                     const form = e.target;
                     const formData = new FormData(form);
 
@@ -308,27 +312,41 @@
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                             'Accept': 'application/json'
-                        }
+                        },
+                        redirect: 'manual'
                     })
                     .then(response => {
-                        if (response.ok || response.redirected) {
+                        if (response.type === 'opaqueredirect' || response.status === 302 || response.status === 301) {
                             window.location.href = '{{ route("boutique.application.confirmation") }}';
-                        } else if (response.status === 422) {
+                            return;
+                        }
+                        if (response.ok) {
+                            window.location.href = '{{ route("boutique.application.confirmation") }}';
+                            return;
+                        }
+                        if (response.status === 422) {
                             return response.json().then(data => {
                                 this.errors = data.errors || {};
+                                this.submitting = false;
                                 this.$nextTick(() => {
                                     const firstError = form.querySelector('.border-red-500');
                                     if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 });
                             });
-                        } else {
-                            return response.json().then(data => {
-                                this.errors = { general: [data.message || 'Failed to submit application'] };
-                            });
                         }
+                        return response.text().then(text => {
+                            try {
+                                const data = JSON.parse(text);
+                                this.errors = { general: [data.message || 'Failed to submit application'] };
+                            } catch {
+                                this.errors = { general: ['Failed to submit application. Please try again.'] };
+                            }
+                            this.submitting = false;
+                        });
                     })
                     .catch(() => {
                         this.errors = { general: ['Failed to submit application. Please try again.'] };
+                        this.submitting = false;
                     });
                 }
             }

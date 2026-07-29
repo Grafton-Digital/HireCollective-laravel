@@ -26,7 +26,7 @@
             @endif
             <div class="overflow absolute top-0 left-0 w-full h-full bg-black/20"></div>
             <div class="relative">
-                <h3 class="animate animate-delay-300 font-serif max-w-[200px] text-center text-xl font-normal uppercase text-white">{{ $content['hero']['right']['text'] ?? 'Learn how it works' }}</h3>
+                <a href="{{ route('how-it-works') }}" class="animate animate-delay-300 block max-w-[160px] font-serif max-w-[200px] text-center text-xl font-normal uppercase text-white hover:underline">{{ $content['hero']['right']['text'] ?? 'Learn how it works' }}</a>
             </div>
         </div>
     </section>
