@@ -97,30 +97,104 @@
         x-transition:leave-end="translate-x-full"
         class="absolute inset-0 z-50 flex items-center bg-white px-4 md:px-[60px]"
         style="display: none;"
+        x-data="headerSearch()"
+        @keydown.escape.window="if (searchOpen) { searchOpen = false }"
     >
         <button @click="searchOpen = false" class="mr-4 h-6 w-6 flex-shrink-0">
             <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
         </button>
-        <form action="{{ route('products.index') }}" method="GET" class="flex flex-1 items-center">
-            <input
-                type="text"
-                name="search"
-                placeholder="Search dresses, bags, hats, boutiques..."
-                class="flex-1 border-none border-black bg-transparent py-2 text-base text-black placeholder-gray-400 focus:outline-none"
-                x-ref="searchInput"
-                @keydown.escape="searchOpen = false"
-                style="border-bottom: 1px solid #dadada;"
+        <div class="relative flex-1">
+            <form @submit.prevent="submitSearch()" class="flex items-center">
+                <input
+                    type="text"
+                    x-model="query"
+                    @input.debounce.300ms="fetchSuggestions()"
+                    placeholder="Search dresses, bags, hats, boutiques..."
+                    class="flex-1 border-none bg-transparent py-2 text-base text-black placeholder-gray-400 focus:outline-none"
+                    x-ref="searchInput"
+                    @keydown.arrow-down.prevent="highlightNext()"
+                    @keydown.arrow-up.prevent="highlightPrev()"
+                    @keydown.enter.prevent="submitSearch()"
+                    style="border-bottom: 1px solid #dadada;"
+                >
+                <button type="submit" class="ml-4 h-6 w-6 flex-shrink-0">
+                    <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </button>
+            </form>
+
+            {{-- Dropdown --}}
+            <div
+                x-show="results.length > 0 && query.length >= 2"
+                x-transition
+                class="absolute left-0 right-0 top-full mt-1 border border-gray-200 bg-white shadow-lg"
+                style="display: none;"
             >
-            <button type="submit" class="ml-4 h-6 w-6 flex-shrink-0">
-                <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <circle cx="11" cy="11" r="8"/>
-                    <path d="m21 21-4.3-4.3"/>
-                </svg>
-            </button>
-        </form>
+                <template x-for="(item, index) in results" :key="index">
+                    <a
+                        :href="item.url"
+                        @mouseenter="highlighted = index"
+                        :class="highlighted === index ? 'bg-gray-50' : ''"
+                        class="flex items-center justify-between px-4 py-3 text-sm text-black hover:bg-gray-50 transition-colors"
+                    >
+                        <span x-text="item.name" class="truncate"></span>
+                        <span
+                            x-text="item.type === 'product' ? item.price : 'Boutique'"
+                            :class="item.type === 'boutique' ? 'text-xs uppercase tracking-wide text-gray-500' : 'text-sm font-medium text-black'"
+                        ></span>
+                    </a>
+                </template>
+            </div>
+        </div>
     </div>
+
+    <script>
+        function headerSearch() {
+            return {
+                query: '',
+                results: [],
+                highlighted: -1,
+                fetchSuggestions() {
+                    if (this.query.length < 2) {
+                        this.results = [];
+                        return;
+                    }
+                    fetch('{{ route("search.suggestions") }}?q=' + encodeURIComponent(this.query))
+                        .then(r => r.json())
+                        .then(data => {
+                            this.results = data.results;
+                            this.highlighted = -1;
+                        });
+                },
+                highlightNext() {
+                    if (this.highlighted < this.results.length - 1) this.highlighted++;
+                },
+                highlightPrev() {
+                    if (this.highlighted > 0) this.highlighted--;
+                },
+                submitSearch() {
+                    if (this.highlighted >= 0 && this.results[this.highlighted]) {
+                        window.location.href = this.results[this.highlighted].url;
+                        return;
+                    }
+                    if (this.query.length < 2) return;
+
+                    const hasBoutiques = this.results.some(r => r.type === 'boutique');
+                    const hasProducts = this.results.some(r => r.type === 'product');
+
+                    if (hasBoutiques && !hasProducts) {
+                        window.location.href = '{{ route("boutiques.index") }}?search=' + encodeURIComponent(this.query);
+                    } else {
+                        window.location.href = '{{ route("products.index") }}?search=' + encodeURIComponent(this.query);
+                    }
+                }
+            }
+        }
+    </script>
 
     {{-- Fullscreen menu --}}
     <div
