@@ -53,7 +53,8 @@ class AccountController extends Controller
             'remove_logo' => ['nullable', 'in:0,1'],
             'boutique_name' => ['required', 'string', 'max:255'],
             'contact_email' => ['required', 'email', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:255'],
+            'website' => ['nullable', 'url', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
             'county' => ['required', 'string', 'max:255'],
             'instagram' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -71,6 +72,7 @@ class AccountController extends Controller
             $updateData = [
                 'name' => $validated['boutique_name'],
                 'contact_email' => $validated['contact_email'],
+                'website' => $validated['website'] ?? null,
                 'phone' => $validated['phone'] ?? null,
                 'county' => $validated['county'],
                 'description' => $validated['description'] ?? null,

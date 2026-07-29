@@ -42,9 +42,9 @@
             @endif
 
             {{-- Price --}}
-            <div class="flex items-baseline text-black font-semibold gap-2 border-b border-b-cream-50 pb-5">
-                <span class="text-[20px]">from</span>
-                <span class="text-[24px]">
+            <div class="flex items-baseline text-[18px] text-black gap-2 border-b border-b-cream-50 pb-5">
+                <span class="text-[11px] font-semibold tracking-[1px] text-black uppercase">from</span>
+                <span class="text-[#333]">
                     @if ($product->is_variable && $product->variants->count())
                         €{{ number_format($product->variants->min('price'), 0) }}
                     @elseif ($product->price_per_day)

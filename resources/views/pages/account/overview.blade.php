@@ -37,18 +37,28 @@
                 </div>
 
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Email</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Account Email</p>
+                    <p class="mt-1 text-sm text-gray-900">{{ auth()->user()->email }}</p>
+                </div>
+
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Website</p>
+                    <p class="mt-1 text-sm text-gray-900">{{ $boutique->website ?? 'Not specified' }}</p>
+                </div>
+
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Contact Email</p>
                     <p class="mt-1 text-sm text-gray-900">{{ $boutique->contact_email }}</p>
                 </div>
 
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">WhatsApp</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Phone</p>
                     <p class="mt-1 text-sm text-gray-900">{{ $boutique->phone ?? 'Not specified' }}</p>
                 </div>
 
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Location</p>
-                    <p class="mt-1 text-sm text-gray-900">{{ $boutique->city ? $boutique->city.', '.$boutique->county : 'Not specified' }}</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">County</p>
+                    <p class="mt-1 text-sm text-gray-900">{{ $boutique->county ?? 'Not specified' }}</p>
                 </div>
 
                 <div>

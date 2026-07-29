@@ -89,23 +89,64 @@
                                     @error('logo') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                                 </div>
 
+                                <div>
+                                    <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Account Email</label>
+                                    <input
+                                        type="email"
+                                        value="{{ $user->email }}"
+                                        disabled
+                                        class="block w-full border-gray-300 bg-gray-50 text-sm text-gray-500 shadow-sm"
+                                    >
+                                    <p class="mt-1 text-xs text-gray-500">This is your login email and cannot be changed.</p>
+                                </div>
                             </div>
+                            <div>
+                                <label for="boutique_name" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Boutique Name</label>
+                                <input
+                                    type="text"
+                                    name="boutique_name"
+                                    id="boutique_name"
+                                    value="{{ old('boutique_name', $boutique?->name) }}"
+                                    required
+                                    class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                >
+                                @error('boutique_name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div>
+                                <label for="county" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">County</label>
+                                <select
+                                    name="county"
+                                    id="county"
+                                    required
+                                    class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                >
+                                    <option value="">Select your county</option>
+                                    @foreach (App\County::cases() as $countyOption)
+                                        <option value="{{ $countyOption->value }}" {{ old('county', $boutique?->county) == $countyOption->value ? 'selected' : '' }}>
+                                            {{ $countyOption->getLabel() }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('county') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            </div>
+
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label for="boutique_name" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Boutique Name</label>
+                                    <label for="website" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Website</label>
                                     <input
-                                        type="text"
-                                        name="boutique_name"
-                                        id="boutique_name"
-                                        value="{{ old('boutique_name', $boutique?->name) }}"
-                                        required
+                                        type="url"
+                                        name="website"
+                                        id="website"
+                                        value="{{ old('website', $boutique?->website) }}"
+                                        placeholder="https://yourboutique.com"
                                         class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
                                     >
-                                    @error('boutique_name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                    @error('website') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                                 </div>
 
                                 <div>
-                                    <label for="contact_email" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Email</label>
+                                    <label for="contact_email" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Contact Email</label>
                                     <input
                                         type="email"
                                         name="contact_email"
@@ -120,13 +161,13 @@
 
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label for="phone" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">WhatsApp</label>
+                                    <label for="phone" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Phone</label>
                                     <input
-                                        type="text"
+                                        type="tel"
                                         name="phone"
                                         id="phone"
                                         value="{{ old('phone', $boutique?->phone) }}"
-                                        placeholder="+44 7700 900000"
+                                        placeholder="+44 000 000 000"
                                         class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
                                     >
                                     @error('phone') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
@@ -139,40 +180,10 @@
                                         name="instagram"
                                         id="instagram"
                                         value="{{ old('instagram', $boutique?->social_links['instagram'] ?? '') }}"
-                                        placeholder="@thecompletelook"
+                                        placeholder="@handle"
                                         class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
                                     >
                                     @error('instagram') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label for="county" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">County</label>
-                                    <select
-                                        name="county"
-                                        id="county"
-                                        required
-                                        class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
-                                    >
-                                        <option value="">Select your county</option>
-                                        @foreach (App\County::cases() as $countyOption)
-                                            <option value="{{ $countyOption->value }}" {{ old('county', $boutique?->county) == $countyOption->value ? 'selected' : '' }}>
-                                                {{ $countyOption->getLabel() }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('county') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
-                                </div>
-
-                                <div>
-                                    <label for="status" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Status</label>
-                                    <input
-                                        type="text"
-                                        value="Active"
-                                        disabled
-                                        class="block w-full border-gray-300 bg-gray-50 text-sm text-gray-500 shadow-sm"
-                                    >
                                 </div>
                             </div>
 
