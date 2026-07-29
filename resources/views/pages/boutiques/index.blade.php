@@ -101,11 +101,9 @@
             return {
                 query: '{{ request('search') }}',
                 search() {
-                    if (this.query.length === 1) return;
-
                     const params = new URLSearchParams(window.location.search);
 
-                    if (this.query.length >= 2) {
+                    if (this.query.length >= 1) {
                         params.set('search', this.query);
                     } else {
                         params.delete('search');
