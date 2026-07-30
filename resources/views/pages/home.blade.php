@@ -353,9 +353,15 @@
 
             <div class="animate animate-delay-100 flex items-center gap-4">
                 @auth
-                    <a href="{{ route('account.overview') }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
-                       Go to Account
-                    </a>
+                    @if (auth()->user()->isAdmin())
+                        <a href="{{ url('/admin') }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
+                            {{ $content['register']['button_text'] ?? 'Register Now' }}
+                        </a>
+                    @else
+                        <a href="{{ route('account.overview') }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
+                            {{ $content['register']['button_text'] ?? 'Register Now' }}
+                        </a>
+                    @endif
                 @else
                     <a href="{{ $content['register']['button_link'] ?? '/boutique/apply' }}" class="inline-flex items-center justify-center border-[1px] border-white bg-transparent px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black">
                        {{ $content['register']['button_text'] ?? 'Register Now' }}
