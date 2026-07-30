@@ -214,7 +214,7 @@
                                                 type="text"
                                                 :name="`social_links[${index}][handle]`"
                                                 x-model="link.handle"
-                                                placeholder="@handle or URL"
+                                                placeholder="https://..."
                                                 class="block w-full border-gray-300 py-2 px-3 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
                                             >
                                             <button
