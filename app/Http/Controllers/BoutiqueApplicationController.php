@@ -49,10 +49,15 @@ class BoutiqueApplicationController extends Controller
             $boutique->logo = $request->file('logo')->store('boutiques/logos', 'public');
         }
 
-        if (! empty($validated['instagram'])) {
-            $boutique->social_links = [
-                'instagram' => $validated['instagram'],
-            ];
+        if (! empty($validated['social_links'])) {
+            $socialLinks = collect($validated['social_links'])
+                ->filter(fn (array $link) => ! empty($link['platform']) && ! empty($link['handle']))
+                ->mapWithKeys(fn (array $link) => [$link['platform'] => $link['handle']])
+                ->all();
+
+            if (! empty($socialLinks)) {
+                $boutique->social_links = $socialLinks;
+            }
         }
 
         $boutique->save();

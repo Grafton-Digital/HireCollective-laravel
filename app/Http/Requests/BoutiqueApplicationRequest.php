@@ -22,7 +22,9 @@ class BoutiqueApplicationRequest extends FormRequest
             'website' => ['nullable', 'url', 'max:255'],
             'contact_email' => ['required', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
-            'instagram' => ['nullable', 'string', 'max:255'],
+            'social_links' => ['nullable', 'array', 'max:5'],
+            'social_links.*.platform' => ['required_with:social_links.*.handle', 'nullable', 'string', 'in:instagram,tiktok,facebook,twitter,threads'],
+            'social_links.*.handle' => ['required_with:social_links.*.platform', 'nullable', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
         ];

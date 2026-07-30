@@ -183,27 +183,64 @@
                             <p x-show="errors.phone" x-text="errors.phone?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
 
-                        <div>
-                            <label for="instagram" class="sr-only">Instagram</label>
-                            <div class="relative">
-                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                    <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                                    </svg>
-                                </div>
+                    </div>
+                </div>
+
+                <div class="border-t pt-6">
+                    <p class="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-700">Social Media</p>
+
+                    <div class="space-y-3">
+                        <template x-for="(link, index) in socialLinks" :key="index">
+                            <div class="flex items-start gap-2">
+                                <select
+                                    :name="`social_links[${index}][platform]`"
+                                    x-model="link.platform"
+                                    class="w-36 shrink-0 border-gray-300 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                >
+                                    <option value="">Platform</option>
+                                    <option value="instagram">Instagram</option>
+                                    <option value="tiktok">TikTok</option>
+                                    <option value="facebook">Facebook</option>
+                                    <option value="twitter">X (Twitter)</option>
+                                    <option value="threads">Threads</option>
+                                </select>
                                 <input
                                     type="text"
-                                    name="instagram"
-                                    id="instagram"
-                                    value="{{ old('instagram', $prefill['instagram'] ?? '') }}"
-                                    placeholder="@handle"
-                                    class="block w-full py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
-                                    :class="errors.instagram ? 'border-red-500' : 'border-gray-300'"
+                                    :name="`social_links[${index}][handle]`"
+                                    x-model="link.handle"
+                                    placeholder="@handle or URL"
+                                    class="block w-full border-gray-300 py-3 px-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                                 >
+                                <button
+                                    type="button"
+                                    @click="removeSocialLink(index)"
+                                    class="shrink-0 p-3 text-gray-400 hover:text-red-500 transition-colors"
+                                >
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
                             </div>
-                            <p x-show="errors.instagram" x-text="errors.instagram?.[0]" class="mt-1 text-xs text-red-600"></p>
-                        </div>
+                        </template>
                     </div>
+
+                    <button
+                        type="button"
+                        @click="addSocialLink()"
+                        x-show="socialLinks.length < 5"
+                        class="mt-3 inline-flex items-center gap-1 text-xs font-medium text-gray-600 hover:text-black transition-colors"
+                    >
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Add social link
+                    </button>
+
+                    <template x-for="(err, key) in errors" :key="key">
+                        <template x-if="key.startsWith('social_links')">
+                            <p x-text="err?.[0]" class="mt-1 text-xs text-red-600"></p>
+                        </template>
+                    </template>
                 </div>
 
                 <div class="border-t pt-6">
@@ -305,6 +342,18 @@
                 password: '',
                 passwordConfirmation: '',
                 showPassword: false,
+                socialLinks: [{platform: '', handle: ''}],
+                addSocialLink() {
+                    if (this.socialLinks.length < 5) {
+                        this.socialLinks.push({platform: '', handle: ''});
+                    }
+                },
+                removeSocialLink(index) {
+                    this.socialLinks.splice(index, 1);
+                    if (this.socialLinks.length === 0) {
+                        this.socialLinks.push({platform: '', handle: ''});
+                    }
+                },
                 generatePassword() {
                     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
                     const array = new Uint32Array(16);

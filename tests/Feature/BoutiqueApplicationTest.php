@@ -37,7 +37,10 @@ class BoutiqueApplicationTest extends TestCase
             'region' => 'Dublin',
             'contact_email' => 'boutique@example.com',
             'phone' => '+353 123 456 789',
-            'instagram' => '@testboutique',
+            'social_links' => [
+                ['platform' => 'instagram', 'handle' => '@testboutique'],
+                ['platform' => 'tiktok', 'handle' => '@testboutique'],
+            ],
             'email' => 'owner@example.com',
             'password' => 'Password123',
             'password_confirmation' => 'Password123',
