@@ -72,6 +72,8 @@ class BoutiqueResource extends Resource
                     ->disk('public')
                     ->directory('boutiques/logos')
                     ->visibility('public'),
+                Forms\Components\ColorPicker::make('logo_background_color')
+                    ->label('Logo Background Color'),
             ]),
 
             Section::make('Location & Contact')->schema([
