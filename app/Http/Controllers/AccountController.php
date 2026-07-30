@@ -67,18 +67,19 @@ class AccountController extends Controller
             'phone' => ['nullable', 'string', 'max:50'],
             'county' => ['required', 'string', 'max:255'],
             'logo_background_color' => ['nullable', 'string', 'max:7'],
-            'instagram' => ['nullable', 'string', 'max:255'],
+            'social_links' => ['nullable', 'array', 'max:5'],
+            'social_links.*.platform' => ['nullable', 'string', 'in:instagram,tiktok,facebook,twitter,threads'],
+            'social_links.*.handle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
         ]);
 
         $boutique = $request->user()->boutique;
 
         if ($boutique) {
-            $socialLinks = $boutique->social_links ?? [];
-
-            if (isset($validated['instagram'])) {
-                $socialLinks['instagram'] = $validated['instagram'];
-            }
+            $socialLinks = collect($validated['social_links'] ?? [])
+                ->filter(fn (array $link) => ! empty($link['platform']) && ! empty($link['handle']))
+                ->mapWithKeys(fn (array $link) => [$link['platform'] => $link['handle']])
+                ->all();
 
             $updateData = [
                 'name' => $validated['boutique_name'],

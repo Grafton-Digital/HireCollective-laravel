@@ -100,10 +100,24 @@ class BoutiqueResource extends Resource
                     ->keyLabel('Day')
                     ->valueLabel('Hours')
                     ->addActionLabel('Add day'),
-                Forms\Components\KeyValue::make('social_links')
-                    ->keyLabel('Platform')
-                    ->valueLabel('URL')
-                    ->addActionLabel('Add link'),
+                Forms\Components\Repeater::make('social_links')
+                    ->schema([
+                        Forms\Components\Select::make('platform')
+                            ->options([
+                                'instagram' => 'Instagram',
+                                'tiktok' => 'TikTok',
+                                'facebook' => 'Facebook',
+                                'twitter' => 'X (Twitter)',
+                                'threads' => 'Threads',
+                            ])
+                            ->required(),
+                        Forms\Components\TextInput::make('handle')
+                            ->required()
+                            ->maxLength(255),
+                    ])
+                    ->columns(2)
+                    ->addActionLabel('Add link')
+                    ->maxItems(5),
             ])->columns(2),
         ]);
     }

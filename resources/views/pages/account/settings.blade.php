@@ -180,32 +180,67 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label for="phone" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Phone</label>
-                                    <input
-                                        type="tel"
-                                        name="phone"
-                                        id="phone"
-                                        value="{{ old('phone', $boutique?->phone) }}"
-                                        placeholder="+44 000 000 000"
-                                        class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
-                                    >
-                                    @error('phone') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            <div>
+                                <label for="phone" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Phone</label>
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    id="phone"
+                                    value="{{ old('phone', $boutique?->phone) }}"
+                                    placeholder="+44 000 000 000"
+                                    class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                >
+                                @error('phone') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div>
+                                <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Social Media</label>
+                                <div class="space-y-3">
+                                    <template x-for="(link, index) in socialLinks" :key="index">
+                                        <div class="flex items-start gap-2">
+                                            <select
+                                                :name="`social_links[${index}][platform]`"
+                                                x-model="link.platform"
+                                                class="w-36 shrink-0 border-gray-300 py-2 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                            >
+                                                <option value="">Platform</option>
+                                                <option value="instagram" :disabled="isPlatformTaken('instagram', index)">Instagram</option>
+                                                <option value="tiktok" :disabled="isPlatformTaken('tiktok', index)">TikTok</option>
+                                                <option value="facebook" :disabled="isPlatformTaken('facebook', index)">Facebook</option>
+                                                <option value="twitter" :disabled="isPlatformTaken('twitter', index)">X (Twitter)</option>
+                                                <option value="threads" :disabled="isPlatformTaken('threads', index)">Threads</option>
+                                            </select>
+                                            <input
+                                                type="text"
+                                                :name="`social_links[${index}][handle]`"
+                                                x-model="link.handle"
+                                                placeholder="@handle or URL"
+                                                class="block w-full border-gray-300 py-2 px-3 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                            >
+                                            <button
+                                                type="button"
+                                                @click="removeSocialLink(index)"
+                                                class="shrink-0 p-2 text-gray-400 hover:text-red-500 transition-colors"
+                                            >
+                                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </template>
                                 </div>
 
-                                <div>
-                                    <label for="instagram" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Instagram</label>
-                                    <input
-                                        type="text"
-                                        name="instagram"
-                                        id="instagram"
-                                        value="{{ old('instagram', $boutique?->social_links['instagram'] ?? '') }}"
-                                        placeholder="@handle"
-                                        class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
-                                    >
-                                    @error('instagram') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
-                                </div>
+                                <button
+                                    type="button"
+                                    @click="addSocialLink()"
+                                    x-show="socialLinks.length < 5"
+                                    class="mt-3 inline-flex items-center gap-1 text-xs font-medium text-gray-600 hover:text-black transition-colors"
+                                >
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                    Add social link
+                                </button>
                             </div>
 
                             <div>
@@ -370,6 +405,15 @@
         </div>
     </div>
 
+    @php
+        $socialLinksJson = collect($user->boutique?->social_links ?? [])
+            ->map(fn ($handle, $platform) => ['platform' => $platform, 'handle' => $handle])
+            ->values();
+        if ($socialLinksJson->isEmpty()) {
+            $socialLinksJson->push(['platform' => '', 'handle' => '']);
+        }
+    @endphp
+
     <script>
         function passwordForm() {
             return {
@@ -393,6 +437,21 @@
         function boutiqueForm() {
             return {
                 logoFile: null,
+                socialLinks: {!! json_encode($socialLinksJson->all()) !!},
+                addSocialLink() {
+                    if (this.socialLinks.length < 5) {
+                        this.socialLinks.push({platform: '', handle: ''});
+                    }
+                },
+                removeSocialLink(index) {
+                    this.socialLinks.splice(index, 1);
+                    if (this.socialLinks.length === 0) {
+                        this.socialLinks.push({platform: '', handle: ''});
+                    }
+                },
+                isPlatformTaken(platform, currentIndex) {
+                    return this.socialLinks.some((link, i) => i !== currentIndex && link.platform === platform);
+                },
                 submitForm(e) {
                     const form = e.target;
                     const formData = new FormData(form);

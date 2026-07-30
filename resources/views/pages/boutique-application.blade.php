@@ -118,7 +118,7 @@
 
                 <div class="border-t pt-6">
                     <p class="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-700">Contact Links</p>
-                    <div class="grid gap-4 sm:grid-cols-2">
+                    <div class="space-y-4">
                         <div>
                             <label for="website" class="sr-only">Website</label>
                             <div class="relative">
@@ -140,49 +140,50 @@
                             <p x-show="errors.website" x-text="errors.website?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
 
-                        <div>
-                            <label for="contact_email" class="sr-only">Email</label>
-                            <div class="relative">
-                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
+                        <div class="grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <label for="contact_email" class="sr-only">Email</label>
+                                <div class="relative">
+                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                    <input
+                                        type="email"
+                                        name="contact_email"
+                                        id="contact_email"
+                                        value="{{ old('contact_email', $prefill['contact_email'] ?? '') }}"
+                                        required
+                                        placeholder="your@email.com"
+                                        class="block w-full py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                        :class="errors.contact_email ? 'border-red-500' : 'border-gray-300'"
+                                    >
                                 </div>
-                                <input
-                                    type="email"
-                                    name="contact_email"
-                                    id="contact_email"
-                                    value="{{ old('contact_email', $prefill['contact_email'] ?? '') }}"
-                                    required
-                                    placeholder="your@email.com"
-                                    class="block w-full py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
-                                    :class="errors.contact_email ? 'border-red-500' : 'border-gray-300'"
-                                >
+                                <p x-show="errors.contact_email" x-text="errors.contact_email?.[0]" class="mt-1 text-xs text-red-600"></p>
                             </div>
-                            <p x-show="errors.contact_email" x-text="errors.contact_email?.[0]" class="mt-1 text-xs text-red-600"></p>
-                        </div>
 
-                        <div>
-                            <label for="phone" class="sr-only">Phone</label>
-                            <div class="relative">
-                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                    </svg>
+                            <div>
+                                <label for="phone" class="sr-only">Phone</label>
+                                <div class="relative">
+                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                        </svg>
+                                    </div>
+                                    <input
+                                        type="tel"
+                                        name="phone"
+                                        id="phone"
+                                        value="{{ old('phone', $prefill['phone'] ?? '') }}"
+                                        placeholder="+44 000 000 000"
+                                        class="block w-full py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                                        :class="errors.phone ? 'border-red-500' : 'border-gray-300'"
+                                    >
                                 </div>
-                                <input
-                                    type="tel"
-                                    name="phone"
-                                    id="phone"
-                                    value="{{ old('phone', $prefill['phone'] ?? '') }}"
-                                    placeholder="+44 000 000 000"
-                                    class="block w-full py-3 pl-10 pr-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
-                                    :class="errors.phone ? 'border-red-500' : 'border-gray-300'"
-                                >
+                                <p x-show="errors.phone" x-text="errors.phone?.[0]" class="mt-1 text-xs text-red-600"></p>
                             </div>
-                            <p x-show="errors.phone" x-text="errors.phone?.[0]" class="mt-1 text-xs text-red-600"></p>
                         </div>
-
                     </div>
                 </div>
 
@@ -198,11 +199,11 @@
                                     class="w-36 shrink-0 border-gray-300 py-3 text-sm shadow-sm focus:border-gray-500 focus:ring-gray-500"
                                 >
                                     <option value="">Platform</option>
-                                    <option value="instagram">Instagram</option>
-                                    <option value="tiktok">TikTok</option>
-                                    <option value="facebook">Facebook</option>
-                                    <option value="twitter">X (Twitter)</option>
-                                    <option value="threads">Threads</option>
+                                    <option value="instagram" :disabled="isPlatformTaken('instagram', index)">Instagram</option>
+                                    <option value="tiktok" :disabled="isPlatformTaken('tiktok', index)">TikTok</option>
+                                    <option value="facebook" :disabled="isPlatformTaken('facebook', index)">Facebook</option>
+                                    <option value="twitter" :disabled="isPlatformTaken('twitter', index)">X (Twitter)</option>
+                                    <option value="threads" :disabled="isPlatformTaken('threads', index)">Threads</option>
                                 </select>
                                 <input
                                     type="text"
@@ -353,6 +354,9 @@
                     if (this.socialLinks.length === 0) {
                         this.socialLinks.push({platform: '', handle: ''});
                     }
+                },
+                isPlatformTaken(platform, currentIndex) {
+                    return this.socialLinks.some((link, i) => i !== currentIndex && link.platform === platform);
                 },
                 generatePassword() {
                     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';

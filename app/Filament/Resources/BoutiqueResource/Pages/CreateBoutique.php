@@ -25,6 +25,11 @@ class CreateBoutique extends CreateRecord
             $data['submitted_by'] = $user->id;
         }
 
+        $data['social_links'] = collect($data['social_links'] ?? [])
+            ->filter(fn (array $item) => ! empty($item['platform']) && ! empty($item['handle']))
+            ->mapWithKeys(fn (array $item) => [$item['platform'] => $item['handle']])
+            ->all();
+
         return $data;
     }
 
