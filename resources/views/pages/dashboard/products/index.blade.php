@@ -45,10 +45,12 @@
                             <x-availability-badge :available="$product->is_available" />
                         </td>
                         <td class="px-4 py-3 text-right text-sm">
-                            @if (!$product->isPending())
-                                <a href="{{ route('account.products.edit', $product) }}" class="text-gray-600 hover:text-gray-900">Edit</a>
-                            @else
+                            @if ($product->isPending())
                                 <span class="text-gray-400">Awaiting approval</span>
+                            @elseif ($product->isRejected())
+                                <a href="{{ route('account.products.edit', $product) }}" class="text-red-600 hover:text-red-800">Edit & Resubmit</a>
+                            @else
+                                <a href="{{ route('account.products.edit', $product) }}" class="text-gray-600 hover:text-gray-900">Edit</a>
                             @endif
                         </td>
                     </tr>

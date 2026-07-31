@@ -42,6 +42,7 @@
                             <th class="pb-3">Image</th>
                             <th class="pb-3">Name</th>
                             <th class="pb-3">Price From</th>
+                            <th class="pb-3">Status</th>
                             <th class="pb-3">Size</th>
                             <th class="pb-3">Colour</th>
                             <th class="pb-3 text-right">Actions</th>
@@ -61,6 +62,15 @@
                                 </td>
                                 <td class="py-4 text-sm text-gray-900">{{ $product->name }}</td>
                                 <td class="py-4 text-sm text-gray-900">from €{{ number_format($product->price_per_day, 0) }}</td>
+                                <td class="py-4 text-sm">
+                                    @if ($product->isPending())
+                                        <span class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">Pending</span>
+                                    @elseif ($product->isApproved())
+                                        <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">Approved</span>
+                                    @elseif ($product->isRejected())
+                                        <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">Rejected</span>
+                                    @endif
+                                </td>
                                 <td class="py-4 text-sm text-gray-900">{{ $product->size ?? '-' }}</td>
                                 <td class="py-4">
                                     @if($product->colours && $product->colours->isNotEmpty())
@@ -82,24 +92,28 @@
                                 </td>
                                 <td class="py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
-                                        <a href="{{ route('account.products.edit', $product) }}" class="text-gray-400 hover:text-gray-900" title="Edit">
-                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                                            </svg>
-                                        </a>
-                                        <button
-                                            @click="deleteModal = true; deleteFormId = 'delete-form-{{ $product->id }}'"
-                                            class="text-gray-400 hover:text-red-600"
-                                            title="Delete"
-                                        >
-                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                            </svg>
-                                        </button>
-                                        <form id="delete-form-{{ $product->id }}" action="{{ route('account.products.destroy', $product) }}" method="POST" class="hidden">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
+                                        @if ($product->isPending())
+                                            <span class="text-xs text-gray-400">Awaiting approval</span>
+                                        @else
+                                            <a href="{{ route('account.products.edit', $product) }}" class="{{ $product->isRejected() ? 'text-red-500 hover:text-red-700' : 'text-gray-400 hover:text-gray-900' }}" title="{{ $product->isRejected() ? 'Edit & Resubmit' : 'Edit' }}">
+                                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                                                </svg>
+                                            </a>
+                                            <button
+                                                @click="deleteModal = true; deleteFormId = 'delete-form-{{ $product->id }}'"
+                                                class="text-gray-400 hover:text-red-600"
+                                                title="Delete"
+                                            >
+                                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                </svg>
+                                            </button>
+                                            <form id="delete-form-{{ $product->id }}" action="{{ route('account.products.destroy', $product) }}" method="POST" class="hidden">
+                                                @csrf
+                                                @method('DELETE')
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

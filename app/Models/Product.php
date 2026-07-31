@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\County;
+use App\Notifications\ProductApprovedNotification;
+use App\Notifications\ProductRejectedNotification;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -120,13 +122,25 @@ class Product extends Model
             'status' => self::STATUS_APPROVED,
             'is_active' => true,
         ]);
+
+        $owner = $this->boutique->users()->first();
+
+        if ($owner) {
+            $owner->notify(new ProductApprovedNotification($this));
+        }
     }
 
-    public function reject(): void
+    public function reject(string $reason): void
     {
         $this->update([
             'status' => self::STATUS_REJECTED,
             'is_active' => false,
         ]);
+
+        $owner = $this->boutique->users()->first();
+
+        if ($owner) {
+            $owner->notify(new ProductRejectedNotification($this, $reason));
+        }
     }
 }

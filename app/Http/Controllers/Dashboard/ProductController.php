@@ -9,9 +9,11 @@ use App\Models\Category;
 use App\Models\Colour;
 use App\Models\Occasion;
 use App\Models\Product;
+use App\Notifications\NewProductSubmissionNotification;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -74,8 +76,9 @@ class ProductController extends Controller
 
         $product = new Product($validated);
         $product->boutique_id = $request->user()->boutique_id;
-        $product->status = Product::STATUS_APPROVED;
-        $product->is_active = true;
+        $product->submitted_by = $request->user()->id;
+        $product->status = Product::STATUS_PENDING;
+        $product->is_active = false;
 
         if ($request->hasFile('featured_image')) {
             $product->featured_image = $request->file('featured_image')->store('products', 'public');
@@ -97,8 +100,11 @@ class ProductController extends Controller
             $product->colours()->sync($validated['colours']);
         }
 
+        Notification::route('mail', config('app.admin_email'))
+            ->notify(new NewProductSubmissionNotification($product));
+
         return redirect()->route('account.products')
-            ->with('success', 'Product created successfully.');
+            ->with('success', 'Product submitted for review. You will be notified once it is approved.');
     }
 
     public function edit(Request $request, Product $product): View
@@ -131,6 +137,14 @@ class ProductController extends Controller
         }
 
         $product->fill($validated);
+
+        if ($product->isRejected()) {
+            $product->status = Product::STATUS_PENDING;
+            $product->is_active = false;
+
+            Notification::route('mail', config('app.admin_email'))
+                ->notify(new NewProductSubmissionNotification($product));
+        }
 
         if ($request->hasFile('featured_image')) {
             if ($product->featured_image) {
