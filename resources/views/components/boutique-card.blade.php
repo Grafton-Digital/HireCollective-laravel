@@ -19,7 +19,7 @@
             <span class="text-[11px] text-[#666]">{{ $boutique->county }}</span>
         </div>
         <div class="text-sm leading-relaxed text-gray-600 line-clamp-3">
-            {{ $boutique->description }}
+            {{ strip_tags($boutique->description) }}
         </div>
     </div>
 </a>

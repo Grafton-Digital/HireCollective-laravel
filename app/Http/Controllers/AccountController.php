@@ -87,7 +87,7 @@ class AccountController extends Controller
                 'website' => $validated['website'] ?? null,
                 'phone' => $validated['phone'] ?? null,
                 'county' => $validated['county'],
-                'description' => $validated['description'] ?? null,
+                'description' => isset($validated['description']) ? strip_tags($validated['description'], '<p><br><strong><em><del><ul><ol><li><a><blockquote><h1>') : null,
                 'logo_background_color' => $validated['logo_background_color'] ?? null,
                 'social_links' => $socialLinks,
             ];

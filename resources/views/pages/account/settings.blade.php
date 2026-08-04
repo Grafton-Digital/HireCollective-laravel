@@ -245,12 +245,8 @@
 
                             <div>
                                 <label for="description" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Short Bio</label>
-                                <textarea
-                                    name="description"
-                                    id="description"
-                                    rows="4"
-                                    class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
-                                >{{ old('description', $boutique?->description) }}</textarea>
+                                <input type="hidden" id="description" name="description" value="{{ old('description', $boutique?->description) }}">
+                                <trix-editor input="description" class="trix-content block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"></trix-editor>
                                 @error('description') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>

@@ -73,7 +73,7 @@
 
                 <div class="col-span-2">
                     <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Short Bio</p>
-                    <p class="mt-1 text-sm leading-relaxed text-gray-900">{{ $boutique->description ?? '-' }}</p>
+                    <div class="prose prose-sm mt-1 text-gray-900">{!! $boutique->description ?? '-' !!}</div>
                 </div>
 
                 <div class="col-span-2">

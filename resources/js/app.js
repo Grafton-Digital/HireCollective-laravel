@@ -3,6 +3,8 @@ import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import 'trix';
+import 'trix/dist/trix.css';
 
 window.Alpine = Alpine;
 
