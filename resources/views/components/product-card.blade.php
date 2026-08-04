@@ -16,7 +16,7 @@
     <div class="relative h-full overflow-hidden bg-cream-100">
         @if ($product->featured_image)
             <img src="{{ Storage::url($product->featured_image) }}" alt="{{ $product->name }}"
-                 class="h-full w-full object-cover transition group-hover:scale-105">
+                 class="h-full w-full object-contain transition group-hover:scale-105">
         @else
             <div class="flex h-full items-center justify-center">
                 <span class="text-sm text-[#999]">No image</span>
