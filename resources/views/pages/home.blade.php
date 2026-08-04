@@ -133,9 +133,9 @@
 
 
     {{-- Featured Edit of the Week --}}
-    <section class="bg-cream-50 px-4 md:px-[60px] py-16">
+    <section class="bg-cream-50 px-4 md:px-[60px] py-12 md:py-16">
         <div class="mb-12 flex flex-col gap-4 lg:gap-0 lg:flex-row items-center justify-between">
-            <h2 class="animate font-serif text-center lg:text-left text-[36px] md:text-[48px] lg:text-[48px] uppercase font-normal text-black">{{ $content['featured']['heading'] ?? 'Featured Edit of the Week' }}</h2>
+            <h2 class="animate font-serif text-center lg:text-left text-[26px] sm:text-[36px] md:text-[48px] lg:text-[48px] uppercase font-normal text-black">{{ $content['featured']['heading'] ?? 'Featured Edit of the Week' }}</h2>
             <div class="flex shrink-0 items-center gap-4">
                 <button class="swiper-button-prev-featured flex h-12 w-12 shrink-0 items-center justify-center border border-black bg-transparent text-black transition-colors hover:bg-black hover:text-white">
                     <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -167,9 +167,9 @@
 
 
     {{-- Product Categories --}}
-    <section class="py-16">
-        <div class="px-[60px] pb-12">
-            <h2 class="animate font-serif text-[40px] font-normal text-black">PRODUCT CATEGORIES</h2>
+    <section class="py-12 md:py-16">
+        <div class="px-4 md:px-[60px] pb-8 md:pb-12">
+            <h2 class="animate font-serif text-center lg:text-left text-[26px] sm:text-[36px] md:text-[48px] lg:text-[48px] font-normal text-black">PRODUCT CATEGORIES</h2>
         </div>
 
         @if (!empty($content['categories']))
@@ -177,17 +177,25 @@
                 $categories = collect($content['categories']);
                 $topRow = $categories->take(2);
                 $bottomRow = $categories->skip(2);
+
+                $gridClass = fn ($count) => match ($count) {
+                    1 => 'sm:grid-cols-1',
+                    2 => 'sm:grid-cols-2',
+                    3 => 'sm:grid-cols-3',
+                    4 => 'sm:grid-cols-4',
+                    default => 'sm:grid-cols-3',
+                };
             @endphp
             <div class="flex flex-col">
                 @if ($topRow->isNotEmpty())
-                    <div class="grid grid-cols-{{ $topRow->count() }}">
+                    <div class="grid grid-cols-1 {{ $gridClass($topRow->count()) }}">
                         @foreach ($topRow as $category)
-                            <a href="{{ $category['link'] }}" class="group relative h-[400px] overflow-hidden">
+                            <a href="{{ $category['link'] }}" class="group relative h-[300px] sm:h-[400px] overflow-hidden">
                                 @if (!empty($category['image']))
                                     <img src="{{ Storage::disk('public')->url($category['image']) }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="{{ $category['text'] }}">
                                 @endif
-                                <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
-                                    <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">{{ $category['text'] }}</span>
+                                <div class="absolute inset-0 flex items-center justify-center sm:bg-black/0 transition-all duration-300 bg-[#00000059] sm:group-hover:bg-[#00000059]">
+                                    <span class="text-[28px] lg:text-4xl font-normal tracking-[2px] text-white sm:opacity-0 transition-opacity duration-300 sm:group-hover:opacity-100">{{ $category['text'] }}</span>
                                 </div>
                             </a>
                         @endforeach
@@ -195,65 +203,27 @@
                 @endif
 
                 @if ($bottomRow->isNotEmpty())
-                    <div class="grid grid-cols-{{ $bottomRow->count() }}">
+                    <div class="grid grid-cols-1 {{ $gridClass($bottomRow->count()) }}">
                         @foreach ($bottomRow as $category)
-                            <a href="{{ $category['link'] }}" class="group relative h-[400px] overflow-hidden">
+                            <a href="{{ $category['link'] }}" class="group relative h-[300px] sm:h-[400px] overflow-hidden">
                                 @if (!empty($category['image']))
                                     <img src="{{ Storage::disk('public')->url($category['image']) }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="{{ $category['text'] }}">
                                 @endif
-                                <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
-                                    <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">{{ $category['text'] }}</span>
+                                <div class="absolute inset-0 flex items-center justify-center sm:bg-black/0 transition-all duration-300 bg-[#00000059] sm:group-hover:bg-[#00000059]">
+                                    <span class="text-[28px] lg:text-4xl font-normal tracking-[2px] text-white sm:opacity-0 transition-opacity duration-300 sm:group-hover:opacity-100">{{ $category['text'] }}</span>
                                 </div>
                             </a>
                         @endforeach
                     </div>
                 @endif
             </div>
-        @else
-            {{-- Fallback: hardcoded categories --}}
-            <div class="flex flex-col">
-                <div class="grid grid-cols-2">
-                    <a href="{{ route('products.index') }}" class="group relative h-[400px] overflow-hidden">
-                        <img src="{{ asset('images/cat-all.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="All products">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
-                            <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">All products</span>
-                        </div>
-                    </a>
-                    <a href="{{ route('products.index', ['category' => 'tops']) }}" class="group relative h-[400px] overflow-hidden">
-                        <img src="{{ asset('images/cat-suits.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Suits/Jumpsuits">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
-                            <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">Suits/Jumpsuits</span>
-                        </div>
-                    </a>
-                </div>
-                <div class="grid grid-cols-3">
-                    <a href="{{ route('products.index', ['category' => 'dresses']) }}" class="group relative h-[400px] overflow-hidden">
-                        <img src="{{ asset('images/cat-dresses.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Dresses">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
-                            <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">Dresses</span>
-                        </div>
-                    </a>
-                    <a href="{{ route('products.index', ['category' => 'hats']) }}" class="group relative h-[400px] overflow-hidden">
-                        <img src="{{ asset('images/cat-hats.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Hats">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
-                            <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">Hats</span>
-                        </div>
-                    </a>
-                    <a href="{{ route('products.index', ['category' => 'bags']) }}" class="group relative h-[400px] overflow-hidden">
-                        <img src="{{ asset('images/cat-bags.jpg') }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Bags">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-[#00000059]">
-                            <span class="text-4xl font-normal tracking-[2px] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">Bags</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
         @endif
     </section>
 
     {{-- New Arrivals --}}
-    <section class="bg-white px-[60px] py-16">
+    <section class="bg-white px-4 md:px-[60px] py-12 md:py-16">
         <div class="mb-12 flex items-center justify-between">
-            <h2 class="font-serif text-[40px] font-normal text-black">{{ $content['new_arrivals']['heading'] ?? 'NEW ARRIVALS' }}</h2>
+            <h2 class="font-serif text-center lg:text-left text-[26px] sm:text-[36px] md:text-[48px] lg:text-[48px] font-normal text-black">{{ $content['new_arrivals']['heading'] ?? 'NEW ARRIVALS' }}</h2>
             <a href="{{ route('products.index') }}" class="flex items-center gap-2 text-base font-normal text-black hover:underline">
                 View all
                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -262,7 +232,7 @@
             </a>
         </div>
 
-        <div class="grid grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
              @forelse ($latestProducts as $product)
                 <x-product-card :product="$product" />
             @empty
@@ -272,7 +242,7 @@
     </section>
 
     {{-- For Collaboration --}}
-    <section class="relative h-[600px] overflow-hidden">
+    <section class="relative h-[400px] md:h-[600px] overflow-hidden">
         @if (!empty($content['collaboration']['image']))
             <img src="{{ Storage::disk('public')->url($content['collaboration']['image']) }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="Collaboration">
         @else
@@ -280,9 +250,9 @@
         @endif
         <div class="absolute inset-0 bg-black/40"></div>
 
-        <div class="relative flex h-full flex-col items-center justify-center gap-8 px-[60px]">
+        <div class="relative flex h-full flex-col items-center justify-center gap-8 px-4 md:px-[60px]">
             <h2 class="animate font-serif text-center text-white">
-                <span class="mt-2 block text-[48px] font-bold uppercase tracking-[1px] leading-[1.2]">{{ $content['collaboration']['heading'] ?? 'For Colaboration' }}</span>
+                <span class="mt-2 block lg:text-left text-[26px] sm:text-[36px] md:text-[48px] lg:text-[48px] font-bold uppercase tracking-[1px] leading-[1.2]">{{ $content['collaboration']['heading'] ?? 'For Colaboration' }}</span>
             </h2>
             @if (!empty($content['collaboration']['text']))
                 <p class="animate animate-delay-100 text-white max-w-[500px] text-center">{{ $content['collaboration']['text'] }}</p>
@@ -296,9 +266,9 @@
     </section>
 
     {{-- Brands We Represent --}}
-    <section class="bg-white px-[60px] py-20">
-        <div class="mb-12 flex items-center justify-between">
-            <h2 class="animate font-serif text-[48px] uppercase font-normal text-black">Brands We Represent</h2>
+    <section class="bg-white px-4 md:px-[60px] py-12 md:py-20">
+        <div class="mb-12 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
+            <h2 class="animate font-serif lg:text-left text-[26px] sm:text-[36px] md:text-[48px] lg:text-[48px] uppercase font-normal text-black">Brands We Represent</h2>
             <div class="flex items-center gap-4">
                 <button class="swiper-button-prev-brands flex h-12 w-12 items-center justify-center border border-black bg-transparent text-black transition-colors hover:bg-black hover:text-white">
                     <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -327,7 +297,7 @@
             </div>
         </div>
 
-        <div class="animate mt-16 flex justify-center">
+        <div class="animate mt-12 md:mt-16 flex justify-center">
             <a href="{{ $content['brands']['button_link'] ?? '/boutiques' }}" class="inline-flex items-center justify-center bg-black px-6 py-3 text-sm font-medium tracking-[1.5px] text-white transition-colors hover:bg-gray-800">
                 {{ strtoupper($content['brands']['button_text'] ?? 'VIEW ALL BRANDS') }}
                 <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -338,7 +308,7 @@
     </section>
 
     {{-- Register your boutique --}}
-    <section class="relative h-[600px] overflow-hidden">
+    <section class="relative h-[400px] md:h-[600px] overflow-hidden">
         @if (!empty($content['register']['image']))
             <img src="{{ Storage::disk('public')->url($content['register']['image']) }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="Register your boutique">
         @else
@@ -348,7 +318,7 @@
 
         <div class="relative flex h-full flex-col items-center justify-center gap-8 px-[60px]">
             <h2 class="animate max-w-[400px] font-serif text-center text-white">
-                <span class="mt-2 block text-[48px] font-bold uppercase tracking-[1px] leading-[1.2]">{{ $content['register']['heading'] ?? 'Register your boutique' }}</span>
+                <span class="mt-2 block lg:text-left text-[26px] sm:text-[36px] md:text-[48px] lg:text-[48px] font-bold uppercase tracking-[1px] leading-[1.2]">{{ $content['register']['heading'] ?? 'Register your boutique' }}</span>
             </h2>
 
             <div class="animate animate-delay-100 flex items-center gap-4">

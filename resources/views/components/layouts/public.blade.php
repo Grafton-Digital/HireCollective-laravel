@@ -14,10 +14,10 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-white font-sans text-gray-900 antialiased">
+<body class="flex flex-col min-h-screen bg-white font-sans text-gray-900 antialiased">
     <x-header />
 
-    <main>
+    <main class="flex-1">
         {{ $slot }}
     </main>
 

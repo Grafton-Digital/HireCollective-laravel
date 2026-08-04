@@ -1,5 +1,5 @@
 <footer>
-    <div class="bg-[#1A1A1A] px-[60px] py-12">
+    <div class="bg-[#1A1A1A] px-4 md:px-[60px] py-12">
         <div class="flex flex-col gap-10 md:flex-row md:gap-10">
             <div class="flex-1">
                 <p class="font-serif text-[24px] tracking-[2px] text-white">HIRE COLLECTIVE</p>
@@ -28,7 +28,7 @@
             </div>
         </div>
     </div>
-    <div class="flex items-center justify-between bg-[#111] px-[60px] py-4">
+    <div class="flex items-center justify-between bg-[#111] px-4 md:px-[60px] py-4">
         <p class="text-[11px] text-[#AAA]">&copy; {{ date('Y') }} Hire Collective. All rights reserved.</p>
         <div class="flex items-center gap-5">
             <a href="#" class="text-[11px] text-[#AAA] hover:text-white">Terms</a>
