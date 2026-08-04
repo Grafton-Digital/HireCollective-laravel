@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Boutique;
 use App\Models\Category;
 use App\Models\Colour;
-use App\Models\HomepageSection;
 use App\Models\Occasion;
 use App\Models\Page;
 use App\Models\Product;
@@ -165,20 +164,5 @@ class DatabaseSeeder extends Seeder
             'is_published' => true,
         ]);
 
-        // Homepage sections
-        HomepageSection::create([
-            'type' => 'hero',
-            'title' => 'Find your perfect outfit — all in one place',
-            'content' => 'Hundreds of styles brought together from some of Ireland\'s most trusted hire boutiques.',
-            'sort_order' => 1,
-            'is_active' => true,
-        ]);
-
-        HomepageSection::create([
-            'type' => 'featured_boutiques',
-            'title' => 'Browse Our Trusted Boutiques',
-            'sort_order' => 2,
-            'is_active' => true,
-        ]);
     }
 }
