@@ -1,10 +1,10 @@
 {{-- Top banner --}}
-<div class="bg-cream-200 py-2 text-center">
+<div class="bg-cream-200 py-2 text-center z-10">
     <p class="text-[11px] font-normal tracking-[1px] text-black">FREE DELIVERY ON ORDERS OVER €100</p>
 </div>
 
 {{-- Header --}}
-<header class="relative flex items-center justify-between bg-cream-50 px-4 py-4 md:px-[60px]" x-data="{
+<header class="relative flex items-center justify-between bg-cream-50 px-4 py-4 md:px-[60px] z-10" x-data="{
     mobileMenuOpen: false,
     searchOpen: false,
     favoritesCount: 0,
@@ -43,7 +43,7 @@
     }
 }" @favorite-added.window="updateFavoritesCount()" @favorite-removed.window="updateFavoritesCount()" @favorites-updated.window="updateFavoritesCount()">
     {{-- Left section: Burger menu + links --}}
-    <div class="flex items-center gap-6">
+    <div class="flex items-center gap-6 z-10">
         {{-- Burger menu button --}}
         <button @click="mobileMenuOpen = !mobileMenuOpen" class="h-6 w-6">
             <svg x-show="!mobileMenuOpen" class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -55,7 +55,7 @@
         </button>
 
         {{-- Navigation links --}}
-        <nav class="hidden items-center gap-6 md:flex">
+        <nav class="hidden items-center gap-6 nav:flex">
             <a href="{{ route('new-arrivals') }}" class="text-xs text-red-500 font-normal tracking-[1px] hover:underline">NEW</a>
             <a href="{{ route('products.index') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">All PRODUCTS</a>
             <a href="{{ route('how-it-works') }}" class="text-xs font-normal tracking-[1px] text-black hover:underline">HOW IT WORKS</a>
@@ -63,12 +63,12 @@
     </div>
 
     {{-- Center: Logo --}}
-    <a href="{{ route('home') }}" class="font-serif text-[26px] tracking-[3px] text-black md:text-2xl">
+    <a href="{{ route('home') }}" class="font-serif text-center text-[17px] tracking-[3px] text-black sm:text-[26px] ml-[22px] nav:ml-0 md:text-2xl md:ml-[34px]">
         HIRE COLLECTIVE
     </a>
 
     {{-- Right section: Icons --}}
-    <div class="flex w-full max-w-[338px] items-center justify-end gap-4">
+    <div class="flex w-full max-w-[68px] nav:max-w-[338px] md:max-w-[92px] items-center justify-end gap-2 md:gap-4">
         <button @click="searchOpen = true" class="h-5 w-5">
             <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         </button>
@@ -205,7 +205,7 @@
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="translate-x-0"
         x-transition:leave-end="-translate-x-full"
-        class="fixed w-[300px] inset-0 z-50 bg-cream-50"
+        class="fixed w-full sm:w-[300px] inset-0 z-50 bg-cream-50"
         style="display: none;"
     >
         {{-- Close button --}}
@@ -218,8 +218,8 @@
         </div>
 
         {{-- Menu items --}}
-        <nav class="flex h-full flex-col justify-center gap-6 p-6">
-            <a href="{{ route('new-arrivals') }}" class="text-[18px] font-normal tracking-[1px] text-black hover:underline">NEW</a>
+        <nav class="flex h-full flex-col justify-center gap-6 p-6 text-center sm:text-start">
+            <a href="{{ route('new-arrivals') }}" class="text-[18px] font-normal tracking-[1px] text-black hover:underline text-red-500">NEW</a>
             <a href="{{ route('products.index') }}" class="text-[18px] font-normal tracking-[1px] text-black hover:underline">All PRODUCTS</a>
             @foreach ($navCategories as $navCategory)
                 <a href="{{ route('products.index', ['category' => $navCategory->slug]) }}" class="text-[18px] font-normal tracking-[1px] text-black hover:underline">{{ strtoupper($navCategory->name) }}</a>

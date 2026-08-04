@@ -17,7 +17,7 @@ class HomepageController extends Controller
 
         $content = $page?->content ?? [];
 
-        $featuredCount = (int) ($content['featured']['count'] ?? 3);
+        $featuredCount = (int) ($content['featured']['count'] ?? 8);
         $brandsCount = (int) ($content['brands']['count'] ?? 6);
 
         $latestProducts = Product::where('is_active', true)

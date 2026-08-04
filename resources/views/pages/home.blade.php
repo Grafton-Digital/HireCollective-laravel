@@ -2,8 +2,8 @@
     <x-slot:title>Hire Collective — Luxury Fashion Hire in Ireland</x-slot:title>
 
     {{-- Hero --}}
-    <section class="flex bg-cream-200 h-[600px]">
-        <div class="relative flex flex-col w-[70%] justify-end gap-4 px-[60px] py-20">
+    <section class="flex flex-col sm:flex-row bg-cream-200 h-[90vh] sm:h-[600px]">
+        <div class="relative flex flex-col w-full sm:w-[70%] h-[60vh] sm:h-full justify-center sm:justify-end gap-4 px-4 md:px-[60px] py-20">
             @if (!empty($content['hero']['left']['image']))
                 <img src="{{ Storage::disk('public')->url($content['hero']['left']['image']) }}" class="absolute top-0 left-0 w-full h-full object-cover -z-1" alt="Fashion hero">
             @else
@@ -11,29 +11,29 @@
             @endif
             <div class="overflow absolute top-0 left-0 w-full h-full bg-black/20"></div>
             <div class="relative">
-                <h1 class="animate max-w-[600px] font-serif font-semibold text-[60px] leading-[1] text-white mb-2">{{ $content['hero']['left']['heading'] ?? 'Find your perfect outfit — all in one place' }}</h1>
-                <p class="animate animate-delay-100 max-w-[400px] text-sm leading-relaxed text-white mb-2">{{ $content['hero']['left']['subtitle'] ?? 'Hundreds of styles brought together from some of Ireland\'s most trusted hire boutiques.' }}</p>
-                <a href="{{ $content['hero']['left']['button_link'] ?? '/products' }}" class="animate animate-delay-200 mt-2 inline-flex items-center justify-center self-start bg-black px-6 py-3 text-xs font-medium tracking-[1.5px] text-white hover:bg-gray-800">
+                <h1 class="animate max-w-[600px] text-center sm:text-start font-serif font-semibold text-[48px] md:text-[60px] leading-[1] text-white mb-2">{{ $content['hero']['left']['heading'] ?? 'Find your perfect outfit — all in one place' }}</h1>
+                <p class="animate animate-delay-100 max-w-[400px] text-center sm:text-start mx-auto sm:mx-0 text-sm leading-relaxed text-white mb-2">{{ $content['hero']['left']['subtitle'] ?? 'Hundreds of styles brought together from some of Ireland\'s most trusted hire boutiques.' }}</p>
+                <a href="{{ $content['hero']['left']['button_link'] ?? '/products' }}" class="animate animate-delay-200 mt-2 flex sm:inline-flex items-center justify-center bg-black px-6 py-3 text-xs font-medium tracking-[1.5px] text-white hover:bg-gray-800 mx-auto sm:mx-0">
                     {{ strtoupper($content['hero']['left']['button_text'] ?? 'BROWSE NOW') }}
                 </a>
             </div>
         </div>
-        <div class="relative flex justify-center items-center w-[30%] overflow-hidden">
+        <div class="relative flex justify-center items-center w-full sm:w-[30%] h-[30vh] sm:h-full overflow-hidden">
             @if (!empty($content['hero']['right']['image']))
                 <img src="{{ Storage::disk('public')->url($content['hero']['right']['image']) }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="Fashion hero">
             @else
                 <img src="{{ asset('images/hero2.webp') }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="Fashion hero">
             @endif
             <div class="overflow absolute top-0 left-0 w-full h-full bg-black/20"></div>
-            <div class="relative">
+            <div class="relative p-4">
                 <a href="{{ route('how-it-works') }}" class="animate animate-delay-300 block max-w-[160px] font-serif max-w-[200px] text-center text-xl font-normal uppercase text-white hover:underline">{{ $content['hero']['right']['text'] ?? 'Learn how it works' }}</a>
             </div>
         </div>
     </section>
 
     {{-- Interactive text section --}}
-    <section class="relative flex items-center justify-center bg-white px-[60px] py-20" x-data="{ hoveredWord: null }">
-        <p class="animate max-w-5xl font-serif text-center text-[48px] leading-[1.3] text-black">
+    <section class="relative flex items-center justify-center bg-white px-4 md:px-[60px] py-12 md:py-20" x-data="{ hoveredWord: null }">
+        <p class="animate max-w-5xl font-serif text-center text-[26px] md:text-[48px] leading-[1.3] text-black">
             From
             <span
                 @mouseenter="hoveredWord = 'hundreds'"
@@ -133,16 +133,16 @@
 
 
     {{-- Featured Edit of the Week --}}
-    <section class="bg-cream-50 px-[60px] py-16">
-        <div class="mb-12 flex items-center justify-between">
-            <h2 class="animate font-serif text-[48px] uppercase font-normal text-black">{{ $content['featured']['heading'] ?? 'Featured Edit of the Week' }}</h2>
-            <div class="flex items-center gap-4">
-                <button class="swiper-button-prev-featured flex h-12 w-12 items-center justify-center border border-black bg-transparent text-black transition-colors hover:bg-black hover:text-white">
+    <section class="bg-cream-50 px-4 md:px-[60px] py-16">
+        <div class="mb-12 flex flex-col gap-4 lg:gap-0 lg:flex-row items-center justify-between">
+            <h2 class="animate font-serif text-center lg:text-left text-[36px] md:text-[48px] lg:text-[48px] uppercase font-normal text-black">{{ $content['featured']['heading'] ?? 'Featured Edit of the Week' }}</h2>
+            <div class="flex shrink-0 items-center gap-4">
+                <button class="swiper-button-prev-featured flex h-12 w-12 shrink-0 items-center justify-center border border-black bg-transparent text-black transition-colors hover:bg-black hover:text-white">
                     <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/>
                     </svg>
                 </button>
-                <button class="swiper-button-next-featured flex h-12 w-12 items-center justify-center border border-black bg-transparent text-black transition-colors hover:bg-black hover:text-white">
+                <button class="swiper-button-next-featured flex h-12 w-12 shrink-0 items-center justify-center border border-black bg-transparent text-black transition-colors hover:bg-black hover:text-white">
                     <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
                     </svg>
