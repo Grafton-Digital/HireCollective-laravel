@@ -1,12 +1,11 @@
 @props(['product'])
 
 @php
-    // Handle both old relationship images and new JSON array
     $imageArray = is_array($product->images) ? $product->images : [];
 
-    // If no gallery images, use featured_image
-    if (empty($imageArray) && $product->featured_image) {
-        $imageArray = [$product->featured_image];
+    // Prepend featured_image as the first gallery image
+    if ($product->featured_image) {
+        $imageArray = array_values(array_unique(array_merge([$product->featured_image], $imageArray)));
     }
 
     $featured = $imageArray[0] ?? null;
@@ -14,11 +13,11 @@
 
 <div x-data="{ active: '{{ $featured ? Storage::url($featured) : '' }}' }" class="flex flex-col gap-3">
     {{-- Main image --}}
-    <div class="relative flex items-center justify-center bg-gray-50" style="max-height:500px;">
+    <div class="relative flex h-[500px] items-center justify-center bg-gray-50">
         @if ($featured)
-            <img :src="active" alt="{{ $product->name }}" class="max-h-[500px] w-full object-contain">
+            <img :src="active" alt="{{ $product->name }}" class="h-full w-full object-contain">
         @else
-            <div class="flex h-[500px] items-center justify-center text-[#999]">No images</div>
+            <div class="flex h-full items-center justify-center text-[#999]">No images</div>
         @endif
 
         <x-favorite-button :product-id="$product->id" />
