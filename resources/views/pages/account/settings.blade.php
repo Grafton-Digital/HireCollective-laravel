@@ -123,14 +123,16 @@
                                 </div>
 
                                 <div>
-                                    <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Account Email</label>
+                                    <label for="email" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Account Email</label>
                                     <input
                                         type="email"
-                                        value="{{ $user->email }}"
-                                        disabled
-                                        class="block w-full border-gray-300 bg-gray-50 text-sm text-gray-500 shadow-sm"
+                                        name="email"
+                                        id="email"
+                                        value="{{ old('email', $user->email) }}"
+                                        class="block w-full border-gray-300 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
                                     >
-                                    <p class="mt-1 text-xs text-gray-500">This is your login email and cannot be changed.</p>
+                                    <p class="mt-1 text-xs text-gray-500">This is your login email.</p>
+                                    @error('email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                                 </div>
                             </div>
 

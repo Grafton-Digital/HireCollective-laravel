@@ -59,6 +59,7 @@ class AccountController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $validated = $request->validate([
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,'.$request->user()->id],
             'logo' => ['nullable', 'file', 'mimes:jpeg,png,gif,webp,avif,svg', 'max:2048'],
             'remove_logo' => ['nullable', 'in:0,1'],
             'boutique_name' => ['required', 'string', 'max:255'],
@@ -71,6 +72,10 @@ class AccountController extends Controller
             'social_links.*.platform' => ['nullable', 'string', 'in:instagram,tiktok,facebook,twitter,threads'],
             'social_links.*.handle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
+        ]);
+
+        $request->user()->update([
+            'email' => $validated['email'],
         ]);
 
         $boutique = $request->user()->boutique;

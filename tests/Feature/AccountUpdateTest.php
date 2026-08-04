@@ -24,6 +24,7 @@ class AccountUpdateTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)->patch(route('account.update'), [
+            'email' => $user->email,
             'boutique_name' => $boutique->name,
             'contact_email' => $boutique->contact_email,
             'county' => $boutique->county,
