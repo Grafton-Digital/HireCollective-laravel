@@ -1,12 +1,12 @@
 <x-layouts.public>
     <x-slot:title>{{ $page->content['heading'] ?? $page->title }} — Hire Collective</x-slot:title>
 
-    <section class="px-6 md:px-[60px] py-16">
+    <section class="px-4 md:px-[60px] py-16">
         <div class="mx-auto max-w-[1000px]">
 
             <div class="mb-12 text-center">
                 <p class="mb-4 text-xs font-medium uppercase tracking-[2px] text-[#C5A882]">SUPPORT</p>
-                <h1 class="font-serif text-[48px] font-normal leading-[1.2] text-black">{{ $page->content['heading'] ?? $page->title }}</h1>
+                <h1 class="font-serif text-[36px] sm:text-[48px] font-normal leading-[1.2] text-black">{{ $page->content['heading'] ?? $page->title }}</h1>
                 @if (!empty($page->content['subtitle']))
                     <p class="mt-4 text-sm leading-relaxed text-[#666]">{{ $page->content['subtitle'] }}</p>
                 @endif
@@ -18,7 +18,7 @@
                         <div class="overflow-hidden border {{ $index === 0 ? '' : 'border-t-0' }} border-[#E3E3E0] bg-white">
                             <button
                                 @click="openItem = (openItem === {{ $index }} ? null : {{ $index }})"
-                                class="flex w-full items-center justify-between px-8 py-6 text-left transition-colors hover:bg-cream-50"
+                                class="flex w-full items-center justify-between p-4 sm:px-8 sm:py-6 text-left transition-colors hover:bg-cream-50"
                             >
                                 <h3 class="text-base font-medium text-black">{{ $item['question'] }}</h3>
                                 <svg
@@ -37,7 +37,7 @@
                                 :class="openItem === {{ $index }} ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'"
                             >
                                 <div class="overflow-hidden">
-                                    <div class="px-8 pb-6 transition-opacity duration-500">
+                                    <div class="p-4 pt-0 sm:px-8 sm:pb-6 transition-opacity duration-500">
                                         <p class="text-sm leading-relaxed text-[#666]">{{ $item['answer'] }}</p>
                                     </div>
                                 </div>
@@ -49,7 +49,7 @@
         </div>
     </section>
 
-    <section class="px-6 md:px-[60px] py-16 bg-cream-50">
+    <section class="px-4 md:px-[60px] py-16 bg-cream-50">
         <div class="text-center">
             <h2 class="font-serif text-[36px] font-normal leading-[1.2] text-black">Still have questions?</h2>
             <p class="mx-auto mt-4 max-w-[480px] text-sm leading-relaxed text-[#666]">
