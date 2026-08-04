@@ -95,10 +95,18 @@ class ProductController extends Controller
 
         $product->save();
 
+        // Sync category into pivot table
+        if (isset($validated['category_id'])) {
+            $product->categories()->sync([$validated['category_id']]);
+        }
+
         // Sync colours
         if (isset($validated['colours'])) {
             $product->colours()->sync($validated['colours']);
         }
+
+        // Sync occasions
+        $product->occasions()->sync($validated['occasions'] ?? []);
 
         Notification::route('mail', config('app.admin_email'))
             ->notify(new NewProductSubmissionNotification($product));
@@ -178,10 +186,18 @@ class ProductController extends Controller
 
         $product->save();
 
+        // Sync category into pivot table
+        if (isset($validated['category_id'])) {
+            $product->categories()->sync([$validated['category_id']]);
+        }
+
         // Sync colours
         if (isset($validated['colours'])) {
             $product->colours()->sync($validated['colours']);
         }
+
+        // Sync occasions
+        $product->occasions()->sync($validated['occasions'] ?? []);
 
         return redirect()->route('account.products')
             ->with('success', 'Product updated successfully.');

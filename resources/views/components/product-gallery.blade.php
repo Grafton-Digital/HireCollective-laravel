@@ -14,11 +14,11 @@
 
 <div x-data="{ active: '{{ $featured ? Storage::url($featured) : '' }}' }" class="flex flex-col gap-3">
     {{-- Main image --}}
-    <div class="relative overflow-hidden bg-cream-100" style="height:560px;">
+    <div class="relative flex items-center justify-center bg-gray-50" style="max-height:500px;">
         @if ($featured)
-            <img :src="active" alt="{{ $product->name }}" class="h-full w-full object-cover">
+            <img :src="active" alt="{{ $product->name }}" class="max-h-[500px] w-full object-contain">
         @else
-            <div class="flex h-full items-center justify-center text-[#999]">No images</div>
+            <div class="flex h-[500px] items-center justify-center text-[#999]">No images</div>
         @endif
 
         <x-favorite-button :product-id="$product->id" />

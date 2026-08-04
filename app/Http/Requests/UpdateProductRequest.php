@@ -24,6 +24,8 @@ class UpdateProductRequest extends FormRequest
             'colours' => ['required', 'array', 'min:1'],
             'colours.*' => ['exists:colours,id'],
             'category' => ['required', 'exists:categories,id'],
+            'occasions' => ['nullable', 'array'],
+            'occasions.*' => ['exists:occasions,id'],
             'designer' => ['nullable', 'string', 'max:255'],
             'featured_image' => ['nullable', 'image', 'max:10240'],
             'gallery' => ['nullable', 'array', 'max:10'],

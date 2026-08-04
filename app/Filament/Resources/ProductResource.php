@@ -135,7 +135,6 @@ class ProductResource extends Resource
             Section::make('Categorisation')->schema([
                 Forms\Components\Select::make('categories')
                     ->relationship('categories', 'name')
-                    ->multiple()
                     ->preload(),
                 Forms\Components\Select::make('colours')
                     ->relationship('colours', 'name')

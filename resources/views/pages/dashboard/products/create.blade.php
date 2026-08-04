@@ -170,6 +170,79 @@
                         </div>
                     </div>
 
+                    {{-- Occasions / Event Tags --}}
+                    <div class="mb-6" x-data="occasionSelector(@js($occasions->toArray()), @js(old('occasions', [])))">
+                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Event Tags</label>
+
+                        <div class="mb-2 flex flex-wrap gap-2" x-show="selectedOccasions.length > 0">
+                            <template x-for="(occasionId, index) in selectedOccasions" :key="occasionId">
+                                <div class="inline-flex items-center gap-1 bg-gray-100 px-2 py-1 text-xs">
+                                    <span x-text="getOccasionName(occasionId)"></span>
+                                    <button type="button" @click="removeOccasion(occasionId)" class="text-gray-500 hover:text-gray-700">
+                                        <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+
+                        <div class="relative">
+                            <button
+                                type="button"
+                                @click="open = !open"
+                                class="flex w-full items-center justify-between border border-gray-300 bg-white px-3 py-2 text-left text-sm shadow-sm hover:bg-gray-50 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            >
+                                <span x-text="selectedOccasions.length === 0 ? 'Select event tags' : selectedOccasions.length + ' selected'" class="text-gray-700"></span>
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+
+                            <div
+                                x-show="open"
+                                @click.away="open = false"
+                                x-transition
+                                class="absolute z-10 mt-1 w-full border border-gray-300 bg-white shadow-lg"
+                            >
+                                <div class="border-b border-gray-200 p-2">
+                                    <input
+                                        type="text"
+                                        x-model="search"
+                                        placeholder="Search event tags..."
+                                        class="w-full border-gray-300 px-2 py-1 text-sm focus:border-gray-400 focus:ring-gray-400"
+                                    >
+                                </div>
+
+                                <div class="max-h-48 overflow-y-auto">
+                                    <template x-for="occasion in filteredOccasions" :key="occasion.id">
+                                        <label
+                                            class="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50"
+                                            :class="{ 'bg-gray-100': selectedOccasions.includes(occasion.id) }"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                :value="occasion.id"
+                                                x-model="selectedOccasions"
+                                                class="border-gray-300 text-gray-900 focus:ring-gray-400"
+                                            >
+                                            <span x-text="occasion.name"></span>
+                                        </label>
+                                    </template>
+                                    <div x-show="filteredOccasions.length === 0" class="px-3 py-2 text-sm text-gray-500">
+                                        No event tags found
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <template x-for="occasionId in selectedOccasions" :key="occasionId">
+                            <input type="hidden" name="occasions[]" :value="occasionId">
+                        </template>
+
+                        <p x-show="errors.occasions" x-text="errors.occasions?.[0]" class="mt-1 text-xs text-red-600"></p>
+                    </div>
+
                     {{-- Region --}}
                     <div class="mb-6">
                         <label for="county" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Region *</label>
@@ -217,70 +290,6 @@
                     </div>
 
 
-                    {{-- Availability Calendar --}}
-                    <div class="mb-6" x-data="availabilityCalendar()">
-                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Availability Calendar</label>
-                        <p class="mb-4 text-xs text-gray-500">Click on dates to toggle availability. Green = available, Red = unavailable, Yellow = need to confirm</p>
-
-                        <div class="border border-gray-200 p-4">
-                            <div class="mb-4 flex items-center justify-between">
-                                <button type="button" @click="previousMonth()" class="text-gray-400 hover:text-gray-900">
-                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                                    </svg>
-                                </button>
-                                <span class="text-sm font-medium text-gray-900" x-text="monthYear"></span>
-                                <button type="button" @click="nextMonth()" class="text-gray-400 hover:text-gray-900">
-                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <div class="grid grid-cols-7 gap-2">
-                                <div class="text-center text-xs font-medium text-gray-500">Mo</div>
-                                <div class="text-center text-xs font-medium text-gray-500">Tu</div>
-                                <div class="text-center text-xs font-medium text-gray-500">We</div>
-                                <div class="text-center text-xs font-medium text-gray-500">Th</div>
-                                <div class="text-center text-xs font-medium text-gray-500">Fr</div>
-                                <div class="text-center text-xs font-medium text-gray-500">Sa</div>
-                                <div class="text-center text-xs font-medium text-gray-500">Su</div>
-
-                                <template x-for="(day, index) in calendarDays" :key="index">
-                                    <button
-                                        type="button"
-                                        @click="toggleDate(day.date)"
-                                        :disabled="!day.isCurrentMonth"
-                                        :class="{
-                                            'bg-green-100 text-green-900': day.status === 'available' && day.isCurrentMonth,
-                                            'bg-red-100 text-red-900': day.status === 'unavailable' && day.isCurrentMonth,
-                                            'bg-yellow-100 text-yellow-900': day.status === 'confirm' && day.isCurrentMonth,
-                                            'text-gray-300': !day.isCurrentMonth
-                                        }"
-                                        class="flex h-10 items-center justify-center text-sm hover:bg-gray-100 disabled:hover:bg-transparent"
-                                        x-text="day.day"
-                                    ></button>
-                                </template>
-                            </div>
-
-                            <input type="hidden" name="availability" :value="JSON.stringify(availability)">
-                        </div>
-
-                        <div class="mt-3 flex items-center gap-6 text-xs">
-                            <div class="flex items-center gap-2">
-                                <div class="h-4 w-4 bg-green-100 border border-green-200"></div>
-                                <span class="text-gray-600">Available</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="h-4 w-4 bg-red-100 border border-red-200"></div>
-                                <span class="text-gray-600">Unavailable</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="h-4 w-4 bg-yellow-100 border border-yellow-200"></div>
-                                <span class="text-gray-600">Need to confirm</span>
-                            </div>
-                        </div>
-                    </div>
 
                 </div>
 
@@ -555,85 +564,6 @@
             }
         }
 
-        function availabilityCalendar() {
-            return {
-                currentMonth: new Date().getMonth(),
-                currentYear: new Date().getFullYear(),
-                availability: {},
-
-                get monthYear() {
-                    const date = new Date(this.currentYear, this.currentMonth);
-                    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-                },
-
-                get calendarDays() {
-                    const firstDay = new Date(this.currentYear, this.currentMonth, 1);
-                    const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
-                    const prevLastDay = new Date(this.currentYear, this.currentMonth, 0);
-
-                    const firstDayOfWeek = firstDay.getDay() === 0 ? 7 : firstDay.getDay();
-                    const days = [];
-
-                    for (let i = firstDayOfWeek - 1; i > 0; i--) {
-                        days.push({
-                            day: prevLastDay.getDate() - i + 1,
-                            date: null,
-                            isCurrentMonth: false,
-                            status: null
-                        });
-                    }
-
-                    for (let i = 1; i <= lastDay.getDate(); i++) {
-                        const dateStr = `${this.currentYear}-${String(this.currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                        days.push({
-                            day: i,
-                            date: dateStr,
-                            isCurrentMonth: true,
-                            status: this.availability[dateStr] || 'available'
-                        });
-                    }
-
-                    const remainingDays = 35 - days.length;
-                    for (let i = 1; i <= remainingDays; i++) {
-                        days.push({
-                            day: i,
-                            date: null,
-                            isCurrentMonth: false,
-                            status: null
-                        });
-                    }
-
-                    return days;
-                },
-
-                toggleDate(dateStr) {
-                    if (!dateStr) return;
-
-                    const current = this.availability[dateStr] || 'available';
-                    const statuses = ['available', 'unavailable', 'confirm'];
-                    const nextIndex = (statuses.indexOf(current) + 1) % statuses.length;
-                    this.availability[dateStr] = statuses[nextIndex];
-                },
-
-                previousMonth() {
-                    if (this.currentMonth === 0) {
-                        this.currentMonth = 11;
-                        this.currentYear--;
-                    } else {
-                        this.currentMonth--;
-                    }
-                },
-
-                nextMonth() {
-                    if (this.currentMonth === 11) {
-                        this.currentMonth = 0;
-                        this.currentYear++;
-                    } else {
-                        this.currentMonth++;
-                    }
-                }
-            }
-        }
 
     </script>
 </x-layouts.account>

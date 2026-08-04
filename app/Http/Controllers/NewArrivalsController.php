@@ -23,6 +23,10 @@ class NewArrivalsController extends Controller
             ->when($request->query('designer'), fn ($q, $designer) => $q->where('designer', $designer))
             ->when($request->query('county'), fn ($q, $county) => $q->where('county', $county))
             ->when($request->query('size'), fn ($q, $size) => $q->where('size', $size))
+            ->when($request->query('search'), fn ($q, $search) => $q->where(function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('designer', 'like', "%{$search}%");
+            }))
             ->when($request->query('price'), function ($q, $price) {
                 match ($price) {
                     '0-50' => $q->where('price_per_day', '<=', 50),
@@ -40,7 +44,9 @@ class NewArrivalsController extends Controller
             default => $query->latest(),
         };
 
-        $products = $query->paginate(9)->withQueryString();
+        $perPage = in_array((int) $request->query('per_page'), [24, 48, 96]) ? (int) $request->query('per_page') : 24;
+
+        $products = $query->paginate($perPage)->withQueryString();
 
         $categories = Category::orderBy('name')->get();
         $colours = Colour::orderBy('name')->get();

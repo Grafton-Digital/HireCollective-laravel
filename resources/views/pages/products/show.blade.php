@@ -20,7 +20,7 @@
         $availabilityData = is_string($product->availability)
             ? json_decode($product->availability, true)
             : ($product->availability ?? []);
-        $availabilityData = $availabilityData ?: [];
+        $availabilityData = !empty($availabilityData) ? (object) $availabilityData : (object) [];
     @endphp
     <section class="flex gap-12 bg-white px-[60px] py-8" x-data="productAvailabilityCalendar(@js($availabilityData))">
         {{-- Image column --}}

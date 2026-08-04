@@ -85,6 +85,7 @@ window.availabilityCalendar = function(availabilityData = {}) {
         currentMonth: new Date().getMonth(),
         currentYear: new Date().getFullYear(),
         availability: availabilityData,
+        activeDate: null,
 
         get monthYear() {
             const date = new Date(this.currentYear, this.currentMonth);
@@ -131,16 +132,17 @@ window.availabilityCalendar = function(availabilityData = {}) {
             return days;
         },
 
-        toggleDate(dateStr) {
-            if (!dateStr) return;
+        openDropdown(dateStr) {
+            this.activeDate = this.activeDate === dateStr ? null : dateStr;
+        },
 
-            const current = this.availability[dateStr] || 'available';
-            const statuses = ['available', 'unavailable', 'confirm'];
-            const nextIndex = (statuses.indexOf(current) + 1) % statuses.length;
-            this.availability[dateStr] = statuses[nextIndex];
+        setStatus(dateStr, status) {
+            this.availability[dateStr] = status;
+            this.activeDate = null;
         },
 
         previousMonth() {
+            this.activeDate = null;
             if (this.currentMonth === 0) {
                 this.currentMonth = 11;
                 this.currentYear--;
@@ -150,6 +152,7 @@ window.availabilityCalendar = function(availabilityData = {}) {
         },
 
         nextMonth() {
+            this.activeDate = null;
             if (this.currentMonth === 11) {
                 this.currentMonth = 0;
                 this.currentYear++;
@@ -163,7 +166,7 @@ window.availabilityCalendar = function(availabilityData = {}) {
 window.colourSelector = function(colours, selected = []) {
     return {
         colours: colours,
-        selectedColours: selected.map(id => parseInt(id)),
+        selectedColours: selected.map(id => String(id)),
         open: false,
         search: '',
 
@@ -176,20 +179,42 @@ window.colourSelector = function(colours, selected = []) {
         },
 
         getColourName(id) {
-            const colour = this.colours.find(c => c.id === parseInt(id));
+            const colour = this.colours.find(c => String(c.id) === String(id));
             return colour ? colour.name : '';
         },
 
         removeColour(id) {
-            const index = this.selectedColours.indexOf(parseInt(id));
-            if (index > -1) {
-                this.selectedColours.splice(index, 1);
-            }
+            this.selectedColours = this.selectedColours.filter(c => String(c) !== String(id));
         }
     };
 };
 
-// Favorites functionality
+window.occasionSelector = function(occasions, selected = []) {
+    return {
+        occasions: occasions,
+        selectedOccasions: selected.map(id => String(id)),
+        open: false,
+        search: '',
+
+        get filteredOccasions() {
+            if (!this.search) return this.occasions;
+            const searchLower = this.search.toLowerCase();
+            return this.occasions.filter(occasion =>
+                occasion.name.toLowerCase().includes(searchLower)
+            );
+        },
+
+        getOccasionName(id) {
+            const occasion = this.occasions.find(o => String(o.id) === String(id));
+            return occasion ? occasion.name : '';
+        },
+
+        removeOccasion(id) {
+            this.selectedOccasions = this.selectedOccasions.filter(o => String(o) !== String(id));
+        }
+    };
+};
+
 window.migrateFavoritesFormat = function() {
     let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 
@@ -353,6 +378,14 @@ window.collaborationForm = function() {
         }
     };
 };
+
+Alpine.data('productAvailabilityCalendar', window.productAvailabilityCalendar);
+Alpine.data('availabilityCalendar', window.availabilityCalendar);
+Alpine.data('colourSelector', window.colourSelector);
+Alpine.data('occasionSelector', window.occasionSelector);
+Alpine.data('bookingForm', window.bookingForm);
+Alpine.data('collaborationForm', window.collaborationForm);
+Alpine.data('favoritesPageData', window.favoritesPageData);
 
 Alpine.start();
 
