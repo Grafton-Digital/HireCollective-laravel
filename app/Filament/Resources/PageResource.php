@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PageResource\Pages;
 use App\Models\Category;
+use App\Models\Occasion;
 use App\Models\Page;
 use Filament\Actions;
 use Filament\Forms;
@@ -74,6 +75,11 @@ class PageResource extends Resource
                     Forms\Components\TextInput::make('content.featured.heading')
                         ->label('Heading')
                         ->required(),
+                    Forms\Components\Select::make('content.featured.occasion_id')
+                        ->label('Event Tag (Occasion)')
+                        ->options(fn () => Occasion::pluck('name', 'id'))
+                        ->placeholder('All Products')
+                        ->helperText('Filter featured products by occasion'),
                     Forms\Components\TextInput::make('content.featured.count')
                         ->label('Number of Products')
                         ->numeric()
