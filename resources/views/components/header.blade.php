@@ -183,14 +183,7 @@
                     }
                     if (this.query.length < 2) return;
 
-                    const hasBoutiques = this.results.some(r => r.type === 'boutique');
-                    const hasProducts = this.results.some(r => r.type === 'product');
-
-                    if (hasBoutiques && !hasProducts) {
-                        window.location.href = '{{ route("boutiques.index") }}?search=' + encodeURIComponent(this.query);
-                    } else {
-                        window.location.href = '{{ route("products.index") }}?search=' + encodeURIComponent(this.query);
-                    }
+                    window.location.href = '{{ route("search.results") }}?q=' + encodeURIComponent(this.query);
                 }
             }
         }

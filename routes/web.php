@@ -16,6 +16,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SearchResultsController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -27,6 +28,7 @@ Route::get('/boutiques/{boutique:slug}/{product:slug}', [ProductController::clas
 Route::get('/favorites', [FavoritesController::class, 'index'])->name('favorites.index');
 Route::post('/api/favorites/validate', FavoritesValidationController::class)->name('favorites.validate');
 Route::get('/api/search/suggestions', [SearchController::class, 'suggestions'])->name('search.suggestions');
+Route::get('/search', SearchResultsController::class)->name('search.results');
 Route::get('/new-arrivals', NewArrivalsController::class)->name('new-arrivals');
 
 // Enquiry (public, rate-limited)
