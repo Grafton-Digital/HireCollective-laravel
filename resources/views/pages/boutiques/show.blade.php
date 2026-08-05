@@ -193,18 +193,8 @@
         </div>
 
         @if ($products->hasPages())
-            <div class="flex items-center justify-center gap-2 py-6">
-                @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
-                    <a href="{{ $url }}"
-                       class="{{ $page == $products->currentPage() ? 'bg-black text-white' : 'border border-black text-black hover:bg-black hover:text-white' }} flex h-8 w-8 items-center justify-center text-[13px] font-medium">
-                        {{ $page }}
-                    </a>
-                @endforeach
-                @if ($products->hasMorePages())
-                    <a href="{{ $products->nextPageUrl() }}">
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>
-                    </a>
-                @endif
+            <div class="py-10">
+                {{ $products->links('vendor.pagination.custom') }}
             </div>
         @endif
     </section>

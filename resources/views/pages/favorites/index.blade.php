@@ -44,14 +44,14 @@
 
     <div x-data="favoritesPageData()" @favorite-removed.window="updateCount(); if (favoriteCount === 0) location.reload()" @favorites-updated.window="updateCount()">
         {{-- Breadcrumb --}}
-        <div class="flex items-center gap-2 bg-white px-[60px] py-3">
+        <div class="flex items-center gap-2 bg-white px-4 md:px-[60px] py-3">
             <a href="{{ route('home') }}" class="text-xs text-[#666] hover:underline">Home</a>
             <span class="text-xs text-[#666]">&gt;</span>
             <span class="text-xs text-black">Saved Items</span>
         </div>
 
         {{-- Title section --}}
-        <section class="bg-white px-[60px] pb-6 pt-5">
+        <section class="bg-white px-4 md:px-[60px] pb-6 pt-5">
             <div class="flex items-center justify-between">
                 <h1 class="font-serif text-[38px] text-black">Saved Items</h1>
                 <span class="text-sm text-[#666]" x-text="favoriteCount + ' items saved'"></span>
@@ -59,7 +59,7 @@
         </section>
 
         {{-- Product grid --}}
-        <section class="bg-white px-[60px] py-8">
+        <section class="bg-white px-4 md:px-[60px] py-8">
             @if ($products->isEmpty())
                 <div class="flex flex-col items-center justify-center py-16">
                     <svg class="mb-4 h-16 w-16 text-[#999]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -72,11 +72,17 @@
                     </a>
                 </div>
             @else
-                <div class="grid grid-cols-3 gap-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     @foreach ($products as $product)
                         <x-favorite-product-card :product="$product" />
                     @endforeach
                 </div>
+
+                @if ($products->hasPages())
+                    <div class="py-10">
+                        {{ $products->onEachSide(1)->links('vendor.pagination.custom') }}
+                    </div>
+                @endif
             @endif
         </section>
     </div>

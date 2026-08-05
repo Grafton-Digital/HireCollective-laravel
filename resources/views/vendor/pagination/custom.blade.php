@@ -1,4 +1,27 @@
 @if ($paginator->hasPages())
+    @php
+        $current = $paginator->currentPage();
+        $last = $paginator->lastPage();
+        $window = 1;
+
+        $pages = collect();
+
+        // Always show first page
+        $pages->push(1);
+
+        // Pages around current
+        for ($i = max(2, $current - $window); $i <= min($last - 1, $current + $window); $i++) {
+            $pages->push($i);
+        }
+
+        // Always show last page
+        if ($last > 1) {
+            $pages->push($last);
+        }
+
+        $pages = $pages->unique()->sort()->values();
+    @endphp
+
     <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-center gap-2">
         {{-- Previous Page Link --}}
         @if ($paginator->onFirstPage())
@@ -15,26 +38,20 @@
             </a>
         @endif
 
-        {{-- Pagination Elements --}}
-        @foreach ($elements as $element)
-            {{-- "Three Dots" Separator --}}
-            @if (is_string($element))
-                <span class="flex h-10 w-10 items-center justify-center text-gray-500">{{ $element }}</span>
+        {{-- Page Numbers --}}
+        @foreach ($pages as $index => $page)
+            @if ($index > 0 && $page - $pages[$index - 1] > 1)
+                <span class="flex h-10 w-10 items-center justify-center text-gray-500">&hellip;</span>
             @endif
 
-            {{-- Array Of Links --}}
-            @if (is_array($element))
-                @foreach ($element as $page => $url)
-                    @if ($page == $paginator->currentPage())
-                        <span class="flex h-10 w-10 items-center justify-center bg-black text-sm font-medium text-white">
-                            {{ $page }}
-                        </span>
-                    @else
-                        <a href="{{ $url }}" class="flex h-10 w-10 items-center justify-center border border-gray-300 text-sm text-black hover:bg-gray-100 transition">
-                            {{ $page }}
-                        </a>
-                    @endif
-                @endforeach
+            @if ($page == $current)
+                <span class="flex h-10 w-10 items-center justify-center bg-black text-sm font-medium text-white">
+                    {{ $page }}
+                </span>
+            @else
+                <a href="{{ $paginator->url($page) }}" class="flex h-10 w-10 items-center justify-center border border-gray-300 text-sm text-black hover:bg-gray-100 transition">
+                    {{ $page }}
+                </a>
             @endif
         @endforeach
 

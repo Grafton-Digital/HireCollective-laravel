@@ -3,9 +3,9 @@
     <x-slot:metaDescription>Discover Ireland's finest luxury fashion hire boutiques. Dresses, hats, and bags for every occasion.</x-slot:metaDescription>
 
     {{-- Title section --}}
-    <section class="px-[60px] py-12">
+    <section class="px-4 sm:px-[60px] py-12">
         <span class="text-[#c7a869] text-center text-sm block">DISCOVER</span>
-        <h1 class="animate font-serif text-center text-[48px] uppercase font-normal text-black animate-visible">All Boutiques</h1>
+        <h1 class="animate font-serif text-center text-[36px] sm:text-[48px] uppercase font-normal text-black animate-visible my-2">All Boutiques</h1>
         <p class="max-w-[520px] text-center text-sm leading-relaxed text-gray-600 mx-auto mb-6">Explore our curated selection of luxury knitwear boutiques, each handpicked for their exceptional craftsmanship and quality.</p>
 
         {{-- Search section --}}
@@ -34,7 +34,7 @@
     </section>
 
     {{-- Boutique grid --}}
-    <section class="px-[60px] pb-20" id="boutiques-section">
+    <section class="px-4 sm:px-[60px] pb-4 sm:pb-20" id="boutiques-section">
         {{-- Results bar --}}
         <div class="flex items-center justify-between mb-6">
             <div class="text-sm text-gray-600" id="boutiques-count">
@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-5" id="boutiques-grid">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="boutiques-grid">
             @forelse ($boutiques as $boutique)
                 <x-boutique-card :boutique="$boutique" />
             @empty
@@ -68,7 +68,7 @@
     </section>
 
     {{-- Register your boutique --}}
-    <section class="relative h-[600px] overflow-hidden">
+   <section class="relative h-[400px] md:h-[600px] overflow-hidden">
         @if (!empty($content['register']['image']))
             <img src="{{ Storage::disk('public')->url($content['register']['image']) }}" class="absolute top-0 left-0 w-full h-full object-cover" alt="Register your boutique">
         @else
@@ -78,7 +78,7 @@
 
         <div class="relative flex h-full flex-col items-center justify-center gap-8 px-[60px]">
             <h2 class="animate max-w-[400px] font-serif text-center text-white">
-                <span class="mt-2 block text-[48px] font-bold uppercase tracking-[1px] leading-[1.2]">{{ $content['register']['heading'] ?? 'Register your boutique' }}</span>
+                <span class="mt-2 lg:text-left text-[26px] sm:text-[36px] md:text-[48px] lg:text-[48px] font-bold uppercase tracking-[1px] leading-[1.2]">{{ $content['register']['heading'] ?? 'Register your boutique' }}</span>
             </h2>
 
             <div class="animate animate-delay-100 flex items-center gap-4">

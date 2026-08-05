@@ -49,7 +49,7 @@ class ProductController extends Controller
 
         $perPage = in_array((int) $request->query('per_page'), [24, 48, 96]) ? (int) $request->query('per_page') : 24;
 
-        $products = $query->paginate($perPage)->withQueryString();
+        $products = $query->paginate($perPage)->onEachSide(1)->withQueryString();
 
         $categories = Category::orderBy('name')->get();
         $colours = Colour::orderBy('name')->get();

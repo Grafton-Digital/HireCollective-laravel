@@ -3,7 +3,7 @@
     <x-slot:metaDescription>{{ Str::limit(strip_tags($product->description), 160) }}</x-slot:metaDescription>
 
     {{-- Breadcrumb --}}
-    <div class="flex items-center gap-2 bg-white px-[60px] py-3">
+    <div class="flex items-center gap-2 bg-white px-4 md:px-[60px] py-3">
         <a href="{{ route('home') }}" class="text-xs text-[#666] hover:underline">Home</a>
         <span class="text-xs text-[#666]">&gt;</span>
         <a href="{{ route('products.index') }}" class="text-xs text-[#666] hover:underline">All Products</a>
@@ -22,14 +22,14 @@
             : ($product->availability ?? []);
         $availabilityData = !empty($availabilityData) ? (object) $availabilityData : (object) [];
     @endphp
-    <section class="flex gap-12 bg-white px-[60px] py-8" x-data="productAvailabilityCalendar(@js($availabilityData))">
+    <section class="flex flex-col md:flex-row gap-12 bg-white px-4 md:px-[60px] py-8" x-data="productAvailabilityCalendar(@js($availabilityData))">
         {{-- Image column --}}
-        <div class="w-[45%]">
+        <div class="w-full md:w-[45%]">
             <x-product-gallery :product="$product" />
         </div>
 
         {{-- Detail column --}}
-        <div class="flex w-[55%] flex-col gap-4">
+        <div class="flex w-full md:w-[55%] flex-col gap-4">
             <h1 class="font-serif text-[40px] leading-tight text-black">{{ $product->name }}</h1>
 
             {{-- Designer --}}

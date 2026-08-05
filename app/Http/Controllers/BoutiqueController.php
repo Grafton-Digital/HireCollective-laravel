@@ -24,7 +24,7 @@ class BoutiqueController extends Controller
             default => $query->orderBy('name'),
         };
 
-        $boutiques = $query->paginate(9)->withQueryString();
+        $boutiques = $query->paginate(9)->onEachSide(0)->withQueryString();
 
         return view('pages.boutiques.index', compact('boutiques'));
     }
@@ -61,7 +61,7 @@ class BoutiqueController extends Controller
             default => $query->latest(),
         };
 
-        $products = $query->paginate(12)->withQueryString();
+        $products = $query->paginate(12)->onEachSide(1)->withQueryString();
 
         $categories = Category::orderBy('name')->get();
         $colours = Colour::orderBy('name')->get();
