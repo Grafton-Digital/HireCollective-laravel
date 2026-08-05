@@ -11,11 +11,19 @@
     {{-- Filter section --}}
     <section class="bg-cream-50 px-4 nav:px-[60px] py-6" x-data="{ filtersOpen: false }">
         {{-- Mobile: toggle button --}}
-        <div class="nav:hidden">
-            <button @click="filtersOpen = !filtersOpen" type="button" class="flex w-full items-center justify-between border border-[#D0D0D0] bg-white px-4 py-3 text-sm font-medium text-black">
-                <span>Filters @if(request()->hasAny(['category', 'size', 'colour', 'designer', 'county', 'price', 'occasion']))<span class="ml-1 inline-flex h-5 w-5 items-center justify-center bg-black text-[10px] text-white rounded-full">{{ collect(['category', 'size', 'colour', 'designer', 'county', 'price', 'occasion'])->filter(fn($f) => request($f))->count() }}</span>@endif</span>
+        <div class="nav:hidden flex items-center gap-2">
+            <button @click="filtersOpen = !filtersOpen" type="button" class="flex flex-1 items-center justify-between border border-[#D0D0D0] bg-white px-4 py-3 text-sm font-medium text-black">
+                <span class="flex items-center gap-2">
+                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" /></svg>
+                    @if(request()->hasAny(['category', 'size', 'colour', 'designer', 'county', 'price', 'occasion']))<span class="inline-flex h-5 w-5 items-center justify-center bg-black text-[10px] text-white rounded-full">{{ collect(['category', 'size', 'colour', 'designer', 'county', 'price', 'occasion'])->filter(fn($f) => request($f))->count() }}</span>@endif
+                </span>
                 <svg class="h-4 w-4 transition-transform" :class="filtersOpen && 'rotate-180'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
             </button>
+            @if(request()->hasAny(['category', 'size', 'colour', 'designer', 'county', 'price', 'occasion', 'search']))
+                <a href="{{ route('new-arrivals') }}" class="flex h-[46px] items-center justify-center border border-black px-4 text-xs font-medium tracking-[1.5px] text-black hover:bg-black hover:text-white">
+                    CLEAR
+                </a>
+            @endif
         </div>
 
         {{-- Desktop: inline filters --}}
@@ -94,10 +102,10 @@
         </form>
 
         {{-- Mobile: dropdown filters --}}
-        <form method="GET" action="{{ route('new-arrivals') }}" x-show="filtersOpen" x-collapse class="nav:hidden mt-3 grid grid-cols-2 gap-3">
+        <form method="GET" action="{{ route('new-arrivals') }}" x-show="filtersOpen" x-collapse class="nav:hidden mt-3 grid grid-cols-2 gap-3" x-data="{ dirty: false }" @change="dirty = true">
             <div class="flex flex-col gap-1.5">
                 <label class="text-2xs font-medium tracking-[1px] text-black">CATEGORY</label>
-                <select name="category" onchange="this.form.submit()" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                <select name="category" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
                     <option value="">All Categories</option>
                     @foreach ($categories as $category)
                         <option value="{{ $category->slug }}" {{ request('category') === $category->slug ? 'selected' : '' }}>{{ $category->name }}</option>
@@ -106,7 +114,7 @@
             </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-2xs font-medium tracking-[1px] text-black">SIZE</label>
-                <select name="size" onchange="this.form.submit()" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                <select name="size" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
                     <option value="">All Sizes</option>
                     @for ($i = 6; $i <= 18; $i += 2)
                         <option value="{{ $i }}" {{ request('size') == $i ? 'selected' : '' }}>{{ $i }}</option>
@@ -116,7 +124,7 @@
             </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-2xs font-medium tracking-[1px] text-black">COLOUR</label>
-                <select name="colour" onchange="this.form.submit()" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                <select name="colour" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
                     <option value="">All Colours</option>
                     @foreach ($colours as $colour)
                         <option value="{{ $colour->slug }}" {{ request('colour') === $colour->slug ? 'selected' : '' }}>{{ $colour->name }}</option>
@@ -125,7 +133,7 @@
             </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-2xs font-medium tracking-[1px] uppercase text-black">Designer</label>
-                <select name="designer" onchange="this.form.submit()" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                <select name="designer" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
                     <option value="">All Designers</option>
                     @foreach ($designers as $designer)
                         <option value="{{ $designer }}" {{ request('designer') === $designer ? 'selected' : '' }}>{{ $designer }}</option>
@@ -134,7 +142,7 @@
             </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-2xs font-medium tracking-[1px] uppercase text-black">Region/Location</label>
-                <select name="county" onchange="this.form.submit()" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                <select name="county" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
                     <option value="">All Locations</option>
                     @foreach ($counties as $county)
                         <option value="{{ $county->value }}" {{ request('county') === $county->value ? 'selected' : '' }}>{{ $county->getLabel() }}</option>
@@ -143,7 +151,7 @@
             </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-2xs font-medium tracking-[1px] uppercase text-black">Price</label>
-                <select name="price" onchange="this.form.submit()" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                <select name="price" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
                     <option value="">All Prices</option>
                     <option value="0-50" {{ request('price') === '0-50' ? 'selected' : '' }}>€0 – €50</option>
                     <option value="50-100" {{ request('price') === '50-100' ? 'selected' : '' }}>€50 – €100</option>
@@ -154,18 +162,19 @@
             </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-2xs font-medium tracking-[1px] uppercase text-black">Event tags</label>
-                <select name="occasion" onchange="this.form.submit()" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
+                <select name="occasion" class="h-10 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
                     <option value="">All Tags</option>
                     @foreach ($occasions as $occasion)
                         <option value="{{ $occasion->slug }}" {{ request('occasion') === $occasion->slug ? 'selected' : '' }}>{{ $occasion->name }}</option>
                     @endforeach
                 </select>
             </div>
-            @if(request()->hasAny(['category', 'size', 'colour', 'designer', 'county', 'price', 'occasion', 'search']))
-                <a href="{{ route('new-arrivals') }}" class="col-span-2 flex h-10 items-center justify-center border border-black text-xs font-medium tracking-[1.5px] text-black hover:bg-black hover:text-white">
-                    CLEAR ALL
-                </a>
-            @endif
+            <div class="flex flex-col gap-1.5">
+                <label class="text-2xs font-medium tracking-[1px] uppercase text-black">&nbsp;</label>
+                <button type="submit" class="h-10 w-full text-xs font-medium tracking-[1.5px] transition-colors" :class="dirty ? 'bg-black text-white hover:bg-gray-800' : 'bg-gray-200 text-gray-400 cursor-not-allowed'" :disabled="!dirty">
+                    APPLY
+                </button>
+            </div>
         </form>
     </section>
 
@@ -174,7 +183,7 @@
         <div class="flex items-center gap-2">
             <span class="w-[80px] px-2 text-xs text-[#666]">{{ $products->total() }} {{ Str::plural('item', $products->total()) }}</span>
             @if ($products->total() > 24)
-                <select name="per_page" onchange="window.location.href='{{ route('new-arrivals') }}?' + new URLSearchParams({...Object.fromEntries(new URLSearchParams(window.location.search)), per_page: this.value, page: 1})" class="h-9 rounded border border-[#D0D0D0] pl-3 pr-8 text-xs text-black">
+                <select name="per_page" onchange="window.location.href='{{ route('new-arrivals') }}?' + new URLSearchParams({...Object.fromEntries(new URLSearchParams(window.location.search)), per_page: this.value, page: 1})" class="h-9 border border-[#D0D0D0] pl-3 pr-8 text-xs text-black">
                     <option value="24" {{ request('per_page', '24') == '24' ? 'selected' : '' }}>24 per page</option>
                     @if ($products->total() > 48)
                         <option value="48" {{ request('per_page') == '48' ? 'selected' : '' }}>48 per page</option>
@@ -184,7 +193,7 @@
                     @endif
                 </select>
             @endif
-            <select name="sort" onchange="window.location.href='{{ route('new-arrivals') }}?' + new URLSearchParams({...Object.fromEntries(new URLSearchParams(window.location.search)), sort: this.value})" class="h-9 rounded border border-[#D0D0D0] pl-3 pr-8 text-xs text-black">
+            <select name="sort" onchange="window.location.href='{{ route('new-arrivals') }}?' + new URLSearchParams({...Object.fromEntries(new URLSearchParams(window.location.search)), sort: this.value})" class="h-9 border border-[#D0D0D0] pl-3 pr-8 text-xs text-black">
                 <option value="newest" {{ request('sort', 'newest') === 'newest' ? 'selected' : '' }}>Newest</option>
                 <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>Price: Low–High</option>
                 <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>Price: High–Low</option>
