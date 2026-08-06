@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Api\FavoritesValidationController;
+use App\Http\Controllers\BookTestController;
 use App\Http\Controllers\BoutiqueApplicationController;
 use App\Http\Controllers\BoutiqueController;
 use App\Http\Controllers\CollaborationController;
@@ -38,6 +39,9 @@ Route::post('/enquiry', [EnquiryController::class, 'store'])->middleware('thrott
 
 // Collaboration enquiry (public, rate-limited)
 Route::post('/collaboration', [CollaborationController::class, 'store'])->middleware('throttle:5,1')->name('collaboration.store');
+
+// Book a Test (public, rate-limited)
+Route::post('/book-test', [BookTestController::class, 'store'])->middleware('throttle:5,1')->name('book-test.store');
 
 // Static pages
 Route::get('/how-it-works', [HowItWorksController::class, 'index'])->name('how-it-works');

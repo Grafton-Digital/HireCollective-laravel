@@ -327,6 +327,59 @@ window.bookingForm = function(productId) {
     };
 };
 
+window.bookTestForm = function(productId) {
+    return {
+        loading: false,
+        submitted: false,
+        errors: {},
+        form: {
+            product_id: productId,
+            customer_name: '',
+            customer_email: '',
+            customer_phone: '',
+        },
+
+        async submitForm() {
+            this.loading = true;
+            this.errors = {};
+
+            try {
+                const response = await fetch('/book-test', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: JSON.stringify(this.form),
+                });
+
+                if (response.ok) {
+                    this.submitted = true;
+                } else if (response.status === 422) {
+                    const data = await response.json();
+                    const fieldErrors = data.errors || {};
+                    for (const [key, messages] of Object.entries(fieldErrors)) {
+                        this.errors[key] = messages[0];
+                    }
+                }
+            } catch (e) {
+                this.errors.customer_email = 'Something went wrong. Please try again.';
+            }
+
+            this.loading = false;
+        },
+
+        resetForm() {
+            this.submitted = false;
+            this.errors = {};
+            this.form.customer_name = '';
+            this.form.customer_email = '';
+            this.form.customer_phone = '';
+        }
+    };
+};
+
 window.collaborationForm = function() {
     return {
         loading: false,
@@ -386,6 +439,7 @@ Alpine.data('availabilityCalendar', window.availabilityCalendar);
 Alpine.data('colourSelector', window.colourSelector);
 Alpine.data('occasionSelector', window.occasionSelector);
 Alpine.data('bookingForm', window.bookingForm);
+Alpine.data('bookTestForm', window.bookTestForm);
 Alpine.data('collaborationForm', window.collaborationForm);
 Alpine.data('favoritesPageData', window.favoritesPageData);
 
