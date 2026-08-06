@@ -39,7 +39,7 @@
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-600">
                             @if ($enquiry->product)
-                                <a href="{{ route('products.show', [$enquiry->product->boutique, $enquiry->product]) }}" class="hover:underline">{{ $enquiry->product->name }}</a>
+                                <a href="{{ route('account.products.edit', $enquiry->product) }}" class="hover:underline">{{ $enquiry->product->name }}</a>
                             @else
                                 —
                             @endif

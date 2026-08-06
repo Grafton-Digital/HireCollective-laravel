@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEnquiryRequest;
+use App\Mail\BookingRequestMail;
 use App\Models\Enquiry;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class EnquiryController extends Controller
@@ -28,12 +30,16 @@ class EnquiryController extends Controller
 
         $product = Product::where('is_active', true)
             ->whereHas('boutique', fn ($q) => $q->where('is_active', true))
+            ->with('boutique')
             ->findOrFail($validated['product_id']);
 
         $enquiry = new Enquiry($validated);
         $enquiry->boutique_id = $product->boutique_id;
         $enquiry->status = 'new';
         $enquiry->save();
+
+        $enquiry->load('product');
+        Mail::to($product->boutique->contact_email)->send(new BookingRequestMail($enquiry));
 
         if ($request->wantsJson()) {
             return response()->json(['success' => true]);

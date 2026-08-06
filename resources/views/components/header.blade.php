@@ -1,3 +1,5 @@
+@props(['newEnquiriesCount' => 0])
+
 {{-- Top banner --}}
 <div class="bg-cream-200 py-2 text-center z-10">
     <p class="text-[11px] font-normal tracking-[1px] text-black">FREE DELIVERY ON ORDERS OVER €100</p>
@@ -81,8 +83,11 @@
                 style="display: none;"
             ></span>
         </a>
-        <a href="@auth{{ auth()->user()->isAdmin() ? url('/admin') : route('account.overview') }}@else{{ route('login') }}@endauth" class="h-5 w-5">
+        <a href="@auth{{ auth()->user()->isAdmin() ? url('/admin') : route('account.overview') }}@else{{ route('login') }}@endauth" class="relative h-5 w-5">
             <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
+            @if($newEnquiriesCount > 0)
+                <span class="absolute -right-2 -top-2 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white">{{ $newEnquiriesCount }}</span>
+            @endif
         </a>
     </div>
 

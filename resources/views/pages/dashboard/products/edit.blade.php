@@ -306,7 +306,7 @@
                     @endphp
                     <div class="mb-6" x-data="availabilityCalendar(@js($availabilityData))">
                         <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Availability Calendar</label>
-                        <p class="mb-4 text-xs text-gray-500">Click on a date to set its status.</p>
+                        <p class="mb-4 text-xs text-gray-500">Select a date range (min. 4 days) then choose a status to apply.</p>
 
                         <div class="border border-gray-200 p-4">
                             <div class="mb-4 flex items-center justify-between">
@@ -333,38 +333,45 @@
                                 <div class="text-center text-xs font-medium text-gray-500">Su</div>
 
                                 <template x-for="(day, index) in calendarDays" :key="index">
-                                    <div class="relative">
-                                        <button
-                                            type="button"
-                                            @click="day.isCurrentMonth ? openDropdown(day.date) : null"
-                                            :disabled="!day.isCurrentMonth"
-                                            :class="{
-                                                'bg-green-100 text-green-900': day.status === 'available' && day.isCurrentMonth,
-                                                'bg-red-100 text-red-900': day.status === 'unavailable' && day.isCurrentMonth,
-                                                'bg-yellow-100 text-yellow-900': day.status === 'confirm' && day.isCurrentMonth,
-                                                'text-gray-300': !day.isCurrentMonth
-                                            }"
-                                            class="flex h-10 w-full items-center justify-center text-sm hover:bg-gray-100 disabled:hover:bg-transparent"
-                                            x-text="day.day"
-                                        ></button>
-                                        <div
-                                            x-show="day.date && activeDate === day.date"
-                                            x-transition
-                                            class="absolute z-20 mt-1 w-36 border border-gray-200 bg-white shadow-lg"
-                                            :class="index % 7 >= 5 ? 'right-0' : 'left-0'"
-                                        >
-                                            <button type="button" @click.stop="setStatus(day.date, 'available')" class="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-gray-50">
-                                                <span class="h-3 w-3 bg-green-100 border border-green-300"></span> Available
-                                            </button>
-                                            <button type="button" @click.stop="setStatus(day.date, 'unavailable')" class="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-gray-50">
-                                                <span class="h-3 w-3 bg-red-100 border border-red-300"></span> Unavailable
-                                            </button>
-                                            <button type="button" @click.stop="setStatus(day.date, 'confirm')" class="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-gray-50">
-                                                <span class="h-3 w-3 bg-yellow-100 border border-yellow-300"></span> Need to confirm
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <button
+                                        type="button"
+                                        @click="day.isCurrentMonth ? selectDay(day.date) : null"
+                                        @mouseenter="day.isCurrentMonth ? hoverDay(day.date) : null"
+                                        @mouseleave="hoverLeave()"
+                                        :disabled="!day.isCurrentMonth"
+                                        :class="{
+                                            'bg-green-100 text-green-900': day.status === 'available' && day.isCurrentMonth && !getDayRangeState(day.date),
+                                            'bg-red-100 text-red-900': day.status === 'unavailable' && day.isCurrentMonth && !getDayRangeState(day.date),
+                                            'bg-yellow-100 text-yellow-900': day.status === 'confirm' && day.isCurrentMonth && !getDayRangeState(day.date),
+                                            'text-gray-300': !day.isCurrentMonth,
+                                            'bg-gray-900 !text-white': getDayRangeState(day.date) === 'selected-start' || getDayRangeState(day.date) === 'selected-end',
+                                            'bg-gray-200 text-gray-900': getDayRangeState(day.date) === 'in-range' || getDayRangeState(day.date) === 'hover-range',
+                                            'bg-gray-100 !text-gray-300 pointer-events-none': getDayRangeState(day.date) === 'disabled-range',
+                                        }"
+                                        class="flex h-10 w-full items-center justify-center text-sm hover:bg-gray-300 disabled:hover:bg-transparent cursor-pointer disabled:cursor-default"
+                                        x-text="day.day"
+                                    ></button>
                                 </template>
+                            </div>
+
+                            {{-- Range selection info --}}
+                            <div x-show="startDate" class="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
+                                <span class="text-xs text-gray-600" x-text="rangeLabel"></span>
+                                <button type="button" @click="clearSelection()" class="text-xs text-gray-400 hover:text-gray-900">Clear</button>
+                            </div>
+
+                            {{-- Status picker after range selected --}}
+                            <div x-show="showStatusPicker" x-transition class="mt-3 flex items-center gap-2">
+                                <span class="text-xs text-gray-600">Set as:</span>
+                                <button type="button" @click="applyStatus('unavailable')" class="flex items-center gap-1.5 border border-gray-200 px-3 py-1.5 text-xs hover:bg-red-50">
+                                    <span class="h-3 w-3 bg-red-100 border border-red-300"></span> Unavailable
+                                </button>
+                                <button type="button" @click="applyStatus('available')" class="flex items-center gap-1.5 border border-gray-200 px-3 py-1.5 text-xs hover:bg-green-50">
+                                    <span class="h-3 w-3 bg-green-100 border border-green-300"></span> Available
+                                </button>
+                                <button type="button" @click="applyStatus('confirm')" class="flex items-center gap-1.5 border border-gray-200 px-3 py-1.5 text-xs hover:bg-yellow-50">
+                                    <span class="h-3 w-3 bg-yellow-100 border border-yellow-300"></span> Confirm
+                                </button>
                             </div>
 
                             <input type="hidden" name="availability" :value="JSON.stringify(availability)">
@@ -545,10 +552,9 @@
                         formData.append('gallery[]', file);
                     });
 
-                    const calendarEl = form.querySelector('[x-data*="availabilityCalendar"]');
-                    if (calendarEl) {
-                        const calendarData = Alpine.$data(calendarEl);
-                        formData.set('availability', JSON.stringify(calendarData.availability));
+                    const availabilityInput = form.querySelector('input[name="availability"]');
+                    if (availabilityInput) {
+                        formData.set('availability', availabilityInput.value);
                     }
 
                     const galleryUploader = window.Alpine ? Alpine.$data(document.querySelector('[x-data*="galleryUploader"]')) : null;

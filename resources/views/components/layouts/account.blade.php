@@ -14,7 +14,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-white font-sans antialiased">
-    <x-header />
+    @php
+        $newEnquiriesCount = \App\Models\Enquiry::where('boutique_id', auth()->user()->boutique_id)->where('status', 'new')->count();
+    @endphp
+
+    <x-header :new-enquiries-count="$newEnquiriesCount" />
 
     <div class="flex min-h-screen bg-gray-50">
             {{-- Sidebar --}}
@@ -48,6 +52,9 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
                     Booking Requests
+                    @if($newEnquiriesCount > 0)
+                        <span class="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[11px] font-semibold text-white">{{ $newEnquiriesCount }}</span>
+                    @endif
                 </a>
 
                 <a href="{{ route('account.trainings') }}"

@@ -138,3 +138,31 @@
 .calendar-day.other-month {
   color: #d1d5db;
 }
+
+.calendar-day.available:hover,
+.calendar-day.confirm:hover {
+  background-color: #2c2c2c;
+  color: #fff;
+  cursor: pointer;
+}
+
+.calendar-day.selected {
+  background-color: #2c2c2c;
+  color: #fff;
+}
+
+.calendar-day.in-range {
+  background-color: #e5e5e5;
+  color: #1f2937;
+}
+
+.calendar-day.hover-range {
+  background-color: #e5e5e5;
+  color: #1f2937;
+}
+
+.calendar-day.disabled-range {
+  background-color: #f3f4f6;
+  color: #d1d5db;
+  pointer-events: none;
+}

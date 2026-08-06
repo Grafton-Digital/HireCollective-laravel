@@ -105,7 +105,11 @@
 
             {{-- Availability Calendar --}}
             <div class="mt-2">
-                <p class="mb-3 text-[11px] font-semibold tracking-[1px] text-black">AVAILABILITY</p>
+
+                <div class="flex gap-2 mb-6">
+                    <span class="w-[150px] text-[11px] font-semibold tracking-[1px] text-black mt-[1px]">AVAILABILITY</span>
+                    <span class="text-[13px] text-[#333]">Min. 4 days</span>
+                </div>
 
                 <div class="bg-gray-50">
                     <div class="flex items-center justify-between px-4 py-3">
@@ -139,8 +143,16 @@
                                         'available': day.status === 'available' && day.isCurrentMonth,
                                         'unavailable': day.status === 'unavailable' && day.isCurrentMonth,
                                         'confirm': day.status === 'confirm' && day.isCurrentMonth,
-                                        'other-month': !day.isCurrentMonth
+                                        'other-month': !day.isCurrentMonth,
+                                        'selected': getDayState(day) === 'selected-start' || getDayState(day) === 'selected-end',
+                                        'in-range': getDayState(day) === 'in-range',
+                                        'hover-range': getDayState(day) === 'hover-range',
+                                        'disabled-range': getDayState(day) === 'disabled-range',
+                                        'cursor-pointer': day.isCurrentMonth && day.status !== 'unavailable',
                                     }"
+                                    @click="selectDay(day)"
+                                    @mouseenter="hoverDay(day)"
+                                    @mouseleave="hoverLeave()"
                                     x-text="day.day"
                                 ></div>
                             </template>
@@ -161,6 +173,15 @@
                             <span class="text-[#666]">Need to confirm</span>
                         </div>
                     </div>
+
+                    <div x-show="errorMessage" x-transition class="bg-red-50 border-t border-red-100 px-4 py-2.5">
+                        <p class="text-xs text-red-700" x-text="errorMessage"></p>
+                    </div>
+
+                    <div x-show="startDate && !errorMessage" class="flex items-center justify-between bg-white border-t border-gray-100 px-4 py-2.5">
+                        <span class="text-xs text-[#333]" x-text="selectionLabel"></span>
+                        <button type="button" @click="clearSelection()" class="text-xs text-[#999] hover:text-black">Clear</button>
+                    </div>
                 </div>
             </div>
 
@@ -168,8 +189,10 @@
             <div class="flex flex-row gap-4">
                 <button
                     type="button"
-                    x-on:click="$dispatch('open-modal', 'request-booking')"
-                    class="mt-4 flex h-12 w-full items-center justify-center bg-[#2C2C2C] text-[13px] font-semibold tracking-[1.5px] text-white hover:bg-black"
+                    x-on:click="$dispatch('open-modal', 'request-booking'); $dispatch('set-booking-dates', { start: startDate, end: endDate })"
+                    :disabled="!startDate || !endDate"
+                    :class="!startDate || !endDate ? 'opacity-40 cursor-not-allowed' : 'hover:bg-black'"
+                    class="mt-4 flex h-12 w-full items-center justify-center bg-[#2C2C2C] text-[13px] font-semibold tracking-[1.5px] text-white"
                 >
                     REQUEST TO BOOK
                 </button>
@@ -197,7 +220,9 @@
 
     {{-- Request a Booking Modal --}}
     <x-modal name="request-booking" maxWidth="md" focusable>
-        <div class="p-8" x-data="bookingForm({{ $product->id }})" x-cloak>
+        <div class="p-8" x-data="bookingForm({{ $product->id }})" x-cloak
+             @set-booking-dates.window="selectedStart = $event.detail.start; selectedEnd = $event.detail.end; form.desired_dates = ($event.detail.start && $event.detail.end) ? $event.detail.start + ' to ' + $event.detail.end : ''"
+        >
             <template x-if="!submitted">
                 <div>
                     <div class="flex items-center justify-between">
@@ -246,10 +271,11 @@
                         </div>
 
                         <div class="flex flex-col gap-1.5">
-                            <label class="text-[11px] font-semibold tracking-[1px] text-black">EVENT DATE</label>
-                            <input type="date" x-model="form.desired_dates"
-                                   class="h-11 w-full border border-[#D0D0D0] bg-white px-3 text-[13px] text-[#333]">
-                            <p x-show="errors.desired_dates" x-text="errors.desired_dates" class="text-[11px] text-red-600"></p>
+                            <label class="text-[11px] font-semibold tracking-[1px] text-black">SELECTED DATES</label>
+                            <div class="flex h-11 w-full items-center border border-[#D0D0D0] bg-gray-50 px-3 text-[13px] text-[#333]">
+                                <span x-text="selectedStart && selectedEnd ? formatDisplayDate(selectedStart) + ' — ' + formatDisplayDate(selectedEnd) : 'Select dates from the calendar above'"></span>
+                            </div>
+                            <input type="hidden" x-model="form.desired_dates">
                         </div>
 
                         <div class="flex flex-col gap-1.5">

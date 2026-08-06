@@ -10,14 +10,125 @@ window.Alpine = Alpine;
 
 // Alpine.js components
 window.productAvailabilityCalendar = function(availabilityData = {}) {
+    const MIN_DAYS = 4;
+
+    function addDays(dateStr, n) {
+        const d = new Date(dateStr);
+        d.setDate(d.getDate() + n);
+        return d.toISOString().split('T')[0];
+    }
+
     return {
         currentMonth: new Date().getMonth(),
         currentYear: new Date().getFullYear(),
         availability: availabilityData,
+        startDate: null,
+        endDate: null,
+        hoveredDate: null,
+        errorMessage: null,
 
         get monthYear() {
             const date = new Date(this.currentYear, this.currentMonth);
             return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        },
+
+        get minEndDate() {
+            if (!this.startDate) return null;
+            return addDays(this.startDate, MIN_DAYS - 1);
+        },
+
+        getStatus(dateStr) {
+            return this.availability[dateStr] || 'available';
+        },
+
+        hasUnavailableBetween(from, to) {
+            let d = addDays(from, 1);
+            while (d <= to) {
+                if (this.getStatus(d) === 'unavailable') return true;
+                d = addDays(d, 1);
+            }
+            return false;
+        },
+
+        get selectionLabel() {
+            if (!this.startDate) return '';
+            if (!this.endDate) return `From: ${this.formatDate(this.startDate)} — select end date`;
+            return `${this.formatDate(this.startDate)} — ${this.formatDate(this.endDate)}`;
+        },
+
+        formatDate(dateStr) {
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+        },
+
+        showError(msg) {
+            this.errorMessage = msg;
+            setTimeout(() => { this.errorMessage = null; }, 4000);
+        },
+
+        canStartFrom(dateStr) {
+            for (let i = 0; i < MIN_DAYS; i++) {
+                const d = addDays(dateStr, i);
+                if (this.getStatus(d) === 'unavailable') return false;
+            }
+            return true;
+        },
+
+        selectDay(day) {
+            if (!day.isCurrentMonth || !day.date) return;
+            if (day.status === 'unavailable') return;
+            this.errorMessage = null;
+
+            if (!this.startDate || this.endDate) {
+                if (!this.canStartFrom(day.date)) {
+                    this.showError(`Minimum booking is ${MIN_DAYS} days. There are unavailable dates too close to the selected start date.`);
+                    return;
+                }
+                this.startDate = day.date;
+                this.endDate = null;
+            } else {
+                if (day.date < this.startDate) {
+                    if (!this.canStartFrom(day.date)) {
+                        this.showError(`Minimum booking is ${MIN_DAYS} days. There are unavailable dates too close to the selected start date.`);
+                        return;
+                    }
+                    this.startDate = day.date;
+                    this.endDate = null;
+                } else if (day.date < this.minEndDate) {
+                    this.showError(`Minimum booking is ${MIN_DAYS} days.`);
+                } else if (this.hasUnavailableBetween(this.startDate, day.date)) {
+                    this.showError('Selected range contains unavailable dates. Please choose dates within an available period.');
+                } else {
+                    this.endDate = day.date;
+                }
+            }
+        },
+
+        clearSelection() {
+            this.startDate = null;
+            this.endDate = null;
+            this.errorMessage = null;
+        },
+
+        hoverDay(day) {
+            if (!day.isCurrentMonth || !day.date) return;
+            if (this.startDate && !this.endDate) {
+                this.hoveredDate = day.date;
+            }
+        },
+
+        hoverLeave() {
+            this.hoveredDate = null;
+        },
+
+        getDayState(day) {
+            if (!day.isCurrentMonth || !day.date) return '';
+            if (day.date === this.startDate) return 'selected-start';
+            if (day.date === this.endDate) return 'selected-end';
+            if (this.startDate && !this.endDate && day.date > this.startDate && day.date < this.minEndDate) return 'disabled-range';
+            if (this.startDate && this.endDate && day.date > this.startDate && day.date < this.endDate) return 'in-range';
+            if (this.startDate && !this.endDate && this.hoveredDate && day.date > this.startDate && day.date <= this.hoveredDate && day.date >= this.minEndDate && !this.hasUnavailableBetween(this.startDate, this.hoveredDate)) return 'hover-range';
+            return '';
         },
 
         get calendarDays() {
@@ -83,15 +194,103 @@ window.productAvailabilityCalendar = function(availabilityData = {}) {
 };
 
 window.availabilityCalendar = function(availabilityData = {}) {
+    const MIN_DAYS = 4;
+
     return {
         currentMonth: new Date().getMonth(),
         currentYear: new Date().getFullYear(),
         availability: availabilityData,
         activeDate: null,
+        startDate: null,
+        endDate: null,
+        hoveredDate: null,
+        showStatusPicker: false,
 
         get monthYear() {
             const date = new Date(this.currentYear, this.currentMonth);
             return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        },
+
+        get minEndDate() {
+            if (!this.startDate) return null;
+            const d = new Date(this.startDate);
+            d.setDate(d.getDate() + MIN_DAYS - 1);
+            return d.toISOString().split('T')[0];
+        },
+
+        get rangeLabel() {
+            if (!this.startDate) return '';
+            if (!this.endDate) return `From: ${this.formatDate(this.startDate)} — select end date (min. ${MIN_DAYS} days)`;
+            return `${this.formatDate(this.startDate)} — ${this.formatDate(this.endDate)}`;
+        },
+
+        formatDate(dateStr) {
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+        },
+
+        selectDay(dateStr) {
+            if (!dateStr) return;
+
+            if (!this.startDate || (this.startDate && this.endDate)) {
+                this.startDate = dateStr;
+                this.endDate = null;
+                this.showStatusPicker = false;
+            } else {
+                if (dateStr < this.startDate) {
+                    this.startDate = dateStr;
+                    this.endDate = null;
+                    this.showStatusPicker = false;
+                } else if (dateStr < this.minEndDate) {
+                    return;
+                } else {
+                    this.endDate = dateStr;
+                    this.showStatusPicker = true;
+                }
+            }
+        },
+
+        hoverDay(dateStr) {
+            if (this.startDate && !this.endDate) {
+                this.hoveredDate = dateStr;
+            }
+        },
+
+        hoverLeave() {
+            this.hoveredDate = null;
+        },
+
+        applyStatus(status) {
+            if (!this.startDate || !this.endDate) return;
+            const start = new Date(this.startDate);
+            const end = new Date(this.endDate);
+            const updated = { ...this.availability };
+            for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                const dateStr = d.toISOString().split('T')[0];
+                updated[dateStr] = status;
+            }
+            this.availability = updated;
+            this.startDate = null;
+            this.endDate = null;
+            this.hoveredDate = null;
+            this.showStatusPicker = false;
+        },
+
+        clearSelection() {
+            this.startDate = null;
+            this.endDate = null;
+            this.hoveredDate = null;
+            this.showStatusPicker = false;
+        },
+
+        getDayRangeState(dateStr) {
+            if (!dateStr) return '';
+            if (dateStr === this.startDate) return 'selected-start';
+            if (dateStr === this.endDate) return 'selected-end';
+            if (this.startDate && !this.endDate && dateStr > this.startDate && dateStr < this.minEndDate) return 'disabled-range';
+            if (this.startDate && this.endDate && dateStr > this.startDate && dateStr < this.endDate) return 'in-range';
+            if (this.startDate && !this.endDate && this.hoveredDate && this.hoveredDate >= this.minEndDate && dateStr > this.startDate && dateStr <= this.hoveredDate) return 'hover-range';
+            return '';
         },
 
         get calendarDays() {
@@ -139,7 +338,7 @@ window.availabilityCalendar = function(availabilityData = {}) {
         },
 
         setStatus(dateStr, status) {
-            this.availability[dateStr] = status;
+            this.availability = { ...this.availability, [dateStr]: status };
             this.activeDate = null;
         },
 
@@ -273,6 +472,8 @@ window.bookingForm = function(productId) {
         loading: false,
         submitted: false,
         errors: {},
+        selectedStart: null,
+        selectedEnd: null,
         form: {
             product_id: productId,
             product_variant_id: '',
@@ -281,6 +482,12 @@ window.bookingForm = function(productId) {
             customer_phone: '',
             desired_dates: '',
             message: '',
+        },
+
+        formatDisplayDate(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
         },
 
         async submitForm() {
