@@ -45,7 +45,7 @@ class BoutiqueController extends Controller
             ->when($request->query('occasion'), fn ($q, $slug) => $q->whereHas('occasions', fn ($cq) => $cq->where('slug', $slug)))
             ->when($request->query('designer'), fn ($q, $designer) => $q->where('designer', $designer))
             ->when($request->query('size'), fn ($q, $size) => $q->where('size', $size))
-            ->when($request->query('price_range'), function ($q, $range) {
+            ->when($request->query('price'), function ($q, $range) {
                 if ($range === '200+') {
                     return $q->where('price_per_day', '>=', 200);
                 }
