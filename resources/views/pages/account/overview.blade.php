@@ -1,7 +1,7 @@
 <x-layouts.account>
-    <div class="mb-8 flex items-center justify-between">
+    <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <h1 class="font-serif text-[32px] tracking-wide text-gray-900">Boutique</h1>
+            <h1 class="font-serif text-[28px] sm:text-[32px] tracking-wide text-gray-900">Boutique</h1>
             <p class="mt-1 text-sm text-gray-500">Manage your boutique profile and products</p>
         </div>
         @if(auth()->user()->boutique)
@@ -15,8 +15,8 @@
     </div>
 
     @if(auth()->user()->boutique)
-        <div class="bg-white p-8 shadow-sm">
-            <div class="mb-6 flex items-start justify-between">
+        <div class="bg-white p-4 sm:p-8 shadow-sm">
+            <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <h2 class="text-lg font-semibold text-gray-900">Information</h2>
                 <a href="{{ route('account.settings') }}" class="inline-flex items-center gap-2 bg-black px-6 py-2 text-sm text-white hover:bg-gray-800">
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -30,7 +30,7 @@
                 $boutique = auth()->user()->boutique;
             @endphp
 
-            <div class="grid grid-cols-2 gap-x-16 gap-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-6">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Boutique Name</p>
                     <p class="mt-1 text-sm text-gray-900">{{ $boutique->name }}</p>
@@ -71,12 +71,12 @@
                     <p class="mt-1 text-sm font-medium text-green-600">Active</p>
                 </div>
 
-                <div class="col-span-2">
+                <div class="sm:col-span-2">
                     <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Short Bio</p>
                     <div class="prose prose-sm mt-1 text-gray-900">{!! $boutique->description ?? '-' !!}</div>
                 </div>
 
-                <div class="col-span-2">
+                <div class="sm:col-span-2">
                     <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Social Media</p>
                     @if(!empty($boutique->social_links))
                         <div class="mt-2 flex items-center gap-4">

@@ -4,7 +4,7 @@
         <p class="mt-1 text-sm text-gray-500">Manage incoming booking requests from customers</p>
     </div>
 
-    <div class="flex items-center gap-4 border-b border-gray-200 pb-4">
+    <div class="flex flex-wrap items-center gap-3 sm:gap-4 border-b border-gray-200 pb-4">
         <a href="{{ route('account.enquiries.index') }}"
            class="text-sm {{ !request('status') ? 'font-medium text-gray-900 border-b-2 border-black pb-4 -mb-4' : 'text-gray-500 hover:text-gray-700' }}">All</a>
         <a href="{{ route('account.enquiries.index', ['status' => 'new']) }}"
@@ -17,7 +17,44 @@
            class="text-sm {{ request('status') === 'cancelled' ? 'font-medium text-gray-900 border-b-2 border-black pb-4 -mb-4' : 'text-gray-500 hover:text-gray-700' }}">Cancelled</a>
     </div>
 
-    <div class="mt-6 overflow-hidden border border-gray-200">
+    {{-- Mobile: card layout --}}
+    <div class="mt-6 space-y-3 sm:hidden">
+        @forelse ($enquiries as $enquiry)
+            <a href="{{ route('account.enquiries.show', $enquiry) }}" class="block border border-gray-200 bg-white p-4 hover:bg-gray-50">
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">{{ $enquiry->customer_name }}</p>
+                        <p class="mt-0.5 text-xs text-gray-500">{{ $enquiry->customer_email }}</p>
+                    </div>
+                    <span class="shrink-0 inline-flex px-2 py-0.5 text-xs font-medium
+                        {{ $enquiry->status === 'new' ? 'bg-amber-100 text-amber-700' : '' }}
+                        {{ $enquiry->status === 'confirmed' ? 'bg-green-100 text-green-700' : '' }}
+                        {{ $enquiry->status === 'completed' ? 'bg-blue-100 text-blue-700' : '' }}
+                        {{ $enquiry->status === 'cancelled' ? 'bg-red-100 text-red-700' : '' }}
+                    ">{{ ucfirst($enquiry->status) }}</span>
+                </div>
+                <div class="mt-3 grid grid-cols-2 gap-2 text-xs text-gray-600">
+                    <div>
+                        <span class="font-medium uppercase text-gray-400">Product</span>
+                        <p class="mt-0.5">{{ $enquiry->product?->name ?? '—' }}</p>
+                    </div>
+                    <div>
+                        <span class="font-medium uppercase text-gray-400">Event Date</span>
+                        <p class="mt-0.5">{{ $enquiry->desired_dates ?? '—' }}</p>
+                    </div>
+                    <div>
+                        <span class="font-medium uppercase text-gray-400">Received</span>
+                        <p class="mt-0.5">{{ $enquiry->created_at->format('d M Y') }}</p>
+                    </div>
+                </div>
+            </a>
+        @empty
+            <p class="py-8 text-center text-sm text-gray-500">No booking requests yet.</p>
+        @endforelse
+    </div>
+
+    {{-- Desktop: table layout --}}
+    <div class="mt-6 hidden overflow-x-auto border border-gray-200 sm:block">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>

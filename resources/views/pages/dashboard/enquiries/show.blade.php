@@ -8,7 +8,7 @@
         </a>
     </div>
 
-    <div class="max-w-2xl space-y-6">
+    <div class="w-full max-w-2xl space-y-6">
         @if (session('date_warning'))
             <div class="border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
                 <div class="flex items-start gap-2">
@@ -29,8 +29,8 @@
             </div>
         @endif
 
-        <div class="flex items-center justify-between">
-            <h1 class="font-serif text-[28px] tracking-wide text-gray-900">{{ $enquiry->customer_name }}</h1>
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <h1 class="font-serif text-[24px] sm:text-[28px] tracking-wide text-gray-900">{{ $enquiry->customer_name }}</h1>
             <span class="inline-flex px-3 py-1 text-xs font-medium
                 {{ $enquiry->status === 'new' ? 'bg-amber-100 text-amber-700' : '' }}
                 {{ $enquiry->status === 'confirmed' ? 'bg-green-100 text-green-700' : '' }}
@@ -97,7 +97,7 @@
 
         {{-- Status actions --}}
         @if ($enquiry->status === 'new' || $enquiry->status === 'confirmed')
-        <div class="flex items-center gap-3 border-t border-gray-200 pt-6">
+        <div class="flex flex-wrap items-center gap-3 border-t border-gray-200 pt-6">
             @if ($enquiry->status === 'new')
                 <form method="POST" action="{{ route('account.enquiries.update', $enquiry) }}">
                     @csrf

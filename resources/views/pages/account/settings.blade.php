@@ -6,7 +6,7 @@
 
     <div x-data="{ tab: '{{ session('tab', 'account') }}' }" class="mt-6">
         <div class="border-b border-gray-200">
-            <nav class="-mb-px flex gap-8">
+            <nav class="-mb-px flex gap-6 sm:gap-8">
                 <button
                     @click="tab = 'account'"
                     :class="tab === 'account' ? 'border-gray-900 text-gray-900 font-medium' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'"
@@ -26,7 +26,7 @@
 
         <div class="mt-8">
             <div x-show="tab === 'account'" class="max-w-4xl">
-                <div class=" bg-white p-6 shadow">
+                <div class="bg-white p-4 sm:p-6 shadow">
                     <h3 class="text-lg font-semibold text-gray-900">Boutique Information</h3>
                     <p class="mt-1 text-sm text-gray-600">Update your boutique profile and contact details.</p>
 
@@ -44,7 +44,7 @@
                         <input type="hidden" name="remove_logo" x-ref="removeLogo" value="0">
 
                         <div class="space-y-5">
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div x-data="fileUpload('logo', '{{ $boutique?->logo ? Storage::url($boutique->logo) : '' }}')" x-ref="logoUpload">
                                     <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Logo</label>
                                     <div
@@ -108,7 +108,7 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label for="boutique_name" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Boutique Name</label>
                                     <input
@@ -154,7 +154,7 @@
                                 @error('county') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
 
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label for="website" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Website</label>
                                     <input
@@ -199,35 +199,48 @@
                                 <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-700">Social Media</label>
                                 <div class="space-y-3">
                                     <template x-for="(link, index) in socialLinks" :key="index">
-                                        <div class="flex items-start gap-2">
-                                            <select
-                                                :name="`social_links[${index}][platform]`"
-                                                x-model="link.platform"
-                                                class="w-36 shrink-0 border-gray-300 py-2 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
-                                            >
-                                                <option value="">Platform</option>
-                                                <option value="instagram" :disabled="isPlatformTaken('instagram', index)">Instagram</option>
-                                                <option value="tiktok" :disabled="isPlatformTaken('tiktok', index)">TikTok</option>
-                                                <option value="facebook" :disabled="isPlatformTaken('facebook', index)">Facebook</option>
-                                                <option value="twitter" :disabled="isPlatformTaken('twitter', index)">X (Twitter)</option>
-                                                <option value="threads" :disabled="isPlatformTaken('threads', index)">Threads</option>
-                                            </select>
-                                            <input
-                                                type="text"
-                                                :name="`social_links[${index}][handle]`"
-                                                x-model="link.handle"
-                                                placeholder="https://..."
-                                                class="block w-full border-gray-300 py-2 px-3 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
-                                            >
-                                            <button
-                                                type="button"
-                                                @click="removeSocialLink(index)"
-                                                class="shrink-0 p-2 text-gray-400 hover:text-red-500 transition-colors"
-                                            >
-                                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
+                                        <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
+                                            <div class="flex items-start gap-2">
+                                                <select
+                                                    :name="`social_links[${index}][platform]`"
+                                                    x-model="link.platform"
+                                                    class="w-full sm:w-36 shrink-0 border-gray-300 py-2 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                                >
+                                                    <option value="">Platform</option>
+                                                    <option value="instagram" :disabled="isPlatformTaken('instagram', index)">Instagram</option>
+                                                    <option value="tiktok" :disabled="isPlatformTaken('tiktok', index)">TikTok</option>
+                                                    <option value="facebook" :disabled="isPlatformTaken('facebook', index)">Facebook</option>
+                                                    <option value="twitter" :disabled="isPlatformTaken('twitter', index)">X (Twitter)</option>
+                                                    <option value="threads" :disabled="isPlatformTaken('threads', index)">Threads</option>
+                                                </select>
+                                                <button
+                                                    type="button"
+                                                    @click="removeSocialLink(index)"
+                                                    class="shrink-0 p-2 text-gray-400 hover:text-red-500 transition-colors sm:hidden"
+                                                >
+                                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <div class="flex flex-1 items-start gap-2">
+                                                <input
+                                                    type="text"
+                                                    :name="`social_links[${index}][handle]`"
+                                                    x-model="link.handle"
+                                                    placeholder="https://..."
+                                                    class="block w-full border-gray-300 py-2 px-3 text-sm shadow-sm focus:border-gray-400 focus:ring-gray-400"
+                                                >
+                                                <button
+                                                    type="button"
+                                                    @click="removeSocialLink(index)"
+                                                    class="hidden shrink-0 p-2 text-gray-400 hover:text-red-500 transition-colors sm:block"
+                                                >
+                                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                            </div>
                                         </div>
                                     </template>
                                 </div>
@@ -266,7 +279,7 @@
             </div>
 
             <div x-show="tab === 'security'" class="max-w-2xl" style="display: none;">
-                <div class=" bg-white p-6 shadow">
+                <div class="bg-white p-4 sm:p-6 shadow">
                     <h3 class="text-lg font-semibold text-gray-900">Change Password</h3>
                     <p class="mt-1 text-sm text-gray-600">Update your password to keep your account secure.</p>
 

@@ -1,5 +1,5 @@
 <x-layouts.account>
-    <div class="bg-white p-8">
+    <div class="bg-white p-4 sm:p-8">
         <div class="mb-6">
             <h1 class="font-serif text-[24px] tracking-wide text-gray-900">Add New Product</h1>
         </div>
@@ -14,7 +14,7 @@
             @csrf
 
 
-            <div class="grid grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
                 <div class="left-side">
                     

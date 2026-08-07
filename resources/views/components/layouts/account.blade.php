@@ -13,7 +13,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-white font-sans antialiased">
+<body class="min-h-screen bg-white font-sans antialiased" x-data="{ sidebarOpen: false }">
     @php
         $newEnquiriesCount = \App\Models\Enquiry::where('boutique_id', auth()->user()->boutique_id)->where('status', 'new')->count();
     @endphp
@@ -21,93 +21,131 @@
     <x-header :new-enquiries-count="$newEnquiriesCount" />
 
     <div class="flex min-h-screen bg-gray-50">
-            {{-- Sidebar --}}
-        <aside class="w-64 border-r border-gray-200 bg-white">
-            <div class="border-b border-gray-200 p-6">
-                @if(auth()->user()->boutique)
-                    <h3 class="mt-1 text-md text-center text-gray-500">{{ auth()->user()->boutique->name }}</h3>
-                @endif
-            </div>
+        {{-- Mobile sidebar overlay --}}
+        <div
+            x-show="sidebarOpen"
+            x-transition:enter="transition-opacity ease-linear duration-300"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition-opacity ease-linear duration-300"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed inset-0 z-40 bg-black/50 lg:hidden"
+            @click="sidebarOpen = false"
+        ></div>
 
-            <nav class="mt-2 flex flex-col gap-1 px-3">
-                <a href="{{ route('account.overview') }}"
-                   class="flex items-center gap-3  px-3 py-2.5 text-sm {{ request()->routeIs('account.overview') ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
-                    </svg>
-                    Overview
-                </a>
+        {{-- Sidebar --}}
+        <aside
+            x-cloak
+            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+            class="fixed inset-y-0 left-0 z-50 w-64 border-r border-gray-200 bg-white transition-transform duration-300 lg:static lg:z-auto lg:translate-x-0"
+        >
+            <div class="flex h-full flex-col">
+                <div class="border-b border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        @if(auth()->user()->boutique)
+                            <h3 class="mt-1 text-md text-center text-gray-500 flex-1">{{ auth()->user()->boutique->name }}</h3>
+                        @endif
+                        <button @click="sidebarOpen = false" class="lg:hidden p-1 text-gray-400 hover:text-gray-600">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
 
-                <a href="{{ route('account.products') }}"
-                   class="flex items-center gap-3  px-3 py-2.5 text-sm {{ request()->routeIs('account.products') ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                    </svg>
-                    Products
-                </a>
-
-                <a href="{{ route('account.enquiries.index') }}"
-                   class="flex items-center gap-3  px-3 py-2.5 text-sm {{ request()->routeIs('account.enquiries.*') ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                    Booking Requests
-                    @if($newEnquiriesCount > 0)
-                        <span class="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[11px] font-semibold text-white">{{ $newEnquiriesCount }}</span>
-                    @endif
-                </a>
-
-                <a href="{{ route('account.trainings') }}"
-                   class="flex items-center gap-3  px-3 py-2.5 text-sm {{ request()->routeIs('account.trainings') ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    Trainings
-                </a>
-
-                <a href="{{ route('account.settings') }}"
-                   class="flex items-center gap-3  px-3 py-2.5 text-sm {{ request()->routeIs('account.settings') ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                    Settings
-                </a>
-
-                <a href="{{ route('account.help-support') }}"
-                   class="flex items-center gap-3  px-3 py-2.5 text-sm {{ request()->routeIs('account.help-support') ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    Help & Support
-                </a>
-            </nav>
-
-            <div class="mt-auto border-t border-gray-200 p-3">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="flex w-full items-center gap-3  px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50">
+                <nav class="mt-2 flex flex-1 flex-col gap-1 px-3">
+                    <a href="{{ route('account.overview') }}"
+                       class="flex items-center gap-3 px-3 py-2.5 text-sm {{ request()->routeIs('account.overview') ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
                         </svg>
-                        Log out
-                    </button>
-                </form>
+                        Overview
+                    </a>
+
+                    <a href="{{ route('account.products') }}"
+                       class="flex items-center gap-3 px-3 py-2.5 text-sm {{ request()->routeIs('account.products') ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                        Products
+                    </a>
+
+                    <a href="{{ route('account.enquiries.index') }}"
+                       class="flex items-center gap-3 px-3 py-2.5 text-sm {{ request()->routeIs('account.enquiries.*') ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Booking Requests
+                        @if($newEnquiriesCount > 0)
+                            <span class="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[11px] font-semibold text-white">{{ $newEnquiriesCount }}</span>
+                        @endif
+                    </a>
+
+                    <a href="{{ route('account.trainings') }}"
+                       class="flex items-center gap-3 px-3 py-2.5 text-sm {{ request()->routeIs('account.trainings') ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Trainings
+                    </a>
+
+                    <a href="{{ route('account.settings') }}"
+                       class="flex items-center gap-3 px-3 py-2.5 text-sm {{ request()->routeIs('account.settings') ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Settings
+                    </a>
+
+                    <a href="{{ route('account.help-support') }}"
+                       class="flex items-center gap-3 px-3 py-2.5 text-sm {{ request()->routeIs('account.help-support') ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Help & Support
+                    </a>
+                </nav>
+
+                <div class="border-t border-gray-200 p-3">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="flex w-full items-center gap-3 px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                            Log out
+                        </button>
+                    </form>
+                </div>
             </div>
         </aside>
 
-            {{-- Main content --}}
-            <div class="flex-1">
-                <main class="px-4 py-12 md:px-[60px] md:py-16">
-                    @if (session('success'))
-                        <div class="mb-6 bg-green-50 p-4 text-sm text-green-700">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-                    {{ $slot }}
-                </main>
+        {{-- Main content --}}
+        <div class="flex-1">
+            {{-- Mobile top bar --}}
+            <div class="sticky top-0 z-30 flex items-center border-b border-gray-200 bg-white px-4 py-3 lg:hidden">
+                <button @click="sidebarOpen = true" class="p-1 text-gray-600 hover:text-gray-900">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+                @if(auth()->user()->boutique)
+                    <span class="ml-3 text-sm text-gray-500">{{ auth()->user()->boutique->name }}</span>
+                @endif
             </div>
+
+            <main class="px-4 py-8 md:px-8 lg:px-[60px] lg:py-16">
+                @if (session('success'))
+                    <div class="mb-6 bg-green-50 p-4 text-sm text-green-700">
+                        {{ session('success') }}
+                    </div>
+                @endif
+                {{ $slot }}
+            </main>
+        </div>
     </div>
 
     <x-footer />

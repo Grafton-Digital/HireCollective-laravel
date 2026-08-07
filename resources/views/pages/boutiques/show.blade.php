@@ -12,9 +12,9 @@
     </div>
 
     {{-- Hero section --}}
-    <section class="flex px-[60px] border border-b-[#e5e7eb]" style="height:380px;">
+    <section class="flex min-h-[380px] px-4 md:px-[60px] border border-b-[#e5e7eb]">
 
-        <div class="w-full flex py-16 gap-x-12">
+        <div class="w-full flex flex-col md:flex-row py-16 gap-x-12">
 
             <div class="flex flex-col items-center">
                 @if($boutique->website)
@@ -41,7 +41,7 @@
                     </div>
                 @endif
                 @if(!empty($boutique->social_links) || $boutique->website)
-                    <div class="w-full mt-3 flex items-center gap-5">
+                    <div class="w-full mt-3 flex justify-center md:justify-start items-center gap-5">
                         @if($boutique->website)
                             <a href="{{ $boutique->website }}" target="_blank" rel="noopener" class="text-gray-400 hover:text-gray-900 transition-colors" title="Website">
                                 <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
@@ -72,8 +72,8 @@
                 @endif
             </div>
 
-            <div class="flex flex-col" style="width: calc(100% - 248px)">
-                <h1 class="font-serif text-[56px] italic text-black">{{ $boutique->name }}</h1>
+            <div class="flex flex-col w-full md:w-[calc(100%-248px)]">
+                <h1 class="font-serif text-[42px] md:text-[56px] text-center md:text-left italic text-black">{{ $boutique->name }}</h1>
                 <div class="flex items-center gap-1.5 mb-3">
                     <svg class="h-3.5 w-3.5 text-[#666]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/></svg>
                     <span class="text-[11px] text-[#666]">{{ $boutique->county }}</span>
@@ -250,8 +250,8 @@
         </div>
     </section>
 
-    <section id="products" class="px-[60px] py-8">
-        <div class="grid grid-cols-3 gap-4">
+    <section id="products" class="px-4 lg:px-[60px] py-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             @forelse ($products as $product)
                 <x-product-card :product="$product" />
             @empty
